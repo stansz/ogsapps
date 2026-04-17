@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ogsapps</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #12131a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 2.5rem; }
+    .header img { height: 56px; border-radius: 50%; margin-bottom: 1rem; }
+    .header h1 { font-size: 1.2rem; font-weight: 300; letter-spacing: 0.25em; color: #5a6080; }
+
+    /* Tiles */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    a.tile {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      aspect-ratio: 1.6;
+      background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 12px;
+      text-decoration: none; color: #c0c8e0;
+      transition: all 0.2s;
+    }
+    a.tile:hover { background: #1e2238; border-color: #3a4060; transform: translateY(-2px); }
+    .tile-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .tile-label { font-size: 0.9rem; font-weight: 500; }
+    .tile-sub { font-size: 0.65rem; color: #5a6080; margin-top: 0.2rem; }
+
+    /* Games */
+    .games-section {
+      display: flex; justify-content: center; align-items: center; gap: 0.8rem;
+      margin-bottom: 2.5rem; font-size: 0.8rem;
+    }
+    .games-label { color: #3a3d55; font-size: 0.7rem; }
+    .game-link {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.4rem 0.9rem; background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 20px;
+      color: #6a7090; text-decoration: none; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .game-link:hover { color: #a0a8c0; border-color: #3a4060; background: #1e2238; }
+
+    /* Transit chat */
+    .transit-chat {
+      background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 12px;
+      padding: 1rem 1.2rem; margin-bottom: 2rem;
+    }
+    .transit-title { font-size: 0.75rem; color: #5a6080; margin-bottom: 0.6rem; letter-spacing: 0.05em; }
+    .transit-row { display: flex; gap: 0.5rem; }
+    .transit-input {
+      flex: 1; background: #10121a; border: 1px solid #2a2d40; border-radius: 10px;
+      padding: 0.6rem 1rem; color: #e8eaf0; font-size: 0.85rem; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .transit-input:focus { border-color: #4a6fa5; box-shadow: 0 0 0 2px #4a6fa522; }
+    .transit-input::placeholder { color: #3a3d55; }
+    .transit-go {
+      background: linear-gradient(135deg, #2a4a7a, #1a3050); border: 1px solid #3a5a8a; border-radius: 10px;
+      padding: 0.6rem 1rem; color: #c0d0f0; font-size: 0.8rem;
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+    }
+    .transit-go:hover { background: linear-gradient(135deg, #3a5a8a, #2a4060); }
+    .transit-result { margin-top: 0.6rem; font-size: 0.78rem; color: #7a80a0; }
+    .transit-route { padding: 0.4rem 0; border-bottom: 1px solid #222540; }
+    .transit-route:last-child { border-bottom: none; }
+    .transit-route-duration { color: #c0c8e0; font-weight: 500; }
+    .transit-route-detail { color: #5a6080; font-size: 0.7rem; margin-top: 0.1rem; }
+    .transit-more { margin-top: 0.4rem; }
+    .transit-more a { color: #4a6a9a; text-decoration: none; font-size: 0.7rem; transition: color 0.2s; }
+    .transit-more a:hover { color: #7a9ac0; }
+    .transit-loading { color: #3a3d55; }
+
+    /* Weather */
+    .weather-card {
+      background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 12px;
+      padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .weather-current { display: flex; align-items: center; gap: 0.8rem; }
+    .weather-icon { font-size: 2.5rem; }
+    .weather-temp { font-size: 2rem; font-weight: 300; color: #f0f0f0; }
+    .weather-cond { font-size: 0.85rem; color: #7a80a0; }
+    .weather-forecast {
+      display: flex; gap: 1.2rem; margin-left: auto;
+      border-left: 1px solid #2a2d40; padding-left: 1.5rem;
+    }
+    .forecast-day { text-align: center; font-size: 0.75rem; color: #5a6080; }
+    .forecast-day .day-name { color: #7a80a0; margin-bottom: 0.3rem; }
+    .forecast-day .day-icon { font-size: 1.2rem; }
+    .forecast-day .day-temps { margin-top: 0.2rem; }
+    .forecast-day .day-high { color: #c0c8e0; }
+    .forecast-day .day-low { color: #4a5070; }
+
+    /* News */
+    .news-section { margin-bottom: 2rem; }
+    .news-tabs {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-bottom: 1rem; border-bottom: 1px solid #2a2d40; padding-bottom: 0.5rem;
+    }
+    .news-tab {
+      background: none; border: 1px solid #2a2d40; border-radius: 20px;
+      padding: 0.35rem 0.7rem; font-size: 0.72rem; color: #5a6080;
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .news-tab:hover { color: #a0a8c0; border-color: #3a4060; }
+    .news-tab.active { background: #1e2238; color: #e0e8f0; border-color: #3a5080; }
+    .news-items { min-height: 120px; }
+    .news-item {
+      display: block; padding: 0.6rem 0;
+      border-bottom: 1px solid #1e2030;
+      text-decoration: none; color: #b0b8d0;
+      transition: color 0.15s;
+    }
+    .news-item:hover { color: #f0f0f0; }
+    .news-item:last-child { border-bottom: none; }
+    .news-item-title { font-size: 0.85rem; line-height: 1.4; }
+    .news-item-meta { font-size: 0.65rem; color: #3a3d55; margin-top: 0.2rem; }
+    .news-empty { color: #3a3d55; font-size: 0.85rem; padding: 1rem 0; }
+
+    /* Last updated */
+    .last-updated {
+      text-align: center; font-size: 0.65rem; color: #2a2d40;
+      margin-top: 2rem;
+    }
+
+    /* Loading */
+    .loading { color: #3a3d55; font-size: 0.8rem; text-align: center; padding: 2rem; }
+
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 1rem; }
+      .weather-card { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .weather-forecast { margin-left: 0; border-left: none; padding-left: 0; border-top: 1px solid #2a2d40; padding-top: 0.8rem; width: 100%; justify-content: space-around; }
+      .tiles { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+      .tile-icon { font-size: 1.5rem; }
+      .tile-label { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="logo.jpg" alt="OGS">
+      <h1>ogsapps</h1>
+    </div>
+
+    <div class="tiles">
+      <a href="https://md.ogsapps.cc" class="tile">
+        <div class="tile-icon">📄</div>
+        <div class="tile-label">MarkDown</div>
+        <div class="tile-sub">Document Converter</div>
+      </a>
+      <a href="https://transit.ogsapps.cc" class="tile">
+        <div class="tile-icon">🚆</div>
+        <div class="tile-label">Transit</div>
+        <div class="tile-sub">Routes & Schedules</div>
+      </a>
+    </div>
+
+    <div class="games-section">
+      <span class="games-label">🎮 games</span>
+      <a href="https://2048.ogsapps.cc" class="game-link">🔢 2048</a>
+    </div>
+
+    <div class="transit-chat" id="transitChat">
+      <div class="transit-title">🚆 Quick Transit</div>
+      <div class="transit-row">
+        <input type="text" id="transitInput" class="transit-input" placeholder="Station A to Station B">
+        <button class="transit-go" id="transitGo" onclick="transitSearch()">Go</button>
+      </div>
+      <div id="transitResult" class="transit-result"></div>
+    </div>
+
+    <div id="weatherCard" class="weather-card" style="display:none;"></div>
+    <div id="newsSection" class="news-section" style="display:none;"></div>
+    <div id="loadingMsg" class="loading">Loading dashboard...</div>
+  </div>
+
+  <div class="last-updated" id="lastUpdated"></div>
+
+  <script>
+    const WEATHER_ICONS = {
+      '113': '☀️', '116': '⛅', '119': '☁️', '122': '🌥️',
+      '143': '🌫️', '176': '🌦️', '179': '🌨️', '182': '🌧️',
+      '185': '🌧️', '200': '⛈️', '227': '🌨️', '230': '❄️',
+      '248': '🌫️', '260': '🌫️', '263': '🌦️', '266': '🌧️',
+      '281': '🌧️', '284': '🌧️', '293': '🌦️', '296': '🌧️',
+      '299': '🌧️', '302': '🌧️', '305': '🌧️', '308': '🌧️',
+      '311': '🌧️', '314': '🌧️', '317': '🌨️', '320': '🌨️',
+      '323': '🌨️', '326': '🌨️', '329': '❄️', '332': '❄️',
+      '335': '❄️', '338': '❄️', '350': '🌧️', '353': '🌦️',
+      '356': '🌧️', '359': '🌧️', '362': '🌨️', '365': '🌨️',
+      '368': '🌨️', '371': '❄️', '374': '🌨️', '377': '🌨️',
+      '386': '⛈️', '389': '⛈️', '392': '⛈️', '395': '❄️',
+    };
+
+    const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let dashboardData = null;
+
+    async function fetchDashboard() {
+      try {
+        const res = await fetch('/api/dashboard');
+        if (!res.ok) throw new Error('API error');
+        dashboardData = await res.json();
+        renderAll();
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      } catch (e) {
+        document.getElementById('loadingMsg').textContent = 'Dashboard unavailable';
+        console.error('Dashboard fetch error:', e);
+      }
+    }
+
+    function renderAll() {
+      renderWeather();
+      renderNews();
+    }
+
+    function renderWeather() {
+      const card = document.getElementById('weatherCard');
+      const w = dashboardData.weather;
+      if (!w || !w.current || w.current.temp === 'N/A') return;
+
+      const icon = WEATHER_ICONS[w.current.icon] || '🌡️';
+      const forecastHtml = (w.forecast || []).map(d => {
+        const date = new Date(d.date + 'T00:00:00');
+        const dayName = DAY_NAMES[date.getDay()];
+        return `<div class="forecast-day">
+          <div class="day-name">${dayName}</div>
+          <div class="day-icon">${icon}</div>
+          <div class="day-temps"><span class="day-high">${d.high}°</span> <span class="day-low">${d.low}°</span></div>
+        </div>`;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="weather-current">
+          <div class="weather-icon">${icon}</div>
+          <div>
+            <div class="weather-temp">${w.current.temp}°C</div>
+            <div class="weather-cond">${w.current.condition}</div>
+          </div>
+        </div>
+        <div class="weather-forecast">${forecastHtml}</div>
+      `;
+      card.style.display = 'flex';
+    }
+
+    function renderNews() {
+      const section = document.getElementById('newsSection');
+      const news = dashboardData.news;
+      if (!news) return;
+
+      const feeds = Object.keys(news);
+      if (feeds.length === 0) return;
+
+      const defaultTab = feeds.includes('CBC Top Stories') ? 'CBC Top Stories' : feeds[0];
+
+      const tabsHtml = feeds.map(f =>
+        `<button class="news-tab${f === defaultTab ? ' active' : ''}" data-feed="${f}">${f}</button>`
+      ).join('');
+
+      section.innerHTML = `
+        <div class="news-tabs">${tabsHtml}</div>
+        <div class="news-items" id="newsItems"></div>
+      `;
+
+      renderFeedItems(defaultTab);
+
+      section.querySelectorAll('.news-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          section.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderFeedItems(tab.dataset.feed);
+        });
+      });
+
+      section.style.display = 'block';
+    }
+
+    function renderFeedItems(feedName) {
+      const container = document.getElementById('newsItems');
+      const items = dashboardData.news[feedName] || [];
+      if (items.length === 0) {
+        container.innerHTML = '<div class="news-empty">No items available</div>';
+        return;
+      }
+      container.innerHTML = items.map(item => {
+        const time = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-CA', {month:'short',day:'numeric'}) : '';
+        return `<a class="news-item" href="${item.link}" target="_blank" rel="noopener">
+          <div class="news-item-title">${item.title}</div>
+          ${time ? `<div class="news-item-meta">${time}</div>` : ''}
+        </a>`;
+      }).join('');
+    }
+
+    // Init
+    fetchDashboard();
+    setInterval(fetchDashboard, 5 * 60 * 1000);
+
+    // Transit chat
+    const TRANSIT_API = 'https://maps.ogsapps.cc/api/transit/route';
+
+    document.getElementById('transitInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') transitSearch();
+    });
+
+    async function transitSearch() {
+      const input = document.getElementById('transitInput').value.trim();
+      const result = document.getElementById('transitResult');
+
+      const match = input.match(/^(.+?)\s+(?:to|→|->)\s+(.+)$/i);
+      if (!match) {
+        result.innerHTML = '<div style="color:#5a6080">Try: "Gateway Station to YVR Airport"</div>';
+        return;
+      }
+
+      result.innerHTML = '<div class="transit-loading">Finding routes...</div>';
+
+      try {
+        const res = await fetch(`${TRANSIT_API}?from=${encodeURIComponent(match[1])}&to=${encodeURIComponent(match[2])}`);
+        const data = await res.json();
+
+        if (data.error || !data.routes || data.routes.length === 0) {
+          result.innerHTML = '<div style="color:#5a6080">No routes found</div>';
+          return;
+        }
+
+        const routes = data.routes.slice(0, 2).map(r => {
+          const summary = r.steps.filter(s => s.type !== 'transfer').map(s => s.route).join(' → ');
+          return `<div class="transit-route">
+            <span class="transit-route-duration">${r.duration_min} min</span> · ${r.transfers === 0 ? 'Direct' : r.transfers + ' transfer'}
+            <div class="transit-route-detail">${summary}</div>
+          </div>`;
+        }).join('');
+
+        result.innerHTML = routes + `<div class="transit-more"><a href="https://transit.ogsapps.cc/?from=${encodeURIComponent(match[1])}&to=${encodeURIComponent(match[2])}" target="_blank">Full details →</a></div>`;
+      } catch (e) {
+        result.innerHTML = '<div style="color:#5a6080">Transit API unavailable</div>';
+      }
+    }
+  </script>
+</body>
+</html>
