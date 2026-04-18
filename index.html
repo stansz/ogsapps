@@ -186,11 +186,6 @@
         <div class="tile-label">Transit</div>
         <div class="tile-sub">Routes & Schedules</div>
       </a>
-      <a href="https://elevation.ogsapps.cc" class="tile">
-        <div class="tile-icon">📏</div>
-        <div class="tile-label">Elevation</div>
-        <div class="tile-sub">Route Profiles</div>
-      </a>
     </div>
 
     <div class="games-section">
@@ -236,7 +231,8 @@
 
     async function fetchDashboard() {
       try {
-        const res = await fetch('/api/dashboard');
+        const cityParam = weatherCity ? `?city=${encodeURIComponent(weatherCity)}` : '';
+        const res = await fetch('/api/dashboard' + cityParam);
         if (!res.ok) throw new Error('API error');
         dashboardData = await res.json();
         renderAll();
@@ -310,11 +306,20 @@
       if (city) {
         localStorage.setItem('weatherCity', city);
         weatherCity = city;
-        // Re-fetch with new city — for now just update the display
-        // The dashboard API would need a city param for full support
         document.getElementById('weatherSearch').style.display = 'none';
         document.getElementById('weatherLoc').style.display = '';
-        document.getElementById('weatherLoc').textContent = '📍 ' + city;
+        // Re-fetch weather for new city
+        fetch(`/api/dashboard?city=${encodeURIComponent(city)}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.weather) {
+              dashboardData.weather = data.weather;
+              renderWeather();
+            }
+          })
+          .catch(() => {
+            document.getElementById('weatherLoc').textContent = '📍 ' + city;
+          });
       }
     }
 
@@ -333,7 +338,25 @@
       ).join('');
 
       section.innerHTML = `
-        <div class="news-tabs">${tabsHtml}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #2a2d40; padding-bottom: 0.5rem;">
+          <div class="news-tabs">${tabsHtml}</div>
+          <button class="news-refresh" id="newsRefresh" title="Refresh news" style="
+            background: none;
+            border: 1px solid #3a4060;
+            border-radius: 20px;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.72rem;
+            color: #6a7090;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+          ">
+            <span>↻</span>
+            <span>Refresh</span>
+          </button>
+        </div>
         <div class="news-items" id="newsItems"></div>
       `;
 
@@ -344,6 +367,23 @@
           section.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
           renderFeedItems(tab.dataset.feed);
+        });
+      });
+
+      document.getElementById('newsRefresh').addEventListener('click', () => {
+        const btn = document.getElementById('newsRefresh');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>↻</span><span>Refreshing...</span>';
+        btn.disabled = true;
+        fetchDashboard().then(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }).catch(() => {
+          btn.innerHTML = '<span>↻</span><span>Failed</span>';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }, 2000);
         });
       });
 
