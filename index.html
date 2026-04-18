@@ -90,25 +90,27 @@
       display: flex; align-items: center; gap: 1.5rem;
     }
     .weather-header {
-      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;
+      display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.5rem;
     }
-    .weather-location { font-size: 0.8rem; color: #8890a8; cursor: pointer; }
-    .weather-location:hover { color: #b0b8d0; }
-    .weather-cities { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
+    .weather-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
+    .weather-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+    .weather-location { font-size: 0.8rem; color: #8890a8; }
+    .weather-cities { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .weather-city-btn {
-      background: #10121a; border: 1px solid #2a2d40; border-radius: 12px;
+      background: #10121a; border: 1px solid #2a2d40; border-radius: 20px;
       color: #6a7090; padding: 0.2rem 0.65rem; font-size: 0.72rem; cursor: pointer;
       font-family: inherit; transition: all 0.15s;
     }
     .weather-city-btn:hover { color: #b0b8d0; border-color: #3a4060; }
     .weather-city-btn.active { color: #8ab0d8; border-color: #3b82f6; background: #1a2744; }
     .weather-refresh {
-      background: none; border: none; cursor: pointer; font-size: 0.9rem;
-      padding: 0 0.3rem; opacity: 0.5; transition: opacity 0.15s;
+      background: none; border: 1px solid #2a2d40; border-radius: 6px;
+      cursor: pointer; font-size: 0.75rem; color: #5a6080;
+      padding: 0.15rem 0.5rem; transition: all 0.15s; font-family: inherit;
     }
-    .weather-refresh:hover { opacity: 1; }
+    .weather-refresh:hover { color: #8ab0d8; border-color: #3a4060; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .weather-updated { font-size: 0.65rem; color: #5a6080; margin-left: 0.3rem; }
+    .weather-updated { font-size: 0.6rem; color: #3a4060; }
     .weather-current { display: flex; align-items: center; gap: 0.8rem; }
     .weather-icon { font-size: 2.5rem; }
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
@@ -284,12 +286,16 @@
       card.innerHTML = `
         <div style="flex:1">
           <div class="weather-header">
-            <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Vancouver,BC,Canada'))?.name || city)}</span>
-            <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">🔄</button>
-            <span class="weather-updated" id="weatherUpdated"></span>
-            <div class="weather-cities">${CITIES.map(c =>
-              `<button class="weather-city-btn${c.query === (weatherCity || 'Vancouver,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
-            ).join('')}</div>
+            <div class="weather-header-left">
+              <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Vancouver,BC,Canada'))?.name || city)}</span>
+              <div class="weather-cities">${CITIES.map(c =>
+                `<button class="weather-city-btn${c.query === (weatherCity || 'Vancouver,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
+              ).join('')}</div>
+            </div>
+            <div class="weather-header-right">
+              <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">🔄 Refresh</button>
+              <span class="weather-updated" id="weatherUpdated"></span>
+            </div>
           </div>
           <div class="weather-current">
             <div class="weather-icon">${icon}</div>
