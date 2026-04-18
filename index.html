@@ -94,20 +94,14 @@
     }
     .weather-location { font-size: 0.8rem; color: #8890a8; cursor: pointer; }
     .weather-location:hover { color: #b0b8d0; }
-    .weather-search {
-      display: none; align-items: center; gap: 0.4rem;
+    .weather-cities { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
+    .weather-city-btn {
+      background: #10121a; border: 1px solid #2a2d40; border-radius: 12px;
+      color: #6a7090; padding: 0.2rem 0.65rem; font-size: 0.72rem; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
     }
-    .weather-search-input {
-      background: #10121a; border: 1px solid #2a2d40; border-radius: 8px;
-      padding: 0.3rem 0.6rem; color: #e8eaf0; font-size: 0.78rem; font-family: inherit;
-      outline: none; width: 140px;
-    }
-    .weather-search-input:focus { border-color: #4a6fa5; }
-    .weather-search-btn {
-      background: none; border: none; color: #5a80b0; cursor: pointer; font-size: 0.78rem;
-      font-family: inherit;
-    }
-    .weather-search-btn:hover { color: #8ab0d8; }
+    .weather-city-btn:hover { color: #b0b8d0; border-color: #3a4060; }
+    .weather-city-btn.active { color: #8ab0d8; border-color: #3b82f6; background: #1a2744; }
     .weather-current { display: flex; align-items: center; gap: 0.8rem; }
     .weather-icon { font-size: 2.5rem; }
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
@@ -283,11 +277,10 @@
       card.innerHTML = `
         <div style="flex:1">
           <div class="weather-header">
-            <span class="weather-location" id="weatherLoc" title="Click to change location">📍 ${esc(city)}</span>
-            <div class="weather-search" id="weatherSearch">
-              <input type="text" class="weather-search-input" id="weatherCityInput" placeholder="City name">
-              <button class="weather-search-btn" onclick="setWeatherCity()">Go</button>
-            </div>
+            <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Vancouver,BC,Canada'))?.name || city)}</span>
+            <div class="weather-cities">${CITIES.map(c =>
+              `<button class="weather-city-btn${c.query === (weatherCity || 'Vancouver,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
+            ).join('')}</div>
           </div>
           <div class="weather-current">
             <div class="weather-icon">${icon}</div>
@@ -300,42 +293,28 @@
         <div class="weather-forecast">${forecastHtml}</div>
       `;
 
-      // Click to search
-      document.getElementById('weatherLoc').addEventListener('click', () => {
-        const search = document.getElementById('weatherSearch');
-        search.style.display = 'flex';
-        document.getElementById('weatherLoc').style.display = 'none';
-        document.getElementById('weatherCityInput').focus();
-      });
-
-      document.getElementById('weatherCityInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') setWeatherCity();
-      });
-
       card.style.display = 'flex';
     }
 
-    function setWeatherCity() {
-      const input = document.getElementById('weatherCityInput');
-      const city = input.value.trim();
-      if (city) {
-        localStorage.setItem('weatherCity', city);
-        weatherCity = city;
-        document.getElementById('weatherSearch').style.display = 'none';
-        document.getElementById('weatherLoc').style.display = '';
-        // Re-fetch weather for new city
-        fetch(`/api/dashboard?city=${encodeURIComponent(city)}`)
-          .then(r => r.json())
-          .then(data => {
-            if (data.weather) {
-              dashboardData.weather = data.weather;
-              renderWeather();
-            }
-          })
-          .catch(() => {
-            document.getElementById('weatherLoc').textContent = '📍 ' + city;
-          });
-      }
+    const CITIES = [
+      { name: 'Vancouver', query: 'Vancouver,BC,Canada' },
+      { name: 'Victoria', query: 'Victoria,BC,Canada' },
+      { name: 'Toronto', query: 'Toronto,ON,Canada' },
+      { name: 'France', query: 'Paris,France' },
+    ];
+
+    function switchWeatherCity(query, name) {
+      localStorage.setItem('weatherCity', query);
+      weatherCity = query;
+      fetch(`/api/dashboard?city=${encodeURIComponent(query)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.weather) {
+            dashboardData.weather = data.weather;
+            renderWeather();
+          }
+        })
+        .catch(() => {});
     }
 
     function renderNews() {
