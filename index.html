@@ -102,6 +102,13 @@
     }
     .weather-city-btn:hover { color: #b0b8d0; border-color: #3a4060; }
     .weather-city-btn.active { color: #8ab0d8; border-color: #3b82f6; background: #1a2744; }
+    .weather-refresh {
+      background: none; border: none; cursor: pointer; font-size: 0.9rem;
+      padding: 0 0.3rem; opacity: 0.5; transition: opacity 0.15s;
+    }
+    .weather-refresh:hover { opacity: 1; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .weather-updated { font-size: 0.65rem; color: #5a6080; margin-left: 0.3rem; }
     .weather-current { display: flex; align-items: center; gap: 0.8rem; }
     .weather-icon { font-size: 2.5rem; }
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
@@ -278,6 +285,8 @@
         <div style="flex:1">
           <div class="weather-header">
             <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Vancouver,BC,Canada'))?.name || city)}</span>
+            <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">🔄</button>
+            <span class="weather-updated" id="weatherUpdated"></span>
             <div class="weather-cities">${CITIES.map(c =>
               `<button class="weather-city-btn${c.query === (weatherCity || 'Vancouver,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
             ).join('')}</div>
@@ -294,13 +303,17 @@
       `;
 
       card.style.display = 'flex';
+
+      // Update timestamp
+      const ts = document.getElementById('weatherUpdated');
+      if (ts) ts.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     }
 
     const CITIES = [
       { name: 'Vancouver', query: 'Vancouver,BC,Canada' },
       { name: 'Victoria', query: 'Victoria,BC,Canada' },
       { name: 'Toronto', query: 'Toronto,ON,Canada' },
-      { name: 'France', query: 'Paris,France' },
+      { name: 'Paris', query: 'Paris,France' },
     ];
 
     function switchWeatherCity(query, name) {
@@ -315,6 +328,22 @@
           }
         })
         .catch(() => {});
+    }
+
+    function refreshWeather() {
+      const city = weatherCity || 'Vancouver,BC,Canada';
+      const btn = document.querySelector('.weather-refresh');
+      if (btn) btn.style.animation = 'spin 0.5s linear';
+      fetch(`/api/dashboard?city=${encodeURIComponent(city)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.weather) {
+            dashboardData.weather = data.weather;
+            renderWeather();
+          }
+        })
+        .catch(() => {})
+        .finally(() => { if (btn) btn.style.animation = ''; });
     }
 
     function renderNews() {
