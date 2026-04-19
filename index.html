@@ -290,7 +290,6 @@
       </a>
     </div>
 
-    <div id="weatherCard" class="weather-card" style="display:none;"></div>
     <div id="newsSection" class="news-section" style="display:none;"></div>
 
 
@@ -350,9 +349,7 @@
     }
 
     function renderWeather() {
-      const card = document.getElementById('weatherCard');
-      const w = dashboardData.weather;
-      if (!w || !w.current || w.current.temp === 'N/A') return;
+      return;
 
       const city = weatherCity || w.current.city || 'Vancouver';
       const icon = WEATHER_ICONS[w.current.icon] || '🌡️';
