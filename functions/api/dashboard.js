@@ -97,11 +97,15 @@ async function fetchSingleFeed(url) {
     if (!res.ok) return [];
     const text = await res.text();
 
-    // Regex-based RSS parsing (DOMParser not available in Workers)
+    // Regex-based RSS/Atom parsing (DOMParser not available in Workers)
     const items = [];
     const titles = [...text.matchAll(/<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/title>/gi)];
-    const links = [...text.matchAll(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/gi)];
-    const dates = [...text.matchAll(/<pubDate>(.*?)<\/pubDate>/gi)];
+    // Match RSS <link>...</link> and Atom <link rel="alternate" href="..."/>
+    const rssLinks = [...text.matchAll(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/gi)];
+    const atomLinks = [...text.matchAll(/<link[^>]+href="([^"]+)"[^>]*>/gi)];
+    // Prefer RSS links if found, otherwise use Atom
+    const links = rssLinks.length > 1 ? rssLinks : atomLinks;
+    const dates = [...text.matchAll(/<(?:pubDate|published|updated)>(.*?)<\/(?:pubDate|published|updated)>/gi)];
 
     // Skip first title (feed title)
     for (let i = 1; i < Math.min(titles.length, 11); i++) {
