@@ -655,7 +655,7 @@
         if (!res.ok) throw new Error('API error');
         const data = await res.json();
         wikiArticles = data.articles || [];
-        wikiQueue = pickNextArticles(5);
+        wikiQueue = pickNextArticles(10);
         renderWikiFeed(wikiQueue);
       } catch (e) {
         document.getElementById('wikiCards').innerHTML = '<div class="wiki-empty">Could not load wiki feed</div>';
@@ -663,7 +663,7 @@
     }
 
     function refreshWikiFeed() {
-      wikiQueue = pickNextArticles(5);
+      wikiQueue = pickNextArticles(10);
       renderWikiFeed(wikiQueue);
     }
 
