@@ -53,11 +53,13 @@
     }
     .weather-header {
       display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.5rem;
+      width: 100%;
+      max-width: 520px;
     }
     .weather-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
     .weather-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
     .weather-location { font-size: 0.8rem; color: #8890a8; }
-    .weather-cities { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .weather-cities { display: flex; gap: 0.4rem; flex-wrap: wrap; max-width: 520px; }
     .weather-city-btn {
       background: #10121a; border: 1px solid #2a2d40; border-radius: 20px;
       color: #6a7090; padding: 0.2rem 0.65rem; font-size: 0.72rem; cursor: pointer;
@@ -76,7 +78,7 @@
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .weather-refresh.spinning { animation: spin 0.8s ease-in-out; pointer-events: none; }
     .weather-updated { font-size: 0.6rem; color: #3a4060; }
-    .weather-current { display: flex; align-items: center; gap: 0.8rem; }
+    .weather-current { display: flex; align-items: center; gap: 0.8rem; max-width: 520px; }
     .weather-icon { font-size: 2.5rem; }
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
     .weather-cond { font-size: 0.85rem; color: #8890a8; }
@@ -98,12 +100,14 @@
     }
     .weather-current-inner {
       width: 100%;
+      max-width: 520px;
     }
     .weather-layout {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      max-width: 520px;
     }
     .weather-current {
       width: 100%;
