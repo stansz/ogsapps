@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-19",
+    "slot": "PM",
+    "timestamp": "2026-04-19T14:14:28-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-19 14:13 PDT\n\n📊 Markets — Sunday, April 19th, 2026\n\nUS equity ETFs rally broadly in final pre-close trading, with tech and growth leading gains ahead of a packed earnings week.\n\n📈 US\n• S&P 500 (SPY): $710.14 (+1.21%)\n• Nasdaq (QQQ): $648.85 (+1.31%)\n• Dow (DIA): $494.22 (+1.77%)\n\n🛢️ Commodities & Crypto\n• Gold: $4834.07/oz (flat)\n• BTC/USD: $74650.11 (-1.43%)\n• LTC/USD: $54.57 (-1.94%)\n\n🎯 Movers (only >2% moves or major news)\n• AAPL: +2.59% to $270.23 — strongest performer among primary tickers, leads tech sector gains\n• META: +1.73% to $688.55 — in focus ahead of Q1 2026 earnings announcement this week; Morgan Stanley maintains as top tech pick\n• TSM: +1.97% to $370.50 — Q1 earnings beat cited; story noted as \"still a great buy\" amid continued AI/wafer demand\n\n📰 Top headlines\n• Investors brace for renewed volatility following weekend Iran developments\n• S&P 500 blasts past 7,000 in comeback rally; commentary suggests further upside potential\n\n⚡ Sentiment: Positive. A broad, tech-led advance sets an optimistic tone heading into the week, though crypto diverges to the downside and geopolitical headlines introduce caution."
+  },
+  {
+    "date": "2026-04-19",
     "slot": "AM",
     "timestamp": "2026-04-19T14:11:28-0700",
     "title": "Market Morning",
