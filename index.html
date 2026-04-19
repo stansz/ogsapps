@@ -159,9 +159,7 @@
       /* Stack current weather + forecast under the location pills */
       .weather-current-inner {
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        display: block;
       }
       .weather-layout {
         width: 100%;
@@ -335,7 +333,7 @@
       }).join('');
 
       card.innerHTML = `
-        <div class="weather-current-inner" style="flex:1;">
+        <div class="weather-current-inner">
           <div class="weather-header" style="width:100%; margin-bottom: 0.5rem;">
             <div class="weather-header-left">
               <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Surrey,BC,Canada'))?.name || city)}</span>
