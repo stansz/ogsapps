@@ -154,7 +154,26 @@
     @media (max-width: 600px) {
       body { padding: 1.5rem 1rem; }
       .weather-card { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-      .weather-forecast { margin-left: 0; border-left: none; padding-left: 0; border-top: 1px solid #2a2d40; padding-top: 0.8rem; width: 100%; justify-content: space-around; }
+      .weather-header { width: 100%; }
+      .weather-current { width: 100%; }
+      .weather-current-inner > .weather-current {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      /* Stack current weather + forecast under the location pills */
+      .weather-current-inner > .weather-layout {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        width: 100%;
+      }
+      .weather-forecast {
+        width: 100%;
+        justify-content: space-around;
+        margin-left: 0;
+        border-left: none;
+      }
       .tiles { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
       .tile-icon { font-size: 1.5rem; }
       .tile-label { font-size: 0.75rem; }
@@ -326,7 +345,7 @@
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; width:100%;">
+          <div class="weather-layout" style="display:flex; align-items:center; width:100%;">
             <div class="weather-current">
               <div class="weather-icon">${icon}</div>
               <div>
