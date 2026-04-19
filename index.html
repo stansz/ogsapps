@@ -81,10 +81,22 @@
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
     .weather-cond { font-size: 0.85rem; color: #8890a8; }
     .weather-forecast {
-      display: flex; gap: 1.2rem; margin-left: auto;
-      border-left: 1px solid #2a2d40; padding-left: 1.5rem;
+      display: flex; gap: 1.2rem;
+      border-left: none; padding-left: 0;
+      margin-left: 0;
     }
     .forecast-day { text-align: center; font-size: 0.75rem; color: #6a7090; }
+
+    .weather-current {
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .weather-current-inner {
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .weather-right-edge {
+      margin-left: auto;
+    }
+
     .forecast-day .day-name { color: #8890a8; margin-bottom: 0.3rem; }
     .forecast-day .day-icon { font-size: 1.2rem; }
     .forecast-day .day-temps { margin-top: 0.2rem; }
@@ -300,28 +312,31 @@
       }).join('');
 
       card.innerHTML = `
-        <div style="flex:1">
-          <div class="weather-header">
+        <div class="weather-current-inner" style="flex:1;">
+          <div class="weather-header" style="width:100%; margin-bottom: 0.5rem;">
             <div class="weather-header-left">
-              <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Vancouver,BC,Canada'))?.name || city)}</span>
+              <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Surrey,BC,Canada'))?.name || city)}</span>
               <div class="weather-cities">${CITIES.map(c =>
-                `<button class="weather-city-btn${c.query === (weatherCity || 'Vancouver,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
+                `<button class="weather-city-btn${c.query === (weatherCity || 'Surrey,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
               ).join('')}</div>
             </div>
-            <div class="weather-header-right">
-              <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">🔄 Refresh</button>
+            <div class="weather-header-right" style="justify-content:flex-start;">
+              <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">⟳</button>
               <span class="weather-updated" id="weatherUpdated"></span>
             </div>
           </div>
-          <div class="weather-current">
-            <div class="weather-icon">${icon}</div>
-            <div>
-              <div class="weather-temp">${w.current.temp}°C</div>
-              <div class="weather-cond">${w.current.condition}</div>
+
+          <div style="display:flex; align-items:center; width:100%;">
+            <div class="weather-current">
+              <div class="weather-icon">${icon}</div>
+              <div>
+                <div class="weather-temp">${w.current.temp}°C</div>
+                <div class="weather-cond">${w.current.condition}</div>
+              </div>
             </div>
+            <div class="weather-forecast">${forecastHtml}</div>
           </div>
         </div>
-        <div class="weather-forecast">${forecastHtml}</div>
       `;
 
       card.style.display = 'flex';
@@ -332,10 +347,10 @@
     }
 
     const CITIES = [
+      { name: 'Surrey, BC', query: 'Surrey,BC,Canada' },
       { name: 'Vancouver', query: 'Vancouver,BC,Canada' },
       { name: 'Victoria', query: 'Victoria,BC,Canada' },
       { name: 'Toronto', query: 'Toronto,ON,Canada' },
-      { name: 'Paris', query: 'Paris,France' },
     ];
 
     function switchWeatherCity(query, name) {
