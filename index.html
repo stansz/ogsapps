@@ -290,7 +290,19 @@
       </a>
     </div>
 
-    <div id="newsSection" class="news-section" style="display:none;"></div>
+    <div class="news-section" style="margin-bottom: 2rem;" id="marketNewsWrapper" aria-live="polite">
+      <div class="news-tabs" id="topBriefTabs" style="margin-bottom: 1rem;">
+        <button class="news-tab active" id="tabMarket" data-mode="market">📊 Market Report</button>
+        <button class="news-tab" id="tabNews" data-mode="news">📰 News</button>
+      </div>
+
+      <div id="marketSection" style="display:block;" aria-label="Market report">
+        <div class="news-items" id="marketItems" style="min-height: 120px;"></div>
+        <div class="news-empty" id="marketEmpty" style="display:none;">No market reports yet.</div>
+      </div>
+
+      <div id="newsSection" class="news-section" style="display:none;"></div>
+    </div>
 
 
     <div class="attribution-section">
@@ -346,10 +358,128 @@
     function renderAll() {
       renderWeather();
       renderNews();
+      renderMarketReport();
     }
 
     function renderWeather() {
       return;
+    }
+
+    // Market report (AM/PM briefings stored in market-briefings.json)
+    async function loadMarketBriefings() {
+      try {
+        const res = await fetch('/market-briefings.json', { cache: 'no-store' });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function parseLocalDate(dateStr) {
+      // dateStr: YYYY-MM-DD
+      const [y, m, d] = dateStr.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function formatSlot(slot) {
+      return slot === 'AM' ? 'AM' : 'PM';
+    }
+
+    function previewText(text, maxChars = 220) {
+      const t = (text || '').replace(/\s+/g, ' ').trim();
+      if (t.length <= maxChars) return t;
+      return t.slice(0, maxChars) + '…';
+    }
+
+    function getLastBusinessWeekItems(items, now = new Date()) {
+      // Keep Mon–Fri for the last full week-ish window (past 7 calendar days) then group by date+slot
+      // Simpler: filter for items newer than 7 days and then only Mon–Fri.
+      const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return items
+        .filter(it => {
+          if (!it || !it.date || !it.slot) return false;
+          const dt = parseLocalDate(it.date);
+          const day = dt.getDay();
+          const isWeekday = day >= 1 && day <= 5;
+          return isWeekday && dt >= cutoff;
+        })
+        .sort((a, b) => {
+          const aKey = `${a.date} ${a.slot}`;
+          const bKey = `${b.date} ${b.slot}`;
+          return bKey.localeCompare(aKey);
+        });
+    }
+
+    function renderMarketReport() {
+      const itemsEl = document.getElementById('marketItems');
+      const emptyEl = document.getElementById('marketEmpty');
+      if (!itemsEl || !emptyEl) return;
+
+      loadMarketBriefings().then(all => {
+        const weekItems = getLastBusinessWeekItems(all);
+        if (!weekItems.length) {
+          emptyEl.style.display = 'block';
+          itemsEl.innerHTML = '';
+          return;
+        }
+        emptyEl.style.display = 'none';
+
+        const blocks = weekItems
+          .slice(0, 10) // keep it tidy
+          .map(it => {
+            const title = it.title || (it.slot === 'AM' ? 'Market Morning' : 'Market Pre-close');
+            const dateLabel = it.date;
+            const preview = previewText(it.text);
+            const full = it.text || '';
+            return `
+              <div style="border-bottom:1px solid #1e2030; padding: 0.7rem 0;">
+                <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
+                  <div>
+                    <div style="font-size:0.9rem; color:#e8ecf4;">${title}</div>
+                    <div style="font-size:0.65rem; color:#4a5070; margin-top:0.2rem;">${dateLabel} · ${formatSlot(it.slot)}</div>
+                  </div>
+                  <div style="font-size:0.65rem; color:#4a5070; text-align:right;">${it.timestamp ? new Date(it.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+                </div>
+                <div style="margin-top:0.4rem; font-size:0.8rem; color:#c0c8e0; line-height:1.4; white-space: pre-wrap;">
+                  ${esc(preview)}
+                </div>
+                <details style="margin-top:0.4rem;">
+                  <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
+                  <div style="margin-top:0.5rem; font-size:0.78rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">
+                    ${esc(full)}
+                  </div>
+                </details>
+              </div>
+            `;
+          })
+          .join('');
+
+        itemsEl.innerHTML = blocks;
+      });
+    }
+
+    function renderMarketReportTabWiring() {
+      const tabMarket = document.getElementById('tabMarket');
+      const tabNews = document.getElementById('tabNews');
+      if (!tabMarket || !tabNews) return;
+
+      // If you click tabs, switch our two views
+      tabMarket.addEventListener('click', () => {
+        tabMarket.classList.add('active');
+        tabNews.classList.remove('active');
+        document.getElementById('marketSection').style.display = 'block';
+        document.getElementById('newsSection').style.display = 'none';
+      });
+
+      tabNews.addEventListener('click', () => {
+        tabNews.classList.add('active');
+        tabMarket.classList.remove('active');
+        document.getElementById('marketSection').style.display = 'none';
+        document.getElementById('newsSection').style.display = 'block';
+      });
+    }
 
       const city = weatherCity || w.current.city || 'Vancouver';
       const icon = WEATHER_ICONS[w.current.icon] || '🌡️';
@@ -523,6 +653,9 @@
     // Init
     fetchDashboard();
     setInterval(fetchDashboard, 5 * 60 * 1000);
+
+    // Wire Market tabs
+    renderMarketReportTabWiring();
 
     function esc(s) {
       const d = document.createElement('div');
