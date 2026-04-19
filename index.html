@@ -66,12 +66,15 @@
     .weather-city-btn:hover { color: #b0b8d0; border-color: #3a4060; }
     .weather-city-btn.active { color: #8ab0d8; border-color: #3b82f6; background: #1a2744; }
     .weather-refresh {
-      background: none; border: 1px solid #2a2d40; border-radius: 6px;
-      cursor: pointer; font-size: 0.75rem; color: #5a6080;
-      padding: 0.15rem 0.5rem; transition: all 0.15s; font-family: inherit;
+      background: #10121a; border: 1px solid #2a2d40; border-radius: 50%;
+      cursor: pointer; font-size: 0.85rem; color: #5a6080;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: inherit;
     }
-    .weather-refresh:hover { color: #8ab0d8; border-color: #3a4060; }
+    .weather-refresh:hover { color: #8ab0d8; border-color: #3b82f6; background: #1a2744; }
+    .weather-refresh:active { transform: scale(0.9); }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .weather-refresh.spinning { animation: spin 0.8s ease-in-out; pointer-events: none; }
     .weather-updated { font-size: 0.6rem; color: #3a4060; }
     .weather-current { display: flex; align-items: center; gap: 0.8rem; }
     .weather-icon { font-size: 2.5rem; }
@@ -171,7 +174,7 @@
       </a>
       <a href="https://elevation.ogsapps.cc" class="tile" target="_blank" rel="noopener noreferrer">
         <div class="tile-icon">🏔️</div>
-        <div class="tile-label">Elevation & Distance</div>
+        <div class="tile-label">Elevation</div>
         <div class="tile-sub">Trail Profiles</div>
       </a>
       <a href="https://stt.ogsapps.cc" class="tile" target="_blank" rel="noopener noreferrer">
@@ -193,6 +196,11 @@
         <div class="tile-icon">✏️</div>
         <div class="tile-label">OGS Draw</div>
         <div class="tile-sub">Whiteboard</div>
+      </a>
+      <a href="https://pdf.ogsapps.cc" class="tile" target="_blank" rel="noopener noreferrer">
+        <div class="tile-icon">📑</div>
+        <div class="tile-label">PDF</div>
+        <div class="tile-sub">PDF Toolkit</div>
       </a>
     </div>
 
