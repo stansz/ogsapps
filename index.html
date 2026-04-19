@@ -394,16 +394,26 @@
     }
 
     function getLastBusinessWeekItems(items, now = new Date()) {
-      // Keep Mon–Fri for the last full week-ish window (past 7 calendar days) then group by date+slot
-      // Simpler: filter for items newer than 7 days and then only Mon–Fri.
-      const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      // Prev Mon–Fri week (strict):
+      // - Find the most recent Monday before 'now'
+      // - Week range: [prevMonday, prevFriday]
+      const d = new Date(now);
+      // Normalize to midnight local
+      d.setHours(0,0,0,0);
+
+      const day = d.getDay(); // 0=Sun ... 6=Sat
+      // Compute how many days since Monday in the current week
+      const sinceMon = (day + 6) % 7; // Mon->0, Tue->1, ... Sun->6
+      // Go back to this week's Monday, then step back 7 days to get prev week's Monday
+      const thisMon = new Date(d.getTime() - sinceMon * 24*60*60*1000);
+      const prevMon = new Date(thisMon.getTime() - 7 * 24*60*60*1000);
+      const prevFri = new Date(prevMon.getTime() + 4 * 24*60*60*1000);
+
       return items
         .filter(it => {
           if (!it || !it.date || !it.slot) return false;
           const dt = parseLocalDate(it.date);
-          const day = dt.getDay();
-          const isWeekday = day >= 1 && day <= 5;
-          return isWeekday && dt >= cutoff;
+          return dt >= prevMon && dt <= prevFri;
         })
         .sort((a, b) => {
           const aKey = `${a.date} ${a.slot}`;
