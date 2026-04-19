@@ -45,36 +45,6 @@
     .games-header { color: #4a5070; font-size: 0.7rem; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.6rem; text-align: center; }
     .games-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 2rem; }
 
-    /* Transit chat */
-    .transit-chat {
-      background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 12px;
-      padding: 1rem 1.2rem; margin-bottom: 2rem;
-    }
-    .transit-title { font-size: 0.75rem; color: #6a7090; margin-bottom: 0.6rem; letter-spacing: 0.05em; }
-    .transit-row { display: flex; gap: 0.5rem; }
-    .transit-input {
-      flex: 1; background: #10121a; border: 1px solid #2a2d40; border-radius: 10px;
-      padding: 0.6rem 1rem; color: #e8eaf0; font-size: 0.85rem; font-family: inherit;
-      outline: none; transition: border-color 0.2s;
-    }
-    .transit-input:focus { border-color: #4a6fa5; box-shadow: 0 0 0 2px #4a6fa522; }
-    .transit-input::placeholder { color: #4a5070; }
-    .transit-go {
-      background: linear-gradient(135deg, #2a4a7a, #1a3050); border: 1px solid #3a5a8a; border-radius: 10px;
-      padding: 0.6rem 1rem; color: #d0d8f0; font-size: 0.8rem;
-      cursor: pointer; font-family: inherit; transition: all 0.2s;
-    }
-    .transit-go:hover { background: linear-gradient(135deg, #3a5a8a, #2a4060); }
-    .transit-result { margin-top: 0.6rem; font-size: 0.78rem; color: #8890a8; }
-    .transit-route { padding: 0.4rem 0; border-bottom: 1px solid #222540; }
-    .transit-route:last-child { border-bottom: none; }
-    .transit-route-duration { color: #d0d4e4; font-weight: 500; }
-    .transit-route-detail { color: #6a7090; font-size: 0.7rem; margin-top: 0.1rem; }
-    .transit-more { margin-top: 0.4rem; }
-    .transit-more a { color: #5a80b0; text-decoration: none; font-size: 0.7rem; transition: color 0.2s; }
-    .transit-more a:hover { color: #8ab0d8; }
-    .transit-loading { color: #4a5070; }
-
     /* Weather */
     .weather-card {
       background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 12px;
@@ -144,26 +114,6 @@
     .news-item-meta { font-size: 0.65rem; color: #4a5070; margin-top: 0.2rem; }
     .news-empty { color: #4a5070; font-size: 0.85rem; padding: 1rem 0; }
 
-    /* Wiki Feed */
-    .wiki-section { margin-bottom: 2rem; }
-    .wiki-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-    .wiki-title { font-size: 0.8rem; color: #8890a8; letter-spacing: 0.08em; font-weight: 500; }
-    .wiki-refresh { background: none; border: 1px solid #2a2d40; border-radius: 6px; cursor: pointer; font-size: 0.72rem; color: #5a6080; padding: 0.15rem 0.5rem; font-family: inherit; transition: all 0.15s; }
-    .wiki-refresh:hover { color: #8ab0d8; border-color: #3a4060; }
-    .wiki-cards { display: flex; flex-direction: column; gap: 0.6rem; }
-    .wiki-card { display: flex; gap: 0.8rem; padding: 0.6rem; background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 10px; cursor: pointer; transition: all 0.15s; text-decoration: none; color: #c0c8e0; }
-    .wiki-card:hover { border-color: #3a4060; background: #1e2238; color: #f2f4f8; }
-    .wiki-card-img { width: 64px; height: 64px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
-    .wiki-card-body { flex: 1; min-width: 0; }
-    .wiki-card-title { font-size: 0.82rem; font-weight: 500; margin-bottom: 0.2rem; line-height: 1.3; }
-    .wiki-card-extract { font-size: 0.72rem; color: #6a7090; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .wiki-card-featured { border-color: #3a5060; }
-    .wiki-card-featured .wiki-card-title { color: #8ab0d8; }
-    .wiki-actions { display: flex; gap: 0.4rem; margin-top: 0.3rem; }
-    .wiki-btn { background: none; border: 1px solid #2a2d40; border-radius: 20px; padding: 0.2rem 0.5rem; font-size: 0.65rem; color: #5a6080; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-    .wiki-btn:hover { color: #8ab0d8; border-color: #3a4060; }
-    .wiki-btn.liked { color: #e06080; border-color: #5a3040; }
-    .wiki-empty { color: #4a5070; font-size: 0.8rem; padding: 1rem 0; text-align: center; }
 
     /* Last updated */
     .last-updated {
@@ -173,6 +123,32 @@
 
     /* Loading */
     .loading { color: #4a5070; font-size: 0.8rem; text-align: center; padding: 2rem; display: none; }
+
+
+    /* Calendar */
+    .cal-section { margin-bottom: 2rem; }
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; border-bottom: 1px solid #2a2d40; padding-bottom: 0.5rem; }
+    .cal-title { font-size: 0.8rem; color: #8890a8; letter-spacing: 0.08em; font-weight: 500; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day { background: #1a1d2e; border-radius: 6px; padding: 0.4rem; min-height: 80px; }
+    .cal-day.today { background: #1e2744; border: 1px solid #3b82f644; }
+    .cal-day-label { font-size: 0.65rem; color: #6a7090; text-align: center; margin-bottom: 0.2rem; }
+    .cal-day.today .cal-day-label { color: #3b82f6; font-weight: 600; }
+    .cal-day-num { font-size: 0.75rem; color: #8890a8; text-align: center; margin-bottom: 0.3rem; }
+    .cal-day.today .cal-day-num { color: #e8ecf4; font-weight: 600; }
+    .cal-event { background: #3b82f622; border-left: 2px solid #3b82f6; border-radius: 3px; padding: 0.15rem 0.3rem; margin-bottom: 2px; font-size: 0.6rem; line-height: 1.3; color: #a0b4d4; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .cal-event-time { color: #6a7090; font-size: 0.55rem; }
+    .cal-empty { color: #4a5070; font-size: 0.75rem; text-align: center; padding: 1rem; }
+
+    /* Attribution */
+    .attribution-section { margin-top: 2rem; border-top: 1px solid #2a2d40; padding-top: 0.8rem; }
+    .attribution-toggle { background: none; border: none; color: #4a5070; font-size: 0.72rem; cursor: pointer; padding: 0.3rem 0; font-family: inherit; width: 100%; text-align: center; }
+    .attribution-toggle:hover { color: #8890a8; }
+    .attribution-content { display: none; margin-top: 0.5rem; }
+    .attribution-section.open .attribution-content { display: block; }
+    .attribution-content p { font-size: 0.7rem; color: #4a5070; line-height: 1.8; margin: 0; }
+    .attribution-section.open .attr-arrow::after { content: ' ▴'; }
+    .attr-arrow::after { content: ' ▾'; }
 
     @media (max-width: 600px) {
       body { padding: 1.5rem 1rem; }
@@ -227,6 +203,11 @@
         <div class="tile-label">Card Calc</div>
         <div class="tile-sub">Access Control</div>
       </a>
+      <a href="https://en.wikipedia.org/wiki/Main_Page" class="tile" target="_blank" rel="noopener noreferrer">
+        <div class="tile-icon">📚</div>
+        <div class="tile-label">Wikipedia</div>
+        <div class="tile-sub">Encyclopedia</div>
+      </a>
     </div>
 
     <div class="games-header">🎮 GAMES</div>
@@ -248,24 +229,20 @@
       </a>
     </div>
 
-    <div class="transit-chat" id="transitChat">
-      <div class="transit-title">🚆 Quick Transit</div>
-      <div class="transit-row">
-        <input type="text" id="transitInput" class="transit-input" placeholder="Station A to Station B">
-        <button class="transit-go" id="transitGo" onclick="transitSearch()">Go</button>
-      </div>
-      <div id="transitResult" class="transit-result"></div>
-    </div>
-
     <div id="weatherCard" class="weather-card" style="display:none;"></div>
+    <div id="calSection" class="cal-section" style="display:none;"></div>
     <div id="newsSection" class="news-section" style="display:none;"></div>
 
-    <div class="wiki-section">
-      <div class="wiki-header">
-        <span class="wiki-title">📚 WIKI FEED</span>
-        <button class="wiki-refresh" id="wikiRefresh" onclick="refreshWikiFeed()">🔄 Refresh</button>
+
+    <div class="attribution-section">
+      <button class="attribution-toggle" onclick="this.parentElement.classList.toggle('open')"><span class="attr-arrow">Credits &amp; Attribution</span></button>
+      <div class="attribution-content">
+        <p>🚆 Transit data: TransLink (Open GTFS) · 🗺️ Maps &amp; POIs: OpenStreetMap contributors · 🏔️ Elevation: Natural Resources Canada (CDED)</p>
+        <p>🌤️ Weather: wttr.in · 📰 News: CBC, Google News RSS, Daily Hive, YVR Deals, Narcity, Vancouver's Best Places</p>
+        <p>📚 Wikipedia: Wikimedia Foundation · 🎙️ Speech to Text: Hugging Face Transformers.js (Whisper)</p>
+        <p>🔊 Synth: sfxr.me by DrPetter · ⚔️ ArcoMage: Inspired by Might &amp; Magic · 🔢 Sudoku: Backtracking algorithm</p>
+        <p>🃏 Card Calculator: HID Wiegand format specs · 🌐 Hosting: Cloudflare Pages · 🏠 Portal: OGS Apps</p>
       </div>
-      <div id="wikiCards" class="wiki-cards"></div>
     </div>
 
     <div id="loadingMsg" class="loading">Loading dashboard...</div>
@@ -309,6 +286,7 @@
 
     function renderAll() {
       renderWeather();
+      renderCalendar();
       renderNews();
     }
 
@@ -481,58 +459,42 @@
       }).join('');
     }
 
+
+    // Calendar
+    const CAL_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    function renderCalendar() {
+      const section = document.getElementById('calSection');
+      if (!section) return;
+      const events = dashboardData.calendar;
+      if (!events) { section.style.display = 'none'; return; }
+      const now = new Date();
+      const dow = (now.getDay() + 6) % 7;
+      const monday = new Date(now); monday.setDate(now.getDate() - dow); monday.setHours(0,0,0,0);
+      const days = Array.from({length:7}, (_,i) => { const d = new Date(monday); d.setDate(monday.getDate()+i); return d; });
+      const byDay = [[],[],[],[],[],[],[]];
+      events.forEach(ev => {
+        const s = ev.start?.dateTime ? new Date(ev.start.dateTime) : ev.start?.date ? new Date(ev.start.date+'T00:00:00') : null;
+        if (!s) return;
+        for (let i=0;i<7;i++) if (s.getDate()===days[i].getDate() && s.getMonth()===days[i].getMonth()) { byDay[i].push(ev); break; }
+      });
+      const monthStr = monday.toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+      const hasEv = byDay.some(d=>d.length>0);
+      section.innerHTML = '<div class="cal-header"><span class="cal-title">📅 '+esc(monthStr)+'</span></div>' +
+        (hasEv ? '<div class="cal-grid">' + days.map((d,i) => {
+          const isToday = d.getDate()===now.getDate() && d.getMonth()===now.getMonth();
+          const evHtml = byDay[i].map(ev => {
+            const st = new Date(ev.start.dateTime||ev.start.date);
+            const ts = ev.start.dateTime ? st.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}) : 'All day';
+            return '<div class="cal-event"><div class="cal-event-time">'+esc(ts)+'</div>'+esc(ev.summary||'')+'</div>';
+          }).join('');
+          return '<div class="cal-day'+(isToday?' today':'')+'"><div class="cal-day-label">'+CAL_DAYS[i]+'</div><div class="cal-day-num">'+d.getDate()+'</div>'+evHtml+'</div>';
+        }).join('')+'</div>' : '<div class="cal-empty">No events this week</div>');
+      section.style.display = 'block';
+    }
+
     // Init
     fetchDashboard();
     setInterval(fetchDashboard, 5 * 60 * 1000);
-
-    // Transit chat
-    const TRANSIT_API = 'https://maps.ogsapps.cc/api/transit/route';
-
-    document.getElementById('transitInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') transitSearch();
-    });
-
-    async function transitSearch() {
-      const input = document.getElementById('transitInput').value.trim();
-      const result = document.getElementById('transitResult');
-
-      const match = input.match(/^(.+?)\s+(?:to|→|->)\s+(.+)$/i);
-      if (!match) {
-        result.innerHTML = '<div style="color:#6a7090">Try: "Gateway Station to YVR Airport"</div>';
-        return;
-      }
-
-      result.innerHTML = '<div class="transit-loading">Finding routes...</div>';
-
-      try {
-        const res = await fetch(`${TRANSIT_API}?from=${encodeURIComponent(match[1])}&to=${encodeURIComponent(match[2])}`);
-        const data = await res.json();
-
-        if (data.error || !data.routes || data.routes.length === 0) {
-          result.innerHTML = '<div style="color:#6a7090">No routes found</div>';
-          return;
-        }
-
-        const routes = data.routes.slice(0, 2).map(r => {
-          const summary = r.steps.filter(s => s.type !== 'transfer').map(s => s.route).join(' → ');
-          return `<div class="transit-route">
-            <span class="transit-route-duration">${r.duration_min} min</span> · ${r.transfers === 0 ? 'Direct' : r.transfers + ' transfer'}
-            <div class="transit-route-detail">${summary}</div>
-          </div>`;
-        }).join('');
-
-        result.innerHTML = routes + `<div class="transit-more"><a href="https://transit.ogsapps.cc/?from=${encodeURIComponent(match[1])}&to=${encodeURIComponent(match[2])}" target="_blank">Full details →</a></div>`;
-      } catch (e) {
-        result.innerHTML = '<div style="color:#6a7090">Transit API unavailable</div>';
-      }
-    }
-
-    // Auto-fill transit page from URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('from') && urlParams.get('to')) {
-      document.getElementById('transitInput').value = urlParams.get('from') + ' to ' + urlParams.get('to');
-      transitSearch();
-    }
 
     function esc(s) {
       const d = document.createElement('div');
@@ -540,151 +502,6 @@
       return d.innerHTML;
     }
 
-    // ==================== WIKI FEED ====================
-    const WIKI_ENGAGEMENT_KEY = 'wikiEngagement';
-    const WIKI_SEEN_KEY = 'wikiSeen';
-    let wikiArticles = [];
-    let wikiQueue = [];
-    let wikiCurrentIndex = 0;
-
-    function getEngagement() {
-      try { return JSON.parse(localStorage.getItem(WIKI_ENGAGEMENT_KEY) || '{}'); } catch { return {}; }
-    }
-    function saveEngagement(eng) {
-      localStorage.setItem(WIKI_ENGAGEMENT_KEY, JSON.stringify(eng));
-    }
-    function getSeen() {
-      try { return JSON.parse(localStorage.getItem(WIKI_SEEN_KEY) || '{}'); } catch { return {}; }
-    }
-    function saveSeen(seen) {
-      localStorage.setItem(WIKI_SEEN_KEY, JSON.stringify(seen));
-    }
-
-    function engagePost(article, action) {
-      const eng = getEngagement();
-      const seen = getSeen();
-      let score = 0;
-      switch (action) {
-        case 'scroll': score = -5; break;
-        case 'like': score = 50 + 4 * (wikiCurrentIndex || 1); break;
-        case 'click': score = 75; break;
-        case 'image': score = 100; break;
-      }
-      // Apply score to categories
-      const cats = article.categories || [];
-      cats.forEach(c => { eng[c] = (eng[c] || 0) + score; });
-      saveEngagement(eng);
-      // Track seen
-      seen[article.id] = (seen[article.id] || 0) + 1;
-      saveSeen(seen);
-    }
-
-    function scoreArticle(article) {
-      const eng = getEngagement();
-      const seen = getSeen();
-      const seenCount = seen[article.id] || 0;
-      let base = 0;
-      if (article.thumbnail) base += 5;
-      if (seenCount > 0) base += (Math.pow(3, seenCount) - 1) * -5000;
-      const catScore = (article.categories || []).reduce((s, c) => s + (eng[c] || 0), 0);
-      return base + catScore;
-    }
-
-    function pickNextArticles(count) {
-      if (wikiArticles.length === 0) return [];
-      const picked = [];
-      const pool = [...wikiArticles];
-      for (let i = 0; i < count && pool.length > 0; i++) {
-        const rand = Math.random();
-        let article;
-        if (rand < 0.42) {
-          // Best scoring
-          let bestIdx = 0, bestScore = -Infinity;
-          pool.forEach((a, idx) => { const s = scoreArticle(a); if (s > bestScore) { bestScore = s; bestIdx = idx; } });
-          article = pool.splice(bestIdx, 1)[0];
-        } else if (rand < 0.82) {
-          // Weighted random from small sample
-          const sample = pool.length > 20 ? [...Array(20)].map(() => pool[Math.floor(Math.random() * pool.length)]) : pool;
-          const scores = sample.map(a => Math.max(scoreArticle(a) + 1000, 1));
-          const total = scores.reduce((a, b) => a + b, 0);
-          let r = Math.random() * total, acc = 0;
-          article = sample[0];
-          for (let j = 0; j < sample.length; j++) { acc += scores[j]; if (r <= acc) { article = sample[j]; break; } }
-          const idx = pool.indexOf(article);
-          if (idx >= 0) pool.splice(idx, 1);
-        } else {
-          // Completely random
-          article = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-        }
-        picked.push(article);
-      }
-      return picked;
-    }
-
-    function renderWikiFeed(articles) {
-      const container = document.getElementById('wikiCards');
-      if (!articles || articles.length === 0) {
-        container.innerHTML = '<div class="wiki-empty">Loading Wikipedia feed...</div>';
-        return;
-      }
-      container.innerHTML = articles.map((a, i) => {
-        const img = a.thumbnail ? `<img class="wiki-card-img" src="${esc(a.thumbnail)}" alt="" loading="lazy" onerror="this.style.display='none'">` : '';
-        const featured = a.featured ? ' wiki-card-featured' : '';
-        const likes = getEngagement();
-        const seen = getSeen();
-        const isLiked = (likes[a.title] || 0) > 40; // liked if score > 40
-        return `<a class="wiki-card${featured}" href="${esc(a.url)}" target="_blank" rel="noopener noreferrer" onclick="wikiClick(${i})">
-          ${img}
-          <div class="wiki-card-body">
-            <div class="wiki-card-title">${esc(a.title)}</div>
-            <div class="wiki-card-extract">${esc(a.extract || '')}</div>
-            <div class="wiki-actions" onclick="event.preventDefault(); event.stopPropagation();">
-              <button class="wiki-btn${isLiked ? ' liked' : ''}" onclick="wikiLike(${i}, this)">${isLiked ? '❤️' : '🤍'} Like</button>
-              <button class="wiki-btn" onclick="wikiSkip(${i})">Skip →</button>
-            </div>
-          </div>
-        </a>`;
-      }).join('');
-    }
-
-    function wikiClick(i) { if (wikiQueue[i]) engagePost(wikiQueue[i], 'click'); }
-    function wikiLike(i, btn) {
-      if (wikiQueue[i]) {
-        engagePost(wikiQueue[i], 'like');
-        btn.classList.add('liked');
-        btn.innerHTML = '❤️ Liked';
-      }
-    }
-    function wikiSkip(i) {
-      if (wikiQueue[i]) engagePost(wikiQueue[i], 'scroll');
-      // Replace with new article
-      const newOnes = pickNextArticles(1);
-      if (newOnes.length > 0) {
-        wikiQueue[i] = newOnes[0];
-        renderWikiFeed(wikiQueue);
-      }
-    }
-
-    async function fetchWikiFeed() {
-      try {
-        const res = await fetch('/api/wiki-feed');
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        wikiArticles = data.articles || [];
-        wikiQueue = pickNextArticles(10);
-        renderWikiFeed(wikiQueue);
-      } catch (e) {
-        document.getElementById('wikiCards').innerHTML = '<div class="wiki-empty">Could not load wiki feed</div>';
-      }
-    }
-
-    function refreshWikiFeed() {
-      wikiQueue = pickNextArticles(10);
-      renderWikiFeed(wikiQueue);
-    }
-
-    // Fetch wiki feed on load
-    fetchWikiFeed();
   </script>
 </body>
 </html>
