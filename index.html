@@ -362,6 +362,7 @@
     }
 
     function renderWeather() {
+      // Weather widget removed from portal
       return;
     }
 
@@ -378,7 +379,6 @@
     }
 
     function parseLocalDate(dateStr) {
-      // dateStr: YYYY-MM-DD
       const [y, m, d] = dateStr.split('-').map(Number);
       return new Date(y, m - 1, d);
     }
@@ -389,37 +389,21 @@
 
     function previewText(text, maxChars = 220) {
       const t = (text || '').replace(/\s+/g, ' ').trim();
-      if (t.length <= maxChars) return t;
-      return t.slice(0, maxChars) + '…';
+      return t.length <= maxChars ? t : t.slice(0, maxChars) + '…';
     }
 
     function getLastBusinessWeekItems(items, now = new Date()) {
-      // Prev Mon–Fri week (strict):
-      // - Find the most recent Monday before 'now'
-      // - Week range: [prevMonday, prevFriday]
       const d = new Date(now);
-      // Normalize to midnight local
       d.setHours(0,0,0,0);
-
-      const day = d.getDay(); // 0=Sun ... 6=Sat
-      // Compute how many days since Monday in the current week
-      const sinceMon = (day + 6) % 7; // Mon->0, Tue->1, ... Sun->6
-      // Go back to this week's Monday, then step back 7 days to get prev week's Monday
+      const day = d.getDay();
+      const sinceMon = (day + 6) % 7;
       const thisMon = new Date(d.getTime() - sinceMon * 24*60*60*1000);
       const prevMon = new Date(thisMon.getTime() - 7 * 24*60*60*1000);
       const prevFri = new Date(prevMon.getTime() + 4 * 24*60*60*1000);
 
       return items
-        .filter(it => {
-          if (!it || !it.date || !it.slot) return false;
-          const dt = parseLocalDate(it.date);
-          return dt >= prevMon && dt <= prevFri;
-        })
-        .sort((a, b) => {
-          const aKey = `${a.date} ${a.slot}`;
-          const bKey = `${b.date} ${b.slot}`;
-          return bKey.localeCompare(aKey);
-        });
+        .filter(it => it && it.date && it.slot && (() => { const dt = parseLocalDate(it.date); return dt >= prevMon && dt <= prevFri; })())
+        .sort((a, b) => `${b.date} ${b.slot}`.localeCompare(`${a.date} ${a.slot}`));
     }
 
     function renderMarketReport() {
@@ -435,107 +419,50 @@
           return;
         }
         emptyEl.style.display = 'none';
-
-        const blocks = weekItems
-          .slice(0, 10) // keep it tidy
-          .map(it => {
-            const title = it.title || (it.slot === 'AM' ? 'Market Morning' : 'Market Pre-close');
-            const dateLabel = it.date;
-            const preview = previewText(it.text);
-            const full = it.text || '';
-            return `
-              <div style="border-bottom:1px solid #1e2030; padding: 0.7rem 0;">
-                <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
-                  <div>
-                    <div style="font-size:0.9rem; color:#e8ecf4;">${title}</div>
-                    <div style="font-size:0.65rem; color:#4a5070; margin-top:0.2rem;">${dateLabel} · ${formatSlot(it.slot)}</div>
-                  </div>
-                  <div style="font-size:0.65rem; color:#4a5070; text-align:right;">${it.timestamp ? new Date(it.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+        itemsEl.innerHTML = weekItems.slice(0, 10).map(it => {
+          const title = it.title || (it.slot === 'AM' ? 'Market Morning' : 'Market Pre-close');
+          const preview = previewText(it.text);
+          const full = it.text || '';
+          return `
+            <div style="border-bottom:1px solid #1e2030; padding: 0.7rem 0;">
+              <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
+                <div>
+                  <div style="font-size:0.9rem; color:#e8ecf4;">${title}</div>
+                  <div style="font-size:0.65rem; color:#4a5070; margin-top:0.2rem;">${it.date} · ${formatSlot(it.slot)}</div>
                 </div>
-                <div style="margin-top:0.4rem; font-size:0.8rem; color:#c0c8e0; line-height:1.4; white-space: pre-wrap;">
-                  ${esc(preview)}
-                </div>
-                <details style="margin-top:0.4rem;">
-                  <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
-                  <div style="margin-top:0.5rem; font-size:0.78rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">
-                    ${esc(full)}
-                  </div>
-                </details>
+                <div style="font-size:0.65rem; color:#4a5070; text-align:right;">${it.timestamp ? new Date(it.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</div>
               </div>
-            `;
-          })
-          .join('');
-
-        itemsEl.innerHTML = blocks;
+              <div style="margin-top:0.4rem; font-size:0.8rem; color:#c0c8e0; line-height:1.4; white-space: pre-wrap;">${esc(preview)}</div>
+              <details style="margin-top:0.4rem;">
+                <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
+                <div style="margin-top:0.5rem; font-size:0.78rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">${esc(full)}</div>
+              </details>
+            </div>
+          `;
+        }).join('');
       });
     }
 
     function renderMarketReportTabWiring() {
       const tabMarket = document.getElementById('tabMarket');
       const tabNews = document.getElementById('tabNews');
-      if (!tabMarket || !tabNews) return;
+      const marketSection = document.getElementById('marketSection');
+      const newsSection = document.getElementById('newsSection');
+      if (!tabMarket || !tabNews || !marketSection || !newsSection) return;
 
-      // If you click tabs, switch our two views
       tabMarket.addEventListener('click', () => {
         tabMarket.classList.add('active');
         tabNews.classList.remove('active');
-        document.getElementById('marketSection').style.display = 'block';
-        document.getElementById('newsSection').style.display = 'none';
+        marketSection.style.display = 'block';
+        newsSection.style.display = 'none';
       });
 
       tabNews.addEventListener('click', () => {
         tabNews.classList.add('active');
         tabMarket.classList.remove('active');
-        document.getElementById('marketSection').style.display = 'none';
-        document.getElementById('newsSection').style.display = 'block';
+        marketSection.style.display = 'none';
+        newsSection.style.display = 'block';
       });
-    }
-
-      const city = weatherCity || w.current.city || 'Vancouver';
-      const icon = WEATHER_ICONS[w.current.icon] || '🌡️';
-      const forecastHtml = (w.forecast || []).map(d => {
-        const date = new Date(d.date + 'T00:00:00');
-        const dayName = DAY_NAMES[date.getDay()];
-        return `<div class="forecast-day">
-          <div class="day-name">${dayName}</div>
-          <div class="day-icon">${WEATHER_ICONS[d.icon] || icon}</div>
-          <div class="day-temps"><span class="day-high">${d.high}°</span> <span class="day-low">${d.low}°</span></div>
-        </div>`;
-      }).join('');
-
-      card.innerHTML = `
-        <div class="weather-current-inner">
-          <div class="weather-header" style="width:100%; margin-bottom: 0.5rem;">
-            <div class="weather-header-left">
-              <span class="weather-location">📍 ${esc(CITIES.find(c => c.query === (weatherCity || 'Surrey,BC,Canada'))?.name || city)}</span>
-              <div class="weather-cities">${CITIES.map(c =>
-                `<button class="weather-city-btn${c.query === (weatherCity || 'Surrey,BC,Canada') ? ' active' : ''}" onclick="switchWeatherCity('${c.query}','${c.name}')">${c.name}</button>`
-              ).join('')}</div>
-            </div>
-            <div class="weather-header-right" style="justify-content:flex-start;">
-              <button class="weather-refresh" onclick="refreshWeather()" title="Refresh">⟳</button>
-              <span class="weather-updated" id="weatherUpdated"></span>
-            </div>
-          </div>
-
-          <div class="weather-layout">
-            <div class="weather-current">
-              <div class="weather-icon">${icon}</div>
-              <div>
-                <div class="weather-temp">${w.current.temp}°C</div>
-                <div class="weather-cond">${w.current.condition}</div>
-              </div>
-            </div>
-            <div class="weather-forecast">${forecastHtml}</div>
-          </div>
-        </div>
-      `;
-
-      card.style.display = 'flex';
-
-      // Update timestamp
-      const ts = document.getElementById('weatherUpdated');
-      if (ts) ts.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     }
 
     const CITIES = [
