@@ -80,21 +80,49 @@
     .weather-icon { font-size: 2.5rem; }
     .weather-temp { font-size: 2rem; font-weight: 300; color: #f2f4f8; }
     .weather-cond { font-size: 0.85rem; color: #8890a8; }
+    /* Desktop weather forecast stays immediately under the location pills */
     .weather-forecast {
-      display: flex; gap: 1.2rem;
-      border-left: none; padding-left: 0;
+      display: flex;
+      gap: 1.2rem;
+      width: 100%;
+      padding-left: 0;
       margin-left: 0;
+      border-left: none;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
     }
-    .forecast-day { text-align: center; font-size: 0.75rem; color: #6a7090; }
+    .forecast-day { text-align: center; font-size: 0.75rem; color: #6a7090; min-width: 62px; }
 
     .weather-current {
       display: flex; align-items: center; gap: 0.8rem;
     }
     .weather-current-inner {
-      display: flex; align-items: center; gap: 0.8rem;
+      width: 100%;
     }
-    .weather-right-edge {
-      margin-left: auto;
+    .weather-layout {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .weather-current {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .weather-forecast {
+      width: 100%;
+      justify-content: flex-start;
+      gap: 1.2rem;
+      padding-left: 0;
+      margin-left: 0;
+      border-left: none;
+      border-top: 1px solid #2a2d40;
+      padding-top: 0.8rem;
+      margin-top: 0.8rem;
+      flex-wrap: nowrap;
+      overflow-x: auto;
     }
 
     .forecast-day .day-name { color: #8890a8; margin-bottom: 0.3rem; }
