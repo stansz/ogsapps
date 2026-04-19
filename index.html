@@ -41,17 +41,9 @@
     .tile-sub { font-size: 0.65rem; color: #6a7090; margin-top: 0.2rem; }
 
     /* Games */
-    .games-section {
-      display: flex; justify-content: center; align-items: center; gap: 0.8rem;
-      margin-bottom: 2.5rem; font-size: 0.8rem;
-    }
-    .games-label { color: #4a5070; font-size: 0.7rem; }
-    .game-link {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      padding: 0.4rem 0.9rem; background: #1a1d2e; border: 1px solid #2a2d40; border-radius: 20px;
-      color: #7a80a0; text-decoration: none; font-size: 0.8rem; transition: all 0.2s;
-    }
-    .game-link:hover { color: #b0b8d0; border-color: #3a4060; background: #1e2238; }
+    /* Games */
+    .games-header { color: #4a5070; font-size: 0.7rem; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.6rem; text-align: center; }
+    .games-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 2rem; }
 
     /* Transit chat */
     .transit-chat {
@@ -232,9 +224,18 @@
       </a>
     </div>
 
-    <div class="games-section">
-      <span class="games-label">🎮 games</span>
-      <a href="https://2048.ogsapps.cc" class="game-link" target="_blank" rel="noopener noreferrer">🔢 2048</a>
+    <div class="games-header">🎮 GAMES</div>
+    <div class="tiles">
+      <a href="https://2048.ogsapps.cc" class="tile" target="_blank" rel="noopener noreferrer">
+        <div class="tile-icon">🔢</div>
+        <div class="tile-label">2048</div>
+        <div class="tile-sub">Puzzle</div>
+      </a>
+      <a href="https://arcomage.github.io" class="tile" target="_blank" rel="noopener noreferrer">
+        <div class="tile-icon">🃏</div>
+        <div class="tile-label">ArcoMage</div>
+        <div class="tile-sub">Card Game</div>
+      </a>
     </div>
 
     <div class="transit-chat" id="transitChat">
