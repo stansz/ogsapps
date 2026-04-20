@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-20",
+    "slot": "AM",
+    "timestamp": "2026-04-20T07:28:23-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-20 07:27 PDT\n📊 Markets — Monday, April 20, 2026\n\nStocks open mixed as Hormuz tensions flare, but broader markets show resilience ahead of tech earnings season.\n\n📈 US\n• S&P 500: $709.43 (-0.10%)\n• Nasdaq: $647.10 (-0.27%)\n• Dow: $494.30 (+0.02%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.731\n• EUR/CAD: 0.621\n• CNY/CAD: 4.984\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4,824.43/oz (-0.20%)\n• BTC/USD: $75,622.48 (+2.44%)\n• LTC/USD: $55.30 (+2.29%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: Down 3.61% after Stifel lifted price targets ahead of earnings; volatility expected around report.\n• BTCUSD: +2.44% continuing recent crypto strength; LTCUSD similarly +2.29% in tandem move.\n• META: Down 1.58% despite Morgan Stanley calling it top tech earnings pick; investors eye Thursday's report.\n• NVDA: Down 1.17% ahead of earnings season; semiconductor momentum in focus.\n\n📰 Key stories\n- Hormuz uncertainty drives early-week energy caution, but broader asset markets remain resilient.\n- Intel, AMD, Lattice all saw price target boosts at Stifel; earnings this week likely catalyst-heavy.\n- Meta flagged as top tech pick by MS ahead of Thursday, but stock under pressure pre-earnings.\n\n⚡ Sentiment is cautious in pre-downtick with tech earnings as next major catalyst; watch AMD (Tuesday) and META (Thursday) plus broad semiconductors after INTC's move."
+  },
+  {
     "date": "2026-04-19",
     "slot": "PM",
     "timestamp": "2026-04-19T14:14:28-0700",
