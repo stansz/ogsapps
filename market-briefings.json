@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-20",
+    "slot": "PM",
+    "timestamp": "2026-04-20T12:31:34-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-20 12:30 PDT\n📊 Markets — Monday, April 20th, 2026\n\nUS markets closed modestly lower as tech weakness offset broad gains in other sectors.\n\n📈 US\n• S&P 500: $708.05 (-0.29%)\n• Nasdaq: $646.3 (-0.39%)\n• Dow: $493.97 (-0.05%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: UNAVAILABLE\n• EUR/CAD: UNAVAILABLE\n• CNY/CAD: UNAVAILABLE\n\n🛢️ Commodities & Crypto\n• Oil: UNAVAILABLE\n• Gold: $4817.16/oz (-0.35%)\n• BTC/USD: $76228.01 (+3.26%)\n• LTC/USD: $55.2 (+2.11%)\n\n🎯 Movers (only >2% moves or major news)\n• META: $-18.13 (-2.63%) on concerns ahead of earnings; Barron's notes Meta remains top tech pick for earnings season.\n• INTC: $-2.98 (-4.35%) after weak guidance and ongoing competitive pressures in chip space.\n• BTCUSD: +$2404.87 (+3.26%) as crypto continues this month's rally on institutional inflows.\n• LITEUSD: +$1.14 (+2.11%) tracking Bitcoin momentum.\n\n📰 Apple earnings seen as 'clearing event' per Morgan Stanley ahead of report; Meta remains top tech pick despite recent sell-off; Kevin Warsh urges Fed to 'stay in its lane.'\n\n⚡ Sentiment: Mixed-to-negative. Broad indices held up reasonably well, but large-cap tech (META, INTC) dragged performance lower. Crypto stayed strong as risk appetite rotated toward digital assets. Key focus shifts to Apple and Meta earnings later this week."
+  },
+  {
+    "date": "2026-04-20",
     "slot": "AM",
     "timestamp": "2026-04-20T07:28:23-0700",
     "title": "Market Report",
