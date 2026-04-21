@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-21",
+    "slot": "PM",
+    "timestamp": "2026-04-21T12:31:34-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-21 12:30 PDT\n📊 Markets — Tuesday, April 21, 2026\n\nUS markets traded mixed with tech indices gaining while broad market edged lower on cautious sentiment.\n\n📈 US\n• S&P 500: $707.77 (-0.13%)\n• Nasdaq: $647.69 (+0.14%)\n• Dow: $493.7 (-0.13%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,712.19/oz (-2.25%)\n• BTC/USD: $75,805 (-0.08%)\n• LTC/USD: $55.23 (+0.36%)\n\n🎯 Movers (only >2% moves or major news)\n• AMD: +3.88% after strong technical breakout above $276 resistance, highest since July 2024\n• BABA: -3.17% on profit-taking after recent rally, volume elevated\n• AAPL: -1.85% after Bank of America issued cautious commentary ahead of earnings\n\n📰 Intel upgraded by BNP Paribas ahead of earnings; Meta faces scrutiny over employee keystroke tracking for AI training.\n\n⚡ Sentiment is cautious with gold selling off sharply while selective tech momentum persists. AMD's breakout signals rotation into higher-beta semis, but broad indices struggle for direction."
+  },
+  {
+    "date": "2026-04-21",
     "slot": "AM",
     "timestamp": "2026-04-21T07:28:25-0700",
     "title": "Market Report",
