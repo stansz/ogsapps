@@ -13,7 +13,7 @@ export async function onRequest(context) {
     let gdeltQ = 'sourcelang:english';
     if (query) gdeltQ += ` ${query}`;
 
-    // Route through VPS to avoid GDELT 429 from shared CF edge IPs
+    // Route through VPS ogs-api to avoid GDELT 429 from shared CF edge IPs
     const proxyUrl = `https://maps.ogsapps.cc/api/breaking?hours=${hours}&q=${encodeURIComponent(query)}`;
     const res = await fetch(proxyUrl, {
       headers: { 'User-Agent': 'ogsapps/1.0' },
