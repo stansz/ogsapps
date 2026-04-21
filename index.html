@@ -156,7 +156,9 @@
       border-bottom: 1px solid #1e2030;
       text-decoration: none; color: #c0c8e0;
       transition: color 0.15s;
+      cursor: pointer;
     }
+    .news-item * { pointer-events: none; }
     .news-item:hover { color: #f2f4f8; }
     .news-item:last-child { border-bottom: none; }
     .news-item-title { font-size: 0.85rem; line-height: 1.4; }
@@ -416,8 +418,9 @@
       const prevMon = new Date(thisMon.getTime() - 7 * 24*60*60*1000);
       const prevFri = new Date(prevMon.getTime() + 4 * 24*60*60*1000);
 
+      // Show this week + last week
       return items
-        .filter(it => it && it.date && it.slot && (() => { const dt = parseLocalDate(it.date); return dt >= prevMon && dt <= prevFri; })())
+        .filter(it => it && it.date && it.slot && (() => { const dt = parseLocalDate(it.date); return dt >= prevMon && dt <= d; })())
         .sort((a, b) => `${b.date} ${b.slot}`.localeCompare(`${a.date} ${a.slot}`));
     }
 
