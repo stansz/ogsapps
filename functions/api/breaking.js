@@ -13,8 +13,11 @@ export async function onRequest(context) {
     if (query) gdeltQ += ` ${query}`;
     const gdeltUrl = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(gdeltQ)}&mode=artlist&maxrecords=15&format=json&timespan=${hours}h`;
 
-    const res = await fetch(gdeltUrl, { headers: { 'User-Agent': 'ogsapps/1.0' } });
-    if (!res.ok) return new Response(JSON.stringify({ breaking: [] }), { headers });
+    const res = await fetch(gdeltUrl, { 
+      headers: { 'User-Agent': 'ogsapps/1.0' },
+      redirect: 'follow',
+    }); 
+    if (!res.ok) return new Response(JSON.stringify({ breaking: [], error: `GDELT ${res.status}` }), { headers });
 
     const data = await res.json();
     const items = (data.articles || []).map(a => ({
