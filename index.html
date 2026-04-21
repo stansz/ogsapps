@@ -437,7 +437,6 @@
           return;
         }
         emptyEl.style.display = 'none';
-        itemsEl.innerHTML = '';
         // Group by date
         const grouped = {};
         weekItems.forEach(it => {
@@ -445,23 +444,23 @@
           grouped[it.date].push(it);
         });
         const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+        let html = '';
         dates.forEach((date, di) => {
           const dayItems = grouped[date];
           const dateObj = parseLocalDate(date);
           const dayName = DAY_NAMES[dateObj.getDay()];
           const dateLabel = `${dayName}, ${dateObj.toLocaleDateString('en-CA', {month:'short',day:'numeric',year:'numeric'})}`;
           const isToday = di === 0;
-          itemsEl.innerHTML += `
-            <details ${isToday ? 'open' : ''} style="border-bottom:1px solid #2a2d40;">
-              <summary style="cursor:pointer; font-size:0.8rem; font-weight:600; color:#8890a8; padding:0.6rem 0; list-style:none; display:flex; align-items:center; gap:0.5rem;">
-                <span style="transition:transform 0.2s; display:inline-block;">▸</span> ${dateLabel}
-                <span style="font-weight:400; font-size:0.65rem; color:#4a5070; margin-left:0.3rem;">${dayItems.length} report${dayItems.length > 1 ? 's' : ''}</span>
-              </summary>`;
+          html += `<details ${isToday ? 'open' : ''} style="border-bottom:1px solid #2a2d40;">
+            <summary style="cursor:pointer; font-size:0.8rem; font-weight:600; color:#8890a8; padding:0.6rem 0; list-style:none; display:flex; align-items:center; gap:0.5rem;">
+              <span style="transition:transform 0.2s; display:inline-block;">▸</span> ${dateLabel}
+              <span style="font-weight:400; font-size:0.65rem; color:#4a5070; margin-left:0.3rem;">${dayItems.length} report${dayItems.length > 1 ? 's' : ''}</span>
+            </summary>`;
           dayItems.forEach(it => {
             const slotLabel = formatSlot(it.slot);
             const preview = previewText(it.text);
             const full = it.text || '';
-            itemsEl.innerHTML += `
+            html += `
               <div style="border-top:1px solid #1e2030; padding: 0.5rem 0 0.5rem 1rem;">
                 <div style="display:flex; justify-content:space-between; gap:1rem; align-items:center;">
                   <div style="font-size:0.85rem; color:#e8ecf4;">${slotLabel} Report</div>
@@ -472,11 +471,11 @@
                   <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
                   <div style="margin-top:0.4rem; font-size:0.75rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">${esc(full)}</div>
                 </details>
-              </div>
-            `;
+              </div>`;
           });
-          itemsEl.innerHTML += `</details>`;
+          html += `</details>`;
         });
+        itemsEl.innerHTML = html;
       });
     }
 
