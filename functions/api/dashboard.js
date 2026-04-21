@@ -97,57 +97,32 @@ async function fetchSingleFeed(url) {
     if (!res.ok) return [];
     const text = await res.text();
 
-    // Regex-based RSS/Atom parsing (DOMParser not available in Workers)
+    // Parse by extracting <item>...</item> or <entry>...</entry> blocks
     const items = [];
-    const titles = [...text.matchAll(/<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/title>/gi)];
-    // Match RSS <link>...</link> and Atom <link rel="alternate" href="..."/>
-    const rssLinks = [...text.matchAll(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/gi)];
-    const atomLinks = [...text.matchAll(/<link[^>]+href="([^"]+)"[^>]*>/gi)];
-    // Prefer RSS links if found, otherwise use Atom
-    const links = rssLinks.length > 1 ? rssLinks : atomLinks;
-    const dates = [...text.matchAll(/<(?:pubDate|published|updated)>(.*?)<\/(?:pubDate|published|updated)>/gi)];
-
-    // Skip first title (feed title)
-    for (let i = 1; i < Math.min(titles.length, 11); i++) {
-      items.push({
-        title: titles[i][1].trim(),
-        link: links[i - 1] ? links[i - 1][1].trim() : '',
-        pubDate: dates[i - 1] ? dates[i - 1][1].trim() : '',
-      });
+    const itemBlocks = [...text.matchAll(/<(?:item|entry)[\s>][\s\S]*?<\/(?:item|entry)>/gi)];
+    for (const block of itemBlocks) {
+      const content = block[0];
+      const titleMatch = content.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i);
+      // RSS: <link>url</link>, Atom: <link href="url" .../>
+      let linkMatch = content.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
+      if (!linkMatch) linkMatch = content.match(/<link[^>]+href="([^"]+)"/i);
+      const dateMatch = content.match(/<(?:pubDate|published|updated)>([\s\S]*?)<\/(?:pubDate|published|updated)>/i);
+      if (titleMatch) {
+        const link = linkMatch ? linkMatch[1].trim() : '';
+        // Skip empty or feed-level links
+        if (link && !link.includes('news.google.com') && link.startsWith('http')) {
+          items.push({
+            title: titleMatch[1].trim(),
+            link,
+            pubDate: dateMatch ? dateMatch[1].trim() : '',
+          });
+        }
+      }
     }
-    return items;
+    return items.slice(0, 15);
   } catch (e) {
     return [];
   }
 }
 
-// Deprecated, kept for compatibility
-async function fetchFeed(name, url) {
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'ogsapps/1.0' } });
-    if (!res.ok) return [];
-    const text = await res.text();
-
-    // Regex-based RSS parsing (DOMParser not available in Workers)
-    const items = [];
-    const itemRegex = /<item[\s>]|<entry[\s>]/gi;
-    let match;
-
-    // Simple extraction
-    const titles = [...text.matchAll(/<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/title>/gi)];
-    const links = [...text.matchAll(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/gi)];
-    const dates = [...text.matchAll(/<pubDate>(.*?)<\/pubDate>/gi)];
-
-    // Skip first title (feed title)
-    for (let i = 1; i < Math.min(titles.length, 11); i++) {
-      items.push({
-        title: titles[i][1].trim(),
-        link: links[i - 1] ? links[i - 1][1].trim() : '',
-        pubDate: dates[i - 1] ? dates[i - 1][1].trim() : '',
-      });
-    }
-    return items;
-  } catch (e) {
-    return [];
-  }
-}
+// Deprecated fetchFeed removed — fetchFeedFromConfig handles all feeds

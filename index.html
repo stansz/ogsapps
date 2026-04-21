@@ -458,7 +458,7 @@
             </summary>`;
           dayItems.forEach(it => {
             const slotLabel = formatSlot(it.slot);
-            const preview = previewText(it.text);
+            const preview = `📊 Markets — ${it.date} · ${slotLabel}`;
             const full = it.text || '';
             html += `
               <div style="border-top:1px solid #1e2030; padding: 0.5rem 0 0.5rem 1rem;">
