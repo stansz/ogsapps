@@ -437,27 +437,39 @@
           return;
         }
         emptyEl.style.display = 'none';
-        itemsEl.innerHTML = weekItems.slice(0, 10).map(it => {
-          const title = it.title || (it.slot === 'AM' ? 'Market Morning' : 'Market Pre-close');
-          const preview = previewText(it.text);
-          const full = it.text || '';
-          return `
-            <div style="border-bottom:1px solid #1e2030; padding: 0.7rem 0;">
-              <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
-                <div>
-                  <div style="font-size:0.9rem; color:#e8ecf4;">${title}</div>
-                  <div style="font-size:0.65rem; color:#4a5070; margin-top:0.2rem;">${it.date} · ${formatSlot(it.slot)}</div>
+        itemsEl.innerHTML = '';
+        // Group by date
+        const grouped = {};
+        weekItems.forEach(it => {
+          if (!grouped[it.date]) grouped[it.date] = [];
+          grouped[it.date].push(it);
+        });
+        const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+        dates.forEach(date => {
+          const dayItems = grouped[date];
+          const dateObj = parseLocalDate(date);
+          const dayName = DAY_NAMES[dateObj.getDay()];
+          const dateLabel = `${dayName}, ${dateObj.toLocaleDateString('en-CA', {month:'short',day:'numeric',year:'numeric'})}`;
+          itemsEl.innerHTML += `<div style="font-size:0.8rem;font-weight:600;color:#8890a8;padding:0.8rem 0 0.4rem;border-bottom:1px solid #2a2d40;">${dateLabel}</div>`;
+          dayItems.forEach(it => {
+            const slotLabel = formatSlot(it.slot);
+            const preview = previewText(it.text);
+            const full = it.text || '';
+            itemsEl.innerHTML += `
+              <div style="border-bottom:1px solid #1e2030; padding: 0.6rem 0;">
+                <div style="display:flex; justify-content:space-between; gap:1rem; align-items:center;">
+                  <div style="font-size:0.85rem; color:#e8ecf4;">${slotLabel} Report</div>
+                  <div style="font-size:0.65rem; color:#4a5070;">${it.timestamp ? new Date(it.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</div>
                 </div>
-                <div style="font-size:0.65rem; color:#4a5070; text-align:right;">${it.timestamp ? new Date(it.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</div>
+                <div style="margin-top:0.3rem; font-size:0.78rem; color:#c0c8e0; line-height:1.4; white-space: pre-wrap;">${esc(preview)}</div>
+                <details style="margin-top:0.3rem;">
+                  <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
+                  <div style="margin-top:0.4rem; font-size:0.75rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">${esc(full)}</div>
+                </details>
               </div>
-              <div style="margin-top:0.4rem; font-size:0.8rem; color:#c0c8e0; line-height:1.4; white-space: pre-wrap;">${esc(preview)}</div>
-              <details style="margin-top:0.4rem;">
-                <summary style="cursor:pointer; color:#8ab0d8; font-size:0.72rem;">Expand</summary>
-                <div style="margin-top:0.5rem; font-size:0.78rem; color:#c0c8e0; line-height:1.45; white-space: pre-wrap;">${esc(full)}</div>
-              </details>
-            </div>
-          `;
-        }).join('');
+            `;
+          });
+        });
       });
     }
 
