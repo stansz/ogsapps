@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-22",
+    "slot": "AM",
+    "timestamp": "2026-04-22T07:53:20-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-21 07:27 PDT\n\n📊 Markets — Tuesday, April 21st, 2026\n\nUS equity futures point to a modestly higher open, with the Dow outperforming as UnitedHealth continues to rally.\n\n📈 US\n• S&P 500: $710.47 (+0.25%)\n• Nasdaq: $649.04 (+0.35%)\n• Dow: $497.20 (+0.58%)\n\n💱 Forex (from CAD)\n• CAD/USD: 0.733\n• CAD/EUR: 0.623\n• CAD/CNY: 4.998\n\n🛢️ Commodities & Crypto\n• Gold: $4771.98/oz (-1.01%)\n• BTC/USD: $76166.42 (+0.40%)\n• LTC/USD: $55.74 (+1.29%)\n\n🎯 Movers (only >2% moves or major news)\n• AMD: $281.77 (+2.48%) — Leading gains among US tech majors in pre-market action.\n• INTC: $66.76 (+1.61%) — BNP Paribas upgrades ahead of earnings; earnings preview focused on whether rally can sustain as chipmaker reports.\n\n📰 Headlines\n• Fed chair nominee Kevin Warsh faces Senate questions on rates and inflation policy.\n• Intel upgraded by BNP Paribas as earnings approach; Meta earnings report due soon.\n• UnitedHealth continues to lift Dow futures, driving relative outperformance.\n\n⚡ Sentiment is cautiously optimistic with earnings season in focus, particularly semiconductor names and big tech. Watch for Fed commentary and economic data."
+  },
+  {
     "date": "2026-04-21",
     "slot": "PM",
     "timestamp": "2026-04-21T12:31:34-0700",
