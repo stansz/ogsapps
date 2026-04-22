@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-22",
+    "slot": "PM",
+    "timestamp": "2026-04-22T12:31:21-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-22 12:30 PDT\n📊 Markets — Wednesday, April 22, 2026\n\nTech stocks power broader gains as semiconductor strength lifts Nasdaq to strong session high.\n\n📈 US\n• S&P 500: $710.53 (+0.92%)\n• Nasdaq: $654.24 (+1.54%)\n• Dow: $494.1 (+0.56%)\n\n🛢️ Commodities & Crypto\n• Gold: $4744.84/oz (+0.54%)\n• BTC/USD: $79065.25 (+3.56%)\n• LTC/USD: $56.14 (+1.03%)\n\n🎯 Movers\n• TSM: Taiwan Semiconductor leads the upside with a 4.76% rally on robust AI chip demand and strong guidance sentiment.\n• AMD: AMD surges 6.40% following analyst upgrades and optimism around data-center GPU shipments.\n• AAPL: Apple climbs 2.48% ahead of next week's Q2 earnings, driven by iPhone 16 pre-order strength.\n• INTC: Intel slips 1.13% as traders position cautiously ahead of Q1 earnings release next week.\n• BTCUSD: Bitcoin jumps 3.56% to cross $79K amid renewed institutional inflows and ETF optimism.\n\n📰 Earnings previews dominate the tape: Intel, Meta, and Apple all see increased attention ahead of quarterly releases next week.\n\n⚡ Sentiment is clearly positive, fueled by a powerful semiconductor rally and resurgent crypto prices. Broader indices grind higher with tech leading the charge."
+  },
+  {
+    "date": "2026-04-22",
     "slot": "AM",
     "timestamp": "2026-04-22T07:53:20-0700",
     "title": "Market Report",
