@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-23",
+    "slot": "AM",
+    "timestamp": "2026-04-23T07:28:24-0700",
+    "title": "Market Report",
+    "text": "📊 Markets — Thursday, April 23, 2026\n\nUS markets edge lower in early trade as geopolitical tensions and pre-earnings caution weigh, with tech stocks led by META selling off ahead of key earnings season.\n\n📈 US\n• S&P 500 (SPY): $710.75 (-0.06%)\n• Nasdaq (QQQ): $653.67 (-0.22%)\n• Dow (DIA): $494.71 (-0.01%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 1.368\n• EUR/CAD: 1.600\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4732.83/oz (-0.15%)\n• BTC/USD: $57781.93 (-0.55%)\n• LTC/USD: $55.58 (+0.16%)\n\n🎯 Movers\n• INTC: +2.37% pre-earnings positioning; reports after close today with consensus expecting $1.30 EPS.\n• BABA: -3.25% amid ongoing China regulatory review concerns; HK-listed peers also pressured.\n\n📰 Earnings & Fed in focus: Intel leads a quiet tech earnings calendar today ahead of a busy week; jobless claims and manufacturing data due. Markets remain jittery over Strait of Hormuz tensions after Iran threats.\n\n⚡ Sentiment is cautious as investors parse geopolitical risks and await earnings clarity; the \"lucky\" rally faces its first real test with Intel earnings and macro data on tap."
+  },
+  {
     "date": "2026-04-22",
     "slot": "PM",
     "timestamp": "2026-04-22T12:31:21-0700",
