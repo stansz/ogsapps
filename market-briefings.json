@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-23",
+    "slot": "PM",
+    "timestamp": "2026-04-23T12:31:20-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-23 12:30 PDT\n📊 Markets — Thursday, April 23, 2026\n\nUS markets traded lower as tech weakness weighed on broad indexes ahead of key earnings.\n\n📈 US\n• S&P 500: $708.39 (-0.40%)\n• Nasdaq: $651.12 (-0.61%)\n• Dow: $492.92 (-0.37%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,699.86/oz (-0.84%)\n• BTC/USD: $77,885.11 (-0.41%)\n• LTC/USD: $55.50 (+0.02%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +2.05% — Strong pre-earnings momentum ahead of earnings report.\n• BABA: -3.85% — Continued pressure on Chinese tech amid macro concerns.\n• META: -2.23% — Mixed analyst sentiment builds ahead of earnings; some call it a \"golden buying opportunity\" while others urge caution.\n\n📰 Key headlines\n• Meta and Intel dominate pre-earnings chatter, with conflicting analyst views on valuation and expected moves.\n• Nasdaq and S&P 500 futures dip as jobless claims data and tech earnings focus markets.\n\n⚡ Overall sentiment is cautious with a defensive tilt. Broad indexes slipped, led lower by mega-cap tech, while Intel was a lone bright spot. No major Asia/FX data available today."
+  },
+  {
+    "date": "2026-04-23",
     "slot": "AM",
     "timestamp": "2026-04-23T07:28:24-0700",
     "title": "Market Report",
