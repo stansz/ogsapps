@@ -24,15 +24,6 @@ export async function onRequest(context) {
     if (!gdeltRes.ok) {
       return new Response(JSON.stringify({ breaking: [], error: `GDELT ${gdeltRes.status}` }), { headers });
     }
-    const gdeltUrl = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(gdeltQ)}&mode=artlist&maxrecords=15&format=json&timespan=${hours}h`;
-    const gdeltRes = await fetch(gdeltUrl, {
-      headers: { 'User-Agent': 'ogsapps/1.0' },
-      redirect: 'follow',
-    });
-
-    if (!gdeltRes.ok) {
-      return new Response(JSON.stringify({ breaking: [], error: `GDELT ${gdeltRes.status}` }), { headers });
-    }
 
     const data = await gdeltRes.json();
     const items = (data.articles || []).map(a => ({
