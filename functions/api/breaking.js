@@ -13,18 +13,17 @@ export async function onRequest(context) {
     let gdeltQ = 'sourcelang:english';
     if (query) gdeltQ += ` ${query}`;
 
-    // Route through VPS ogs-api to avoid GDELT 429 from shared CF edge IPs
-    const proxyUrl = `https://maps.ogsapps.cc/api/breaking?hours=${hours}&q=${encodeURIComponent(query)}`;
-    const res = await fetch(proxyUrl, {
+    // Try GDELT directly (proxy via maps.ogsapps.cc is currently offline)
+    const gdeltUrl = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(gdeltQ)}&mode=artlist&maxrecords=15&format=json&timespan=${hours}h`;
+    const gdeltRes = await fetch(gdeltUrl, {
       headers: { 'User-Agent': 'ogsapps/1.0' },
+      redirect: 'follow',
+      signal: AbortSignal.timeout(12000),
     });
 
-    if (res.ok) {
-      const text = await res.text();
-      return new Response(text, { headers });
+    if (!gdeltRes.ok) {
+      return new Response(JSON.stringify({ breaking: [], error: `GDELT ${gdeltRes.status}` }), { headers });
     }
-
-    // Fallback: try GDELT directly (may 429)
     const gdeltUrl = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(gdeltQ)}&mode=artlist&maxrecords=15&format=json&timespan=${hours}h`;
     const gdeltRes = await fetch(gdeltUrl, {
       headers: { 'User-Agent': 'ogsapps/1.0' },
