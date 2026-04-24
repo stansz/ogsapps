@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-24",
+    "slot": "AM",
+    "timestamp": "2026-04-24T07:28:21-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-24 07:27 PDT\n\n📊 Markets — Friday, April 24th, 2026\n\nUS equities trade mixed in early trade as earnings-driven chip rally offsets geopolitical concerns.\n\n📈 US\n• S&P 500: $710.26 (+0.26%)\n• Nasdaq: $658.87 (+1.14%)\n• Dow: $491.38 (-0.33%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.73\n• EUR/CAD: 0.624\n• CNY/CAD: 4.985\n\n🛢️ Commodities & Crypto\n• Gold: $4724.45/oz (+0.66%)\n• BTC/USD: $77813.86 (-0.60%)\n• LTC/USD: $56.10 (-0.20%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +22.90% — Q1 earnings beat with strong outlook, chipmaker shows growth signs; stock upgraded to Buy by multiple firms as beneficiary of Intel's turnaround.\n• AMD: +13.96% — Upgraded to Buy, labeled the big winner of Intel earnings; gains on cross-sector optimism.\n• TSM: +3.67% — Rises in tandem with sector strength amid semiconductor rally.\n• NVDA: +1.63% — climbs with broader chip strength on earnings spillover.\n\n📰\n• Intel soars 20% on Q1 earnings beat and raised guidance, signaling potential market-share gains and improved margins.\n• AMD upgraded to Buy on thesis that Intel's strength validates AI/data-center recovery, positioning AMD as key beneficiary.\n\n⚡ Sentiment is cautious optimism, led by semiconductor strength on earnings catalysts; Middle East tensions and oil prices remain a watch-item ahead of the open."
+  },
+  {
     "date": "2026-04-23",
     "slot": "PM",
     "timestamp": "2026-04-23T12:31:20-0700",
