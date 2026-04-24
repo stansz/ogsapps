@@ -234,30 +234,12 @@
       <div class="section-label">Market & News</div>
       <div class="news-tabs" id="topBriefTabs" style="margin-bottom: 1rem;">
         <button class="news-tab active" id="tabMarket" data-mode="market">📊 Market Report</button>
-        <button class="news-tab" id="tabBreaking" data-mode="breaking">🔴 Breaking</button>
         <button class="news-tab" id="tabNews" data-mode="news">📰 News</button>
       </div>
 
       <div id="marketSection" style="display:block;" aria-label="Market report">
         <div class="news-items" id="marketItems" style="min-height: 120px;"></div>
         <div class="news-empty" id="marketEmpty" style="display:none;">No market reports yet.</div>
-      </div>
-
-      <div id="breakingSection" style="display:none;" aria-label="Breaking news">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <div style="display:flex; gap:0.4rem; align-items:center;">
-            <select id="breakingHours" style="background:#10121a; border:1px solid #2a2d40; border-radius:20px; color:#8890a8; font-size:0.72rem; padding:0.25rem 0.5rem; font-family:inherit;">
-              <option value="2">Last 2h</option>
-              <option value="4" selected>Last 4h</option>
-              <option value="8">Last 8h</option>
-              <option value="12">Last 12h</option>
-              <option value="24">Last 24h</option>
-            </select>
-            <input id="breakingQuery" type="text" placeholder="Filter (e.g. Canada, earthquake)..." style="background:#10121a; border:1px solid #2a2d40; border-radius:20px; color:#c0c8e0; font-size:0.72rem; padding:0.25rem 0.6rem; font-family:inherit; width:200px; max-width:40vw;">&nbsp;</input>
-          </div>
-          <button id="breakingRefresh" style="background:#10121a; border:1px solid #2a2d40; border-radius:20px; padding:0.25rem 0.6rem; font-size:0.72rem; color:#6a7090; cursor:pointer; font-family:inherit;">↻ Refresh</button>
-        </div>
-        <div class="news-items" id="breakingItems" style="min-height:80px;"><div class="news-empty">Loading breaking news...</div></div>
       </div>
 
       <div id="newsSection" class="news-section" style="display:none;"></div>
@@ -389,37 +371,21 @@
     function renderMarketReportTabWiring() {
       const tabMarket = document.getElementById('tabMarket');
       const tabNews = document.getElementById('tabNews');
-      const tabBreaking = document.getElementById('tabBreaking');
       const marketSection = document.getElementById('marketSection');
-      const breakingSection = document.getElementById('breakingSection');
       const newsSection = document.getElementById('newsSection');
       if (!tabMarket || !tabNews || !marketSection || !newsSection) return;
 
       tabMarket.addEventListener('click', () => {
         tabMarket.classList.add('active');
-        tabBreaking.classList.remove('active');
         tabNews.classList.remove('active');
         marketSection.style.display = 'block';
-        breakingSection.style.display = 'none';
         newsSection.style.display = 'none';
-      });
-
-      tabBreaking.addEventListener('click', () => {
-        tabBreaking.classList.add('active');
-        tabMarket.classList.remove('active');
-        tabNews.classList.remove('active');
-        marketSection.style.display = 'none';
-        breakingSection.style.display = 'block';
-        newsSection.style.display = 'none';
-        fetchBreaking();
       });
 
       tabNews.addEventListener('click', () => {
         tabNews.classList.add('active');
         tabMarket.classList.remove('active');
-        tabBreaking.classList.remove('active');
         marketSection.style.display = 'none';
-        breakingSection.style.display = 'none';
         newsSection.style.display = 'block';
       });
     }
@@ -502,42 +468,7 @@
     setInterval(fetchDashboard, 5 * 60 * 1000);
     renderMarketReportTabWiring();
 
-    // Breaking news
-    const breakingRefresh = document.getElementById('breakingRefresh');
-    const breakingHours = document.getElementById('breakingHours');
-    const breakingQuery = document.getElementById('breakingQuery');
-    if (breakingRefresh) breakingRefresh.addEventListener('click', fetchBreaking);
-    if (breakingHours) breakingHours.addEventListener('change', fetchBreaking);
-    if (breakingQuery) breakingQuery.addEventListener('keydown', e => { if (e.key === 'Enter') fetchBreaking(); });
 
-    async function fetchBreaking() {
-      const container = document.getElementById('breakingItems');
-      if (!container) return;
-      container.innerHTML = '<div class="news-empty">Loading...</div>';
-      const hours = document.getElementById('breakingHours')?.value || '4';
-      const query = document.getElementById('breakingQuery')?.value || '';
-      const params = new URLSearchParams({ hours, q: query });
-      try {
-        const res = await fetch('/api/breaking?' + params);
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        const items = data.breaking || [];
-        if (!items.length) {
-          container.innerHTML = '<div class="news-empty">No breaking stories found.</div>';
-          return;
-        }
-        container.innerHTML = items.map(it => {
-          const time = it.pubDate ? new Date(it.pubDate.replace(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6Z')).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
-          const source = it.source ? `<span style="color:#5a6080;"> · ${esc(it.source)}</span>` : '';
-          return `<a class="news-item" href="${esc(it.link)}" target="_blank" rel="noopener">
-            <div class="news-item-title">${esc(it.title)}</div>
-            <div class="news-item-meta">${time}${source}</div>
-          </a>`;
-        }).join('');
-      } catch (e) {
-        container.innerHTML = '<div class="news-empty">Failed to load breaking news.</div>';
-      }
-    }
   </script>
 </body>
 </html>
