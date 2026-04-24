@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-24",
+    "slot": "PM",
+    "timestamp": "2026-04-24T12:50:53-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-24 12:50 PDT\n\n📊 Markets — Friday, April 24\n\nSemiconductors erupt across the board as Intel's blockbuster earnings ignite a broad AI-chip rally, pushing Nvidia toward its first all-time close in six months.\n\n📈 US\n• S&P 500 (SPY): $713.78 (+0.75%)\n• Nasdaq (QQQ): $663.54 (+1.86%)\n• Dow (DIA): $492.05 (-0.19%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,717.64/oz (+0.51%)\n• BTC/USD: $77,600 (-0.87%)\n• LTC/USD: $56.65 (+0.78%)\n\n🎯 Movers\n• INTC: +22.04% — Intel surges after Q1 earnings reveal an AI data center boom, sending the stock to its best day on record after the chipmaker signaled a massive uptick in data-center demand.\n• AMD: +13.56% — Upgraded to Buy by Barron's as the biggest beneficiary of Intel's earnings; AMD also gets a boost ahead of its own earnings, with Seeking Alpha calling the setup asymmetric to the upside.\n• TSM: +5.18% — Taiwan Semi rides the Intel-fueled semiconductor wave higher as the AI supply-chain thesis tightens.\n• NVDA: +4.23% — Nvidia heads for its first record close in six months, lifted by the broader chip sector euphoria and continued AI infrastructure momentum.\n• BABA: +3.23% — Alibaba extends its recent run amid renewed China tech optimism.\n• META: +2.60% — Meta climbs alongside the tech rally with broad risk-on flows into mega-cap tech.\n\n📰\n• Intel's Q1 earnings sparked a historic rally in chip stocks, with the company citing an \"AI data center boom\" that lifted the entire semiconductor complex and triggered analyst upgrades across the space.\n• Charter Communications suffered its worst day on record as concerns over broadband competition and subscriber losses hammered the stock.\n\n⚡ Overall a decisively risk-on session driven by the Intel earnings tsunami. Semiconductors dominated as the engine of the day's gains, pushing the Nasdaq toward a near-2% advance while the Dow lagged marginally. The AI capex narrative remains firmly intact with chip-sector momentum carrying into year-end positioning."
+  },
+  {
+    "date": "2026-04-24",
     "slot": "AM",
     "timestamp": "2026-04-24T07:28:21-0700",
     "title": "Market Report",
