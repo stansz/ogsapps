@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-27",
+    "slot": "PM",
+    "timestamp": "2026-04-27T12:31:21-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-27 12:30 PDT\n\n📊 Markets — Monday, April 27, 2026\n\nWall Street treads water ahead of a blockbuster week of Mag-7 earnings, with NVDA surging over 3% and AMD sliding on semiconductor rotation.\n\n📈 US\n• S&P 500 (SPY): $715.20 (+0.18%)\n• Nasdaq (QQQ): $663.81 (flat)\n• Dow (DIA): $492.20 (flat)\n\n🛢️ Commodities & Crypto\n• Gold: $4,682/oz (-0.53%)\n• BTC/USD: $76,686 (-2.53%)\n• LTC/USD: $55.23 (-1.87%)\n\n🎯 Movers\n• **NVDA** (+3.54%): Surged to $215.65, leading the Mag-7 higher ahead of this week's earnings reports — bullish signals noted by analysts.\n• **AMD** (-3.16%): Shed nearly $11 to $336.82 as semi names saw rotation before earnings season.\n• **BABA** (-2.42%): Dipped to $132.53 amid broader risk-off sentiment on Chinese ADRs.\n\n📰\n• Mag-7 earnings week kicks off — Google, Meta, Microsoft, Amazon, and Apple all report this week; Goldman Sachs reset AAPL forecasts ahead of its print.\n• Ray Dalio recommends up to 15% allocation to gold on Iran war uncertainty; gold holds near $4,682 despite today's pullback.\n\n⚡ Mixed session with a cautious tone ahead of the heaviest earnings week of the season. Semis showed sharp divergence (NVDA surging, AMD sliding), crypto pulled back, and gold held elevated on geopolitical uncertainty. All eyes on Mag-7 results for direction."
+  },
+  {
+    "date": "2026-04-27",
     "slot": "AM",
     "timestamp": "2026-04-27T07:29:02-0700",
     "title": "Market Report",
