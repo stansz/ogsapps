@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-27",
+    "slot": "AM",
+    "timestamp": "2026-04-27T07:29:02-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-27 07:27 PDT\n\n📊 Markets — Monday, April 27\n\nFutures flat to slightly lower as oil surges on stalled US-Iran talks, while Asia's Nikkei and Kospi closed at record highs overnight.\n\n📈 US (pre-market context)\n• S&P 500 (SPY): $713.74 (flat)\n• Nasdaq (QQQ): $662.63 (−0.2%)\n• Dow (DIA): $491.84 (−0.1%)\n\n🌏 Asia (overnight close)\n• Nikkei 225: +1.38% to 60,537 (record high)\n• Hang Seng: −0.2%\n• Kospi: +2.15% to 6,615 (record high)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.361\n• EUR/CAD: 1.597\n• CNY/CAD: 0.199\n\n🛢️ Commodities & Crypto\n• Oil (WTI): ~$96/bbl (+1.8%)\n• Gold: $4,694/oz (−0.3%)\n• BTC/USD: $77,916 (−1.0%)\n• LTC/USD: $55.72 (−1.0%)\n\n🎯 Movers\n• INTC: +3.6% — AI growth story gains momentum ahead of earnings; analysts flag upside\n• AMD: −3.1% — pullback into May 5 earnings; multiple analysts remain bullish despite the dip\n• BABA: −2.6% — tracking Hang Seng weakness; China tech under pressure\n\n📰 Headlines\n• Wednesday is Fed day: rate decision with Powell's last scheduled press conference; Fed is expected to hold, tone is the variable\n• US-Iran talks collapse again; Iran submits new proposal to reopen Strait of Hormuz — oil jumps ~2% on supply fears\n\n⚡ Sentiment\nA heavy catalyst week ahead. US index futures are treading water after record levels as markets digest a fresh geopolitical risk premium in oil. The main event is Wednesday's Fed decision — a hold is priced in, but Powell's swan-song press conference could move markets. Mag-7 earnings season also kicks into gear alongside AMD's May 5 report. Iran headlines remain the wildcard for energy-linked moves."
+  },
+  {
     "date": "2026-04-24",
     "slot": "PM",
     "timestamp": "2026-04-24T12:50:53-0700",
