@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-28",
+    "slot": "AM",
+    "timestamp": "2026-04-28T07:28:20-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-28 07:27 PDT\n\n📊 Markets — Tuesday, April 28\n\nUAE quits OPEC as Iran conflict rattles energy markets; OpenAI growth miss slams AI-linked shares ahead of US open.\n\n📈 US (prior close)\n• S&P 500: 7,115.20 (-0.51%)\n• Nasdaq (QQQ): $657.73 (-0.98%)\n• Dow: $491.90 (+0.01%)\n\n🌏 Asia (overnight)\n• Nikkei 225: 59,917.46 (-1.02%) — pulled back from Monday's record\n• Hang Seng: -0.48% — weighed by oil fears, CATL -7% on $5B HK offering\n• Kospi: 6,641.02 (+0.39%) — another record high\n\n💱 Forex (from CAD)\n• USD/CAD: 1.366\n• EUR/CAD: 1.601\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Brent Crude: ~$111.16/bbl (+2.7%) — UAE exits OPEC amid Strait of Hormuz crisis\n• Gold: $4,569/oz (-2.40%) — sharp pullback from recent highs\n• BTC/USD: $75,800 (-2.02%)\n• LTC/USD: $54.86 (-1.28%)\n\n🎯 Movers\n• TSM: $391.96 (-3.22%) — dragged by OpenAI-linked AI spending fears\n• INTC: $82.81 (-2.57%) — gave back some of yesterday's 20% post-earnings surge\n• AMD: $324.36 (-3.07%) — semiconductor sector weakness on AI demand jitters\n• ORCL: -5% premarket — OpenAI reportedly missed user/revenue targets; $300B Stargate deal in focus\n• SoftBank: -10% in Tokyo — steepest AI-related selloff on OpenAI growth headwinds\n\n📰 News\n• UAE quit OPEC and OPEC+ Tuesday, dealing a historic blow to the cartel as the Iran war, Strait of Hormuz disruptions, and Saudi-UAE rift converge — Brent crude tops $111\n• OpenAI growth shortfall report (missed sales & user targets) sinks SoftBank, Oracle, CoreWeave, and pressures US tech futures; S&P 500 futures -0.6% premarket\n\n⚡ Sentiment: Risk-off bias entering today. The UAE/OPEC exit adds immense crude supply uncertainty atop an already-simmering Iran conflict, pressuring equities globally. Tech faces a double headwind: OpenAI growth doubts revive AI capex scrutiny just ahead of mega-cap earnings. Gold's sharp retreat suggests some liquidation/position-squaring. Pre-market futures point to a lower open. Key data today: home prices and consumer confidence. Earnings on deck: Aflac, Alphabet, Amazon, Ford, Meta, Microsoft."
+  },
+  {
     "date": "2026-04-27",
     "slot": "PM",
     "timestamp": "2026-04-27T12:31:21-0700",
