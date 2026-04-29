@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-29",
+    "slot": "PM",
+    "timestamp": "2026-04-29T12:31:37-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-29 12:30 PDT\n\n📊 Markets — Wednesday, April 29\n\nMarkets edged lower ahead of a deeply divided Fed decision, with Intel and AMD surging on semiconductor sector momentum while broader indexes slipped on Iran conflict uncertainty.\n\n📈 US\n• S&P 500: $710.84 (-0.12%)\n• Nasdaq: $661.07 (+0.54%)\n• Dow: $488.32 (-0.63%)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.368\n• EUR/CAD: 1.597\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Gold: $4,544/oz (-1.14%)\n• BTC/USD: $75,497 (-1.08%)\n• LTC/USD: $54.72 (-1.78%)\n\n🎯 Movers\n• INTC: +10.9% — Intel surged to $93.77, its best day in months, as semiconductor rotation accelerated amid AI hardware demand optimism ahead of earnings season.\n• AMD: +4.9% — Rallied to $339.17, tracking Intel higher as chip stocks found a bid despite broader weakness in the sector this week.\n• NVDA: -1.8% — Continued to slide ahead of competing AI earnings narratives vs TSM, though off session lows of $207.58.\n\n📰\n• The Fed held rates steady at 3.50%-3.75% in its most divided decision since 1992; Powell confirmed he will stay on as a Fed governor after his chair term ends.\n• Oil prices remained elevated amid the Iran conflict, keeping a lid on risk appetite and dragging the Dow lower.\n\n⚡ A mixed tape: semiconductors revived on Intel/AMD strength but the broader market struggled under the weight of oil uncertainty and a fractured Fed. The Nasdaq managed a modest gain as mega-cap tech held firm ahead of Meta earnings tonight. Risk-on appetite remains fragile heading into a heavy earnings calendar."
+  },
+  {
+    "date": "2026-04-29",
     "slot": "AM",
     "timestamp": "2026-04-29T07:28:20-0700",
     "title": "Market Report",
