@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-29",
+    "slot": "AM",
+    "timestamp": "2026-04-29T07:28:20-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-29 07:27 PDT\n\n📊 Markets — Wednesday, April 29\n\nFed decision day + hyperscaler earnings in focus; oil tops $112 on Hormuz impasse.\n\n📈 US (prev close)\n• S&P 500: 7,138.80 (-0.49%)\n• Nasdaq: 24,663.80 (-0.90%)\n• Dow: 49,141.93 (-0.05%)\n• S&P futures +0.1%, Nasdaq futures +0.2% — little changed pre-market\n\n🌏 Asia\n• Nikkei 225: CLOSED (holiday) — prior session at 60,537 (+1.38%, record close)\n• Hang Seng: +1.20% (late trade)\n• CSI 300: 4,810.35 (+1.10%)\n• Kospi: 6,690.90 (+0.75%)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.3699\n• EUR/CAD: 1.6000\n• CNY/CAD: 0.2002\n\n🛢️ Commodities & Crypto\n• Brent Crude: ~$112/barrel (8th straight gain; Strait of Hormuz crisis)\n• WTI Crude: $99.32 (-0.61%)\n• Gold: $4,534.84/oz (-1.34%)\n• BTC/USD: $76,679 (+0.47%)\n• LTC/USD: $56.20 (+0.88%)\n\n🎯 Movers (>2% or significant news)\n• INTC: $90.71 (+7.32%) — Continued rally after blowout Q1 earnings; smashed estimates on $13.6B revenue; broke all-time high above 2000 record\n\n📰 News\n• Fed decision today (likely Powell's final meeting as Chair) — rates expected unchanged, focus on forward guidance. Durable goods and housing starts data also due.\n• Trifecta of Mag-7 earnings after the close: Alphabet, Microsoft, Amazon, and Meta all report tonight. Meta shares called \"iffy\" into print; AI monetization narrative on the line.\n• UAE to exit OPEC May 1 — major blow to cartel as Hormuz tensions persist.\n• OpenAI reportedly missed revenue/user targets, weighing on tech sentiment.\n• Intel capitalizing on years of foundry investments, now seeing payoff in Q1 beat.\n\n⚡ Fed day + mega-cap earnings create a binary-event setup. Oil's relentless grind on Hormuz risk is the macro wild card. Tech sentiment is fragile after the OpenAI report, but strong results from MSFT/GOOGL/AMZN/META tonight could flip the narrative. INTC continues its stunning multi-month re-rate on foundry momentum. Gold pulling back as rate expectations firm."
+  },
+  {
     "date": "2026-04-28",
     "slot": "PM",
     "timestamp": "2026-04-28T12:31:18-0700",
