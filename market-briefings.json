@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-30",
+    "slot": "PM",
+    "timestamp": "2026-04-30T12:31:31-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-30 12:30 PDT\n\n📊 Markets — Thursday, April 30, 2026\n\nWall Street rallies to close out April, with the Dow leading gains while Meta crashes on a massive AI spending hike that spooks investors.\n\n📈 US\n• S&P 500 (SPY): $719.21 (+1.07%)\n• Nasdaq (QQQ): $668.09 (+0.99%)\n• Dow (DIA): $497.39 (+1.78%)\n\n💱 Forex (from USD)\n• USD/CAD: 1.37\n\n🛢️ Commodities & Crypto\n• Gold: $4,618.00/oz (+1.63%)\n• BTC/USD: $76,466 (+0.94%)\n• LTC/USD: $55.51 (+0.34%)\n\n🎯 Movers\n• META: -7.72% — Plunges after Q1 earnings as 2026 AI spending forecast was raised to $125B-$145B, spooking the market\n• AMD: +4.65% — Rallies amid broader tech recovery, bucking the Meta-led selloff in semis\n• NVDA: -3.96% — Slips despite broad market rally as AI spending concerns spill over\n• INTC: -2.26% — Continues to slide amid ongoing competitive pressure in the chip space\n\n📰\n• Meta sinks after disclosing $125B-$145B in 2026 AI capex alongside a $13.7B tax benefit from the Trump administration\n• Apple gains +1.56% ahead of its first earnings report since Tim Cook's announced exit, with iPhone growth in focus\n\n⚡ Mixed tape — broad indices closed near session highs on a strong rebound day, but the magnitude of Meta's AI spending increase is casting a long shadow over the mega-cap outlook. Gold pushing past $4,600 signals lingering inflation/geopolitical unease beneath the surface rally."
+  },
+  {
+    "date": "2026-04-30",
     "slot": "AM",
     "timestamp": "2026-04-30T07:28:45-0700",
     "title": "Market Report",
