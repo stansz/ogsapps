@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-04-30",
+    "slot": "AM",
+    "timestamp": "2026-04-30T07:28:45-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-04-30 07:27 PDT\n\n📊 Markets — Thursday, April 30\n\nGrowth data supports the Dow as tech gets hammered on Meta's AI spending shock.\n\n📈 US (pre-market / early)\n• S&P 500 (SPY): $711.36 (-0.03%)\n• Nasdaq (QQQ): $658.18 (-0.51%)\n• Dow (DIA): $493.89 (+1.07%)\n\n🌏 Asia (overnight closes)\n• Nikkei: 59,284.92 (-1.06%)\n• Hang Seng: 25,776.53 (-1.28%)\n\n🛢️ Commodities & Crypto\n• Oil (WTI): $105.39/bbl (-1.39%)\n• Gold: $4,620.70/oz (+1.69%)\n• BTC/USD: $76,107 (+0.47%)\n• LTC/USD: $55.57 (+0.45%)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.364\n• EUR/CAD: 1.597\n• CNY/CAD: 0.199\n\n🎯 Movers (>2% moves or major news)\n• META: -10.3% — Q1 earnings beat but 2026 AI capex guidance raised to $125B-$145B spooked the Street; investors fear a long ROI wait\n• NVDA: -4.4% — dragged lower by AI capex anxiety and spillover from Meta's spending shock; seasonally weak period ahead\n• INTC: -2.9% — continued pressure amid secular decline in legacy chip demand; no near-term catalyst\n\n📰 Headlines\n• U.S. GDP data shows the economy continues growing — Q1 print today with jobless claims\n• Alphabet and Amazon outperformed Meta in AI this earnings season per Bloomberg\n• Trump to sign order creating retirement plans for workers who lack them\n\n⚡ Sentiment: Mixed. The Dow is grinding higher on steady GDP/growth data and a rotation into value/Old Economy names, but tech is getting crushed by Meta's AI capex shockwave. NVDA's sympathy move suggests the AI trade is in for a reality check on spending versus returns. Gold's continued climb above $4,600 reflects lingering inflation/stagflation hedging. Watch META for follow-through and any analyst downgrades today."
+  },
+  {
     "date": "2026-04-29",
     "slot": "PM",
     "timestamp": "2026-04-29T12:31:37-0700",
