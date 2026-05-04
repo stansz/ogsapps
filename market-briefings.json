@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-04",
+    "slot": "AM",
+    "timestamp": "2026-05-04T07:29:30-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-04 07:27 PDT\n\nMarket Briefing\n\nIndices:\nSPY $721.54 (+0.12%)\nQQQ $675.77 (+0.24%)\nDIA $493.92 (-0.22%)\n\nMovers:\nBABA +3.04% on strong gains\nAMD -4.22% ahead of earnings\nTSM +1.50% (near threshold)\nAAPL -1.41% on tech pullback\nNVDA -0.31% consolidating\n\nCrypto:\nBTC $79,290 (+0.93%)\nLTC $55.32 (+0.05%)\n\nCommodities:\nGold $4,576.57 (-0.80%)\n\nForex (from CAD):\nCAD/USD 0.734\nCAD/EUR 0.627\nCAD/CNY 5.015\n\nNews:\n• Stocks open lower as oil rises on Iran-U.S. tensions\n• EU auto tariffs to 25% — shares slide\n• AMD up 74% in April, now -4.2% pre-earnings focus\n• Meta falls despite strong earnings\n\nWatch: AMD earnings, oil price moves, tariff developments"
+  },
+  {
     "date": "2026-04-30",
     "slot": "PM",
     "timestamp": "2026-04-30T12:31:31-0700",
