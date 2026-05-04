@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-04",
+    "slot": "PM",
+    "timestamp": "2026-05-04T12:34:50-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-04 12:32 PDT\n\n📊 Markets Snapshot: Bears in Control Ahead of AMD Earnings\n\nOverall sentiment: cautious downside pressure dominated the session, with tech selling pressure and gold retreating. The S&P 500 (SPY) slipped 0.37%, while the Dow (DIA) fell 1.13%. Most attention centered on AMD's upcoming earnings and the significant analyst downgrade.\n\n🚨 Key Movers (>2% or notable news)\n\nLosers:\n• INTC: -2.99% to $96.64\n• AMD: -4.83% to $343.13 (downgraded before earnings)\n• Gold: -1.97% to $4,522.27/oz\n\nBiggest Dow Jones laggard: DIA down 1.13%\n\nWinners:\n• BTC: +1.77% to $79,947\n• BABA: +1.79% to $133.86\n\n📰 Notable News\n\nAMD dominates headlines ahead of earnings:\n- Investopedia: \"How Much Is AMD Stock Expected to Move After Earnings?\"\n- Barron's: \"AMD Stock Is Downgraded Before Earnings. Why This Analyst Soured on the Shares.\"\n- Investor's Business Daily: \"Cathie Wood Cashes In On Surging AMD Stock With Earnings Due\"\n- Seeking Alpha: \"AMD earnings call likely to focus on CPU strength, MI455 progress\"\n\nCrypto: Bitcoin rallies nearly 2% to reclaim $79.9K\n\n📉 Sentiment\n\nThe day painted a defensive picture: broad tech weakness, gold sold off, and even the usually stable dividend aristocrats underperformed. With AMD earnings looming after hours (or tomorrow), the pre-announcement downgrade and price action suggest investors are bracing for potential disappointment. Bitcoin provided the lone bright spot in risk assets."
+  },
+  {
+    "date": "2026-05-04",
     "slot": "AM",
     "timestamp": "2026-05-04T07:29:30-0700",
     "title": "Market Report",
