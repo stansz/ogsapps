@@ -59,9 +59,9 @@ async function fetchWeather(city) {
 // News feeds
 const NEWS_FEEDS = [
   { name: 'World', url: 'https://www.cbc.ca/webfeed/rss/rss-topstories' },
-  { name: 'Technology', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en' },
-  { name: 'Business', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0BtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en' },
-  { name: 'Canada & BC', url: 'https://news.google.com/rss/search?q=site:cbc.ca+OR+site:globalnews.ca+british+columbia&hl=en-CA&gl=CA&ceid=CA:en' },
+  { name: 'Technology', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen' },
+  { name: 'Business', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0BtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen' },
+  { name: 'Canada & BC', url: 'https://news.google.com/rss/search?q=site:cbc.ca+OR+site:globalnews.ca+british+columbia&hl=en-CA&gl=CA&ceid=CA%3Aen' },
   { name: 'Local', urls: [
     'https://dailyhive.com/feed/vancouver',
     'https://yvrdeals.com/atom/1',
