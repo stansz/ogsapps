@@ -59,8 +59,8 @@ async function fetchWeather(city) {
 // News feeds
 const NEWS_FEEDS = [
   { name: 'World', url: 'https://www.cbc.ca/webfeed/rss/rss-topstories' },
-  { name: 'Technology', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB' },
-  { name: 'Business', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0BtVnVHZ0pWVXlnQVAB' },
+  { name: 'Technology', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en' },
+  { name: 'Business', url: 'https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0BtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en' },
   { name: 'Canada & BC', url: 'https://news.google.com/rss/search?q=site:cbc.ca+OR+site:globalnews.ca+british+columbia&hl=en-CA&gl=CA&ceid=CA:en' },
   { name: 'Local', urls: [
     'https://dailyhive.com/feed/vancouver',
@@ -109,8 +109,8 @@ async function fetchSingleFeed(url) {
       const dateMatch = content.match(/<(?:pubDate|published|updated)>([\s\S]*?)<\/(?:pubDate|published|updated)>/i);
       if (titleMatch) {
         const link = linkMatch ? linkMatch[1].trim() : '';
-        // Skip empty or feed-level links
-        if (link && !link.includes('news.google.com') && link.startsWith('http')) {
+        // Skip empty or feed-level links (allow news.google.com/rss/articles redirect links)
+        if (link && link.startsWith('http') && !link.match(/news\.google\.com\/($|topics|search)/i)) {
           items.push({
             title: titleMatch[1].trim(),
             link,
