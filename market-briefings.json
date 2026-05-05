@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-05",
+    "slot": "PM",
+    "timestamp": "2026-05-05T12:33:22-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-05 12:31 PDT\n\n📊 Markets — Monday, May 5, 2026\n\nTech stocks show mixed results as AMD and Intel surge while Apple gains over 2% in a quiet trading day.\n\n📈 US\n• S&P 500: $724.72 (+0.93%)\n• Nasdaq: $682.28 (+1.40%)\n• Dow: $493.22 (+0.75%)\n\n🛢️ Commodities & Crypto\n• Gold: $4556.72/oz (+0.73%)\n• BTC/USD: $81554.09 (+2.13%)\n• LTC/USD: $55.83 (+1.58%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +12.49% on strong semiconductor optimism ahead of AMD earnings\n• AMD: +4.07% with options pricing in ~9% post-earnings move; earnings tonight\n• AAPL: +2.68% continued momentum as stock approaches all-time highs\n\n📰 Top headlines\n• Amazon’s stock has come alive, setting the company up to join an exclusive club\n• AMD options traders price ~9% post-earnings move; earnings tonight May 5\n• The last time semiconductor stocks rose this far this quickly, the dot-com bubble burst\n\n⚡ Market sentiment is cautiously optimistic with tech-heavy Nasdaq leading gains. Semiconductor volatility is elevated ahead of AMD earnings. Crypto and gold provide upward support.\n\n# Tracked Tickers\nFull list: `/opt/data/workspace/bin/market-symbols all`\nAdd/remove tickers in `/opt/data/workspace/bin/market-symbols`\nPrimary (always check): NVDA, TSM, AAPL, META, INTC, AMD, BABA\nSecondary (include if data appears): SNDK, OTEX, DPRO"
+  },
+  {
+    "date": "2026-05-05",
     "slot": "AM",
     "timestamp": "2026-05-05T07:30:20-0700",
     "title": "Market Report",
