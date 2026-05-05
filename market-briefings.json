@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-05",
+    "slot": "AM",
+    "timestamp": "2026-05-05T07:30:20-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-05 07:27 PDT\n\nMorning Market Briefing\n\nMARKET SUMMARY\nUS markets opened higher across the board. The Dow, S&P 500 and Nasdaq gained in early trade as investors position for today's packed earnings calendar and key economic data releases. Sentiment is cautious after mixed Asian trade.\n\nNOTABLE MOVERS (>2%)\n• INTC: $109.27 (+14.08%) — Monster rally on upgrade/strategic shift\n• AMD: $350.70 (+2.68%) — Strong pre-earnings move despite Barron's downgrade\n\nINDICES\n• SPY: $723.24 (+0.73%)\n• QQQ: $681.25 (+1.24%) \n• DIA: $492.21 (+0.54%)\n\nCRYPTO\n• Bitcoin (BTCUSD): $81,270.67 (+1.78%) — Extending gains\n\nCOMMODITIES\n• Gold (XAU/USD): $4,582.84 (+1.31%) — Near record highs\n\nFOREX (CAD)\n• CAD/USD: 0.735 | CAD/EUR: 0.628 | CAD/CNY: 5.018\n\nFOCUS FOR TODAY\n• AMD earnings after close — Street expects beat; mixed analyst notes set up volatile reaction\n• Economic data deluge: JOLTS (10am ET), Home Sales, Manufacturing PMIs\n• Coinbase layoffs (14%) highlight tech restructuring due to AI\n\nASIAN/MORNING CONTEXT\n• Overnight Asian markets mostly higher; Nikkei +0.8%, Hang Seng +1.2% (data limited)\n• US pre-market: Gains held; INTC up ~10% pre-market\n\nNEWS HIGHLIGHTS\n• AMD stock surged but Barron's downgrade cites valuation risks\n• AMD earnings: 3 scenarios being debated (Gotrade)\n• Coinbase cuts 14% staff, saying AI creates 'new way of working' (MarketWatch)\n• Beef prices near record; DOJ probing potential price fixing"
+  },
+  {
     "date": "2026-05-04",
     "slot": "PM",
     "timestamp": "2026-05-04T12:34:50-0700",
