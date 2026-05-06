@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-06",
+    "slot": "PM",
+    "timestamp": "2026-05-06T12:32:47-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-06 12:30 PDT\n📊 Markets — Tuesday, May 6, 2026\n\nTech stocks surge as AI optimism drives major rally, with AMD leading gains after strong earnings.\n\n📈 US\n• S&P 500: $733.83 (+1.39%)\n• Nasdaq: $695.04 (+1.97%)\n• Dow: $499.80 (+1.39%)\n\n🛢️ Commodities & Crypto\n• Gold: $4699.17/oz (+3.12%)\n• BTC/USD: $81327.22 (+0.52%)\n• LTC/USD: $56.85 (+0.91%)\n\n🎯 Movers (only >2% moves or major news)\n• AMD: Soared 18% on Q1 earnings beat and bullish AI forecast; CEO comments signal strong data center demand ahead.\n• TSM: +6.18% as Taiwan semiconductor rally continues on AI supply chain optimism.\n• BABA: +6.85% on renewed China tech investor interest and cloud growth bets.\n• NVDA: +5.65% steady climb as AI infrastructure play remains favored.\n• INTC: +4.25% recovery play on turnaround hopes and foundry progress.\n\n📰 MarketWatch: Amazon's stock has come alive, setting the company up to join an exclusive club. Barron's: AMD Stock Soars on Strong Earnings and Growing AI Confidence.\n\n⚡ Overall sentiment is strongly bullish, driven by AI-related earnings beats and tech momentum. Gold also rose as a safe-haven complement. The rally appears broad-based with all major indices up nearly 1.5-2%. No major concerns emerged from today’s data."
+  },
+  {
+    "date": "2026-05-06",
     "slot": "AM",
     "timestamp": "2026-05-06T07:30:29-0700",
     "title": "Market Report",
