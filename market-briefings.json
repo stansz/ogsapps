@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-07",
+    "slot": "AM",
+    "timestamp": "2026-05-07T07:29:44-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-07 07:27 PDT\n\n📊 Markets — Wednesday, May 7\n\nUS markets open mixed with tech leading gains as S&P 500 and Nasdaq inch higher while Dow slips. Gold rallies and Bitcoin retreats ahead of key economic data.\n\n📈 US\n• S&P 500: $734.86 (+0.14%)\n• Nasdaq: $699.74 (+0.57%)\n• Dow: $497.56 (-0.30%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.733\n• EUR/CAD: 0.623\n• CNY/CAD: 4.993\n\n🛢️ Commodities & Crypto\n• Oil: data unavailable\n• Gold: $4757.49/oz (+1.42%)\n• BTC/USD: $80435 (-1.23%)\n• LTC/USD: $56.94 (+0.37%)\n\n🎯 Movers\n• NVDA: +2.9% on continued AI optimism, hitting $213.88\n• AMD: Major beat on Q1 earnings with data center growth pushing stock +16% after hours; market cap set to surpass $600B\n\n📰\n• AMD soars 16% on stellar Q1 results driven by AI chip demand\n• Jobless claims and construction data due today, with oil export concerns looming\n\n⚡ Sentiment remains cautiously bullish in tech, with earnings momentum offsetting macro worries. Bitcoin's dip and gold's rally signal some risk-off positioning ahead of economic releases."
+  },
+  {
     "date": "2026-05-06",
     "slot": "PM",
     "timestamp": "2026-05-06T12:32:47-0700",
