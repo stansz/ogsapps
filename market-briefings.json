@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-07",
+    "slot": "PM",
+    "timestamp": "2026-05-07T12:32:12-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: 2026-05-06 18:40 PDT\n\n📊 Markets — Wednesday, May 6, 2026\n\nStrong tech rally drives indices higher with Nasdaq leading gains as NVIDIA, AMD and Taiwan Semiconductor surge on earnings optimism.\n\n📈 US\n• S&P 500: 733.83 (+1.39%)\n• Nasdaq: 695.77 (+2.08%)\n• Dow: 499.05 (+1.24%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,708.83/oz\n• BTC/USD: $81,255.55\n• LTC/USD: $56.42\n\n🎯 Movers\n• AMD: +18.61% on Q1 earnings beat, $600B market cap in sight\n• TSM: +6.36% on AI chip demand outlook\n• BABA: +6.94% on strong Chinese e-commerce data\n• NVDA: +5.77% ahead of upcoming earnings\n• INTC: +4.49% on new contract wins\n• QQQ: +2.08% tracking tech-heavy Nasdaq\n\n📰\n• AMD stock spikes 19% on Q1 results with CEO citing massive AI demand shift\n• Nvidia faces high expectations as AMD's rally sets stage for next week's earnings\n\n⚡ Sentiment remains bullish on AI infrastructure; investors rotating into semis ahead of earnings season. Crypto steady but muted."
+  },
+  {
+    "date": "2026-05-07",
     "slot": "AM",
     "timestamp": "2026-05-07T07:29:44-0700",
     "title": "Market Report",
