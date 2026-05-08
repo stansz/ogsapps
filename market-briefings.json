@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-08",
+    "slot": "AM",
+    "timestamp": "2026-05-08T14:28:20+0000",
+    "title": "Market Report",
+    "text": "📊 Markets — Friday, May 8, 2026\n\nUS stocks rally on strong jobs data and diplomatic optimism, with tech leading gains ahead of Nvidia earnings.\n\n📈 US\n• S&P 500: $737.39 (+0.8%)\n• Nasdaq: $706.5 (+1.7%)\n• Dow: $497.27 (+0.3%)\n\n🌏 Asia\n• Nikkei: +0.5% (pending)\n• Hang Seng: -1.2% (pending)\n\n💱 Forex (from CAD)\n• USD/CAD: 0.729\n• EUR/CAD: 0.619\n• CNY/CAD: 4.964\n\n🛢️ Commodities & Crypto\n• Oil: ~$84.80 (pending, -0.8%)\n• Gold: $4725.42/oz (+0.8%)\n• BTC/USD: $80194.97 (+0.2%)\n• LTC/USD: $56.95 (+0.9%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +6.9% on AI infrastructure demand\n• AMD: +7.4% after strong Q1 earnings with data center growth\n• NVDA: +2.2% ahead of earnings this month, analysts see value\n• AAPL: +2.1% on steady iPhone demand\n\n📰 Top headlines: U.S. unemployment holds at 4.3% with 115K jobs added; stocks rise on hopes for Iran peace deal; AMD beats on AI data center surge; Nvidia seen as cheap before earnings.\n\n⚡ Sentiment is bullish on US tech, supported by economic resilience and AI momentum. Keep an eye on Nvidia earnings due later this month."
+  },
+  {
     "date": "2026-05-07",
     "slot": "PM",
     "timestamp": "2026-05-07T12:32:12-0700",
@@ -180,19 +187,5 @@
     "timestamp": "2026-04-20T07:28:23-0700",
     "title": "Market Report",
     "text": "TIMESTAMP: 2026-04-20 07:27 PDT\n📊 Markets — Monday, April 20, 2026\n\nStocks open mixed as Hormuz tensions flare, but broader markets show resilience ahead of tech earnings season.\n\n📈 US\n• S&P 500: $709.43 (-0.10%)\n• Nasdaq: $647.10 (-0.27%)\n• Dow: $494.30 (+0.02%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.731\n• EUR/CAD: 0.621\n• CNY/CAD: 4.984\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4,824.43/oz (-0.20%)\n• BTC/USD: $75,622.48 (+2.44%)\n• LTC/USD: $55.30 (+2.29%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: Down 3.61% after Stifel lifted price targets ahead of earnings; volatility expected around report.\n• BTCUSD: +2.44% continuing recent crypto strength; LTCUSD similarly +2.29% in tandem move.\n• META: Down 1.58% despite Morgan Stanley calling it top tech earnings pick; investors eye Thursday's report.\n• NVDA: Down 1.17% ahead of earnings season; semiconductor momentum in focus.\n\n📰 Key stories\n- Hormuz uncertainty drives early-week energy caution, but broader asset markets remain resilient.\n- Intel, AMD, Lattice all saw price target boosts at Stifel; earnings this week likely catalyst-heavy.\n- Meta flagged as top tech pick by MS ahead of Thursday, but stock under pressure pre-earnings.\n\n⚡ Sentiment is cautious in pre-downtick with tech earnings as next major catalyst; watch AMD (Tuesday) and META (Thursday) plus broad semiconductors after INTC's move."
-  },
-  {
-    "date": "2026-04-19",
-    "slot": "PM",
-    "timestamp": "2026-04-19T14:14:28-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-19 14:13 PDT\n\n📊 Markets — Sunday, April 19th, 2026\n\nUS equity ETFs rally broadly in final pre-close trading, with tech and growth leading gains ahead of a packed earnings week.\n\n📈 US\n• S&P 500 (SPY): $710.14 (+1.21%)\n• Nasdaq (QQQ): $648.85 (+1.31%)\n• Dow (DIA): $494.22 (+1.77%)\n\n🛢️ Commodities & Crypto\n• Gold: $4834.07/oz (flat)\n• BTC/USD: $74650.11 (-1.43%)\n• LTC/USD: $54.57 (-1.94%)\n\n🎯 Movers (only >2% moves or major news)\n• AAPL: +2.59% to $270.23 — strongest performer among primary tickers, leads tech sector gains\n• META: +1.73% to $688.55 — in focus ahead of Q1 2026 earnings announcement this week; Morgan Stanley maintains as top tech pick\n• TSM: +1.97% to $370.50 — Q1 earnings beat cited; story noted as \"still a great buy\" amid continued AI/wafer demand\n\n📰 Top headlines\n• Investors brace for renewed volatility following weekend Iran developments\n• S&P 500 blasts past 7,000 in comeback rally; commentary suggests further upside potential\n\n⚡ Sentiment: Positive. A broad, tech-led advance sets an optimistic tone heading into the week, though crypto diverges to the downside and geopolitical headlines introduce caution."
-  },
-  {
-    "date": "2026-04-19",
-    "slot": "AM",
-    "timestamp": "2026-04-19T14:11:28-0700",
-    "title": "Market Morning",
-    "text": "TIMESTAMP: 2026-04-19 14:06 PDT\n\n📊 Markets — Sunday, April 19, 2026\n\nUS futures and tech ETFs rally in pre-weekend trade as investors eye Meta earnings and watch Middle East developments.\n\n📈 US\n• S&P 500 (SPY): $710.14 (+1.21% chg $8.48) [H: $712.39 L: $705.76]\n• Nasdaq (QQQ): $648.85 (+1.31% chg $8.38) [H: $650 L: $644.07]\n• Dow (DIA): $494.22 (+1.77% chg $8.59) [H: $497.04 L: $490.36]\n\n💱 Forex (from CAD)\n• CAD/USD: 0.73 | CAD/EUR: 0.622 | CAD/CNY: 4.979\n\n🛢️ Commodities & Crypto\n• Gold: $4834.14/oz (+0.00%)\n• BTC/USD: $74746.03 (-1.31%)\n• LTC/USD: $54.54 (-1.99%)\n\n🎯 Movers (only >2% moves or major news)\n• AAPL: Apple up 2.59% to $270.23 in a broad tech rally, reaching session highs of $272.30 as investors position ahead of the upcoming earnings season.\n• META: Meta climbs 1.73% to $688.55 on heightened interest ahead of its Q1 2026 earnings announcement, with Morgan Stanley recently naming it a top pick among tech earnings plays.\n\n📰\n• Meta to announce first quarter 2026 results next week, with investors focusing on AI spending pressure versus revenue growth trajectory.\n• TSMC's Q1 earnings beat has reinforced confidence in semiconductor demand, supporting related stocks including TSM which gained 1.97%.\n\n⚡ Sentiment turns cautiously optimistic as US futures extend Friday's gains, but geopolitical tensions from weekend Iran developments could reintroduce volatility. The week ahead is dominated by tech earnings, with Meta's results serving as a key bellwether for AI-inflected growth expectations."
   }
 ]
