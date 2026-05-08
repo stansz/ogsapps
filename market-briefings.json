@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-08",
+    "slot": "PM",
+    "timestamp": "2026-05-08T12:33:32-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: Friday, 2026-05-08 12:31 PDT\n📊 Markets — Friday, 2026-05-08\n\nTech rally powers markets higher with AI chip stocks surging despite Dow's slight dip.\n\n📈 US\n• S&P 500: $736.64 (+0.69%)\n• Nasdaq: $709.12 (+2.04%)\n• Dow: $495.60 (-0.06%)\n\n🛢️ Commodities & Crypto\n• Gold: $4725.03/oz (+0.76%)\n• BTC/USD: $80016.94 (+0.01%)\n• LTC/USD: $58.55 (+3.78%)\n\n🎯 Movers\n• QQQ: +2.04% (Tech ETF leads gains)\n• AAPL: +2.10% (Apple up 2.1%)\n• INTC: +13.44% (Intel surges on optimism)\n• AMD: +9.13% (Strong earnings beat)\n• LTC: +3.78% (Litecoin rally)\n\n📰\n• AMD's stock soars 16% as data center growth pushes revenue and guidance past estimates — CNBC\n• Intel's stock could achieve a never-before-seen feat as Apple enthusiasm builds — MarketWatch\n\n⚡ Bullish day dominated by semiconductor strength; Nasdaq outperforms as AI optimism drives demand."
+  },
+  {
+    "date": "2026-05-08",
     "slot": "AM",
     "timestamp": "2026-05-08T14:28:20+0000",
     "title": "Market Report",
