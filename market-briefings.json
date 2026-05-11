@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-11",
+    "slot": "PM",
+    "timestamp": "2026-05-11T12:32:58-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: Monday, 2026-05-11 12:30 PDT\n\n📊 Markets — Monday, May 11\n\nUS markets edge higher in a tech-led rally, though Chinese equities and crypto face pressure.\n\n📈 US\n• S&P 500: $738.5 (+0.12%)\n• Nasdaq: $712.14 (+0.13%)\n• Dow: $496.6 (+0.09%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,724.19/oz (+0.18%)\n• BTC/USD: $81,885.76 (-0.38%)\n• LTC/USD: $58.92 (-2.50%)\n\n🎯 Movers\n• BABA: Down 2.1% on cloud revenue concerns ahead of earnings\n• LTC: Down 2.5% in broader crypto pullback\n• NVDA: Adds Oracle-scale market cap in four days despite modest 1.8% move\n\n📰 Meta's price targets swing wildly after earnings; AI skeptics wake up to Nvidia's dominance.\n\n⚡ Sentiment remains cautiously positive as AI enthusiasm outweighs concerns over Chinese tech and energy prices."
+  },
+  {
+    "date": "2026-05-11",
     "slot": "AM",
     "timestamp": "2026-05-11T14:27:55+0000",
     "title": "Market Report",
