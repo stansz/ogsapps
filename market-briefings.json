@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-11",
+    "slot": "AM",
+    "timestamp": "2026-05-11T14:27:55+0000",
+    "title": "Market Report",
+    "text": "📊 Markets — Monday, May 11, 2026\n\nModest gains for US indices as technology stocks show mixed performance amid rising oil prices and geopolitical tensions.\n\n📈 US\n• S&P 500: $739.30 (+0.23%)\n• Nasdaq: $711.39 (+0.02%)\n• Dow: $497.14 (+0.20%)\n\n🌏 Asia\n• Nikkei: UNAVAILABLE\n• Hang Seng: UNAVAILABLE\n\n💱 Forex (from CAD)\n• USD/CAD: 0.732\n• EUR/CAD: 0.621\n• CNY/CAD: 4.98\n\n🛢️ Commodities & Crypto\n• Oil: UNAVAILABLE\n• Gold: $4,732.78/oz\n• BTC/USD: $80,934.33\n• LTC/USD: $58.44\n\n🎯 Movers (only >2% moves or major news)\n• TSM: $-2.25% decline to $402.41 on valuation concerns.\n• LTC: $-3.29% to $58.44 as broader crypto slides.\n\n📰 Headlines\n• Stocks open mixed as oil prices climb on rejected Iran peace proposal.\n• AMD's stock surges on strong data center growth and AI chip demand.\n\n⚡ Market sentiment appears cautious with technology sector divergence — AI-related names like AMD seeing strength while semiconductor equipment faces pressure. Watch for inflation data this week."
+  },
+  {
     "date": "2026-05-08",
     "slot": "PM",
     "timestamp": "2026-05-08T12:33:32-0700",
@@ -180,19 +187,5 @@
     "timestamp": "2026-04-21T07:28:25-0700",
     "title": "Market Report",
     "text": "TIMESTAMP: 2026-04-21 07:27 PDT\n\n📊 Markets — Tuesday, April 21st, 2026\n\nUS equity futures point to a modestly higher open, with the Dow outperforming as UnitedHealth continues to rally.\n\n📈 US\n• S&P 500: $710.47 (+0.25%)\n• Nasdaq: $649.04 (+0.35%)\n• Dow: $497.20 (+0.58%)\n\n💱 Forex (from CAD)\n• CAD/USD: 0.733\n• CAD/EUR: 0.623\n• CAD/CNY: 4.998\n\n🛢️ Commodities & Crypto\n• Gold: $4771.98/oz (-1.01%)\n• BTC/USD: $76166.42 (+0.40%)\n• LTC/USD: $55.74 (+1.29%)\n\n🎯 Movers (only >2% moves or major news)\n• AMD: $281.77 (+2.48%) — Leading gains among US tech majors in pre-market action.\n• INTC: $66.76 (+1.61%) — BNP Paribas upgrades ahead of earnings; earnings preview focused on whether rally can sustain as chipmaker reports.\n\n📰 Headlines\n• Fed chair nominee Kevin Warsh faces Senate questions on rates and inflation policy.\n• Intel upgraded by BNP Paribas as earnings approach; Meta earnings report due soon.\n• UnitedHealth continues to lift Dow futures, driving relative outperformance.\n\n⚡ Sentiment is cautiously optimistic with earnings season in focus, particularly semiconductor names and big tech. Watch for Fed commentary and economic data."
-  },
-  {
-    "date": "2026-04-20",
-    "slot": "PM",
-    "timestamp": "2026-04-20T12:31:34-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-20 12:30 PDT\n📊 Markets — Monday, April 20th, 2026\n\nUS markets closed modestly lower as tech weakness offset broad gains in other sectors.\n\n📈 US\n• S&P 500: $708.05 (-0.29%)\n• Nasdaq: $646.3 (-0.39%)\n• Dow: $493.97 (-0.05%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: UNAVAILABLE\n• EUR/CAD: UNAVAILABLE\n• CNY/CAD: UNAVAILABLE\n\n🛢️ Commodities & Crypto\n• Oil: UNAVAILABLE\n• Gold: $4817.16/oz (-0.35%)\n• BTC/USD: $76228.01 (+3.26%)\n• LTC/USD: $55.2 (+2.11%)\n\n🎯 Movers (only >2% moves or major news)\n• META: $-18.13 (-2.63%) on concerns ahead of earnings; Barron's notes Meta remains top tech pick for earnings season.\n• INTC: $-2.98 (-4.35%) after weak guidance and ongoing competitive pressures in chip space.\n• BTCUSD: +$2404.87 (+3.26%) as crypto continues this month's rally on institutional inflows.\n• LITEUSD: +$1.14 (+2.11%) tracking Bitcoin momentum.\n\n📰 Apple earnings seen as 'clearing event' per Morgan Stanley ahead of report; Meta remains top tech pick despite recent sell-off; Kevin Warsh urges Fed to 'stay in its lane.'\n\n⚡ Sentiment: Mixed-to-negative. Broad indices held up reasonably well, but large-cap tech (META, INTC) dragged performance lower. Crypto stayed strong as risk appetite rotated toward digital assets. Key focus shifts to Apple and Meta earnings later this week."
-  },
-  {
-    "date": "2026-04-20",
-    "slot": "AM",
-    "timestamp": "2026-04-20T07:28:23-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-20 07:27 PDT\n📊 Markets — Monday, April 20, 2026\n\nStocks open mixed as Hormuz tensions flare, but broader markets show resilience ahead of tech earnings season.\n\n📈 US\n• S&P 500: $709.43 (-0.10%)\n• Nasdaq: $647.10 (-0.27%)\n• Dow: $494.30 (+0.02%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.731\n• EUR/CAD: 0.621\n• CNY/CAD: 4.984\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4,824.43/oz (-0.20%)\n• BTC/USD: $75,622.48 (+2.44%)\n• LTC/USD: $55.30 (+2.29%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: Down 3.61% after Stifel lifted price targets ahead of earnings; volatility expected around report.\n• BTCUSD: +2.44% continuing recent crypto strength; LTCUSD similarly +2.29% in tandem move.\n• META: Down 1.58% despite Morgan Stanley calling it top tech earnings pick; investors eye Thursday's report.\n• NVDA: Down 1.17% ahead of earnings season; semiconductor momentum in focus.\n\n📰 Key stories\n- Hormuz uncertainty drives early-week energy caution, but broader asset markets remain resilient.\n- Intel, AMD, Lattice all saw price target boosts at Stifel; earnings this week likely catalyst-heavy.\n- Meta flagged as top tech pick by MS ahead of Thursday, but stock under pressure pre-earnings.\n\n⚡ Sentiment is cautious in pre-downtick with tech earnings as next major catalyst; watch AMD (Tuesday) and META (Thursday) plus broad semiconductors after INTC's move."
   }
 ]
