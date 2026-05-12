@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-12",
+    "slot": "PM",
+    "timestamp": "2026-05-12T12:32:21-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: Tuesday, 2026-05-12 12:30 PDT\n\n📊 Markets — Tuesday, May 12\n\nUS markets closed lower as tech weakness dragged indices despite mixed performance in blue-chip stocks.\n\n📈 US\n• S&P 500: $737.1 (-0.30%)\n• Nasdaq: $704.19 (-1.28%)\n• Dow: $497.97 (+0.17%)\n\n💱 Forex (from CAD)\n— data unavailable\n\n🛢️ Commodities & Crypto\n• Gold: $4,703.79/oz (-0.67%)\n• BTC/USD: $80,727.12 (-1.22%)\n• LTC/USD: $57.68 (-1.44%)\n\n🎯 Movers (only >2% moves or major news)\n• TSM: -2.04% to $396.3 amid broader semiconductor selloff\n• INTC: -8.39% to $118.58 on continued competitive pressures\n• AMD: -4.11% to $439.95 despite Q1 earnings beat, concerns about Intel dynamics\n• NVDA: +0.59% to $220.74 ahead of Q1 earnings preview\n\n📰 NVDA's Q1 earnings preview suggests strong performance; AMD's beat raises questions for Intel.\n\n⚡ Sentiment is cautious with tech sector correction, semiconductor underperformance despite some earnings beats."
+  },
+  {
+    "date": "2026-05-12",
     "slot": "AM",
     "timestamp": "2026-05-12T07:28:26",
     "title": "Market Report",
