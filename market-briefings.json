@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-13",
+    "slot": "AM",
+    "timestamp": "2026-05-13T14:28:27+0000",
+    "title": "Market Report",
+    "text": "📊 Markets — Wednesday, May 13, 2026\n\nUS indices open mixed as PPI inflation jumps to 4-year high, raising Fed concerns.\n\n📈 US\n• S&P 500: $738.40 (+0.03%)\n• Nasdaq: $709.15 (+0.27%)\n• Dow: $496.18 (-0.34%)\n\n🌏 Asia\n(no data)\n\n💱 Forex (from CAD)\n• USD/CAD: 0.73\n• EUR/CAD: 0.623\n• CNY/CAD: 4.957\n\n🛢️ Commodities & Crypto\n• Gold: $4684.09/oz (-0.66%)\n• BTC/USD: $79819.10 (-0.83%)\n• LTC/USD: $57.42 (-1.20%)\n\n🎯 Movers (only >2% moves or major news)\n• BABA: +6.49% on Q4 earnings beat despite 84% core profit plunge; AI/cloud growth accelerates. Watch Alibaba's revenue guidance.\n• AMD: -2.21% on analyst downgrades ahead of Nvidia earnings; semi weakness continues.\n• NVDA: +1.83% (near threshold) — Buying ahead of Q1 results; market expects AI demand beat.\n\n📰 Top headlines\n• Wholesale prices jump by most since 2022, pointing to stubborn inflation ahead of Fed decision.\n• Trump's China visit in focus as trade tensions simmer; markets watching for de-escalation signals.\n• Kevin Warsh faces 5 key tests on first day as Fed chair: inflation fight, independence, communication, market stability, and policy path.\n• BABA releases Q4 2026 earnings; core profit down 84% but AI/cloud growth accelerates — investors weighing long-term bets.\n• Nvidia earnings preview: Analysts split on valuation; some buying ahead of results citing AI infrastructure spend.\n\n⚡ Mixed sentiment. Inflation data hotter than expected keeps rate cuts on hold; tech momentum remains supported by AI narrative and upcoming Nvidia results. Alibaba surprise adds to China tech volatility. Markets in consolidation ahead of Fed speak and Big Tech earnings.\n\n# Tracked Tickers\nFull list: `/opt/data/workspace/bin/market-symbols all`\nPrimary: NVDA, TSM, AAPL, META, INTC, AMD, BABA"
+  },
+  {
     "date": "2026-05-12",
     "slot": "PM",
     "timestamp": "2026-05-12T12:32:21-0700",
@@ -180,19 +187,5 @@
     "timestamp": "2026-04-23T07:28:24-0700",
     "title": "Market Report",
     "text": "📊 Markets — Thursday, April 23, 2026\n\nUS markets edge lower in early trade as geopolitical tensions and pre-earnings caution weigh, with tech stocks led by META selling off ahead of key earnings season.\n\n📈 US\n• S&P 500 (SPY): $710.75 (-0.06%)\n• Nasdaq (QQQ): $653.67 (-0.22%)\n• Dow (DIA): $494.71 (-0.01%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 1.368\n• EUR/CAD: 1.600\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4732.83/oz (-0.15%)\n• BTC/USD: $57781.93 (-0.55%)\n• LTC/USD: $55.58 (+0.16%)\n\n🎯 Movers\n• INTC: +2.37% pre-earnings positioning; reports after close today with consensus expecting $1.30 EPS.\n• BABA: -3.25% amid ongoing China regulatory review concerns; HK-listed peers also pressured.\n\n📰 Earnings & Fed in focus: Intel leads a quiet tech earnings calendar today ahead of a busy week; jobless claims and manufacturing data due. Markets remain jittery over Strait of Hormuz tensions after Iran threats.\n\n⚡ Sentiment is cautious as investors parse geopolitical risks and await earnings clarity; the \"lucky\" rally faces its first real test with Intel earnings and macro data on tap."
-  },
-  {
-    "date": "2026-04-22",
-    "slot": "PM",
-    "timestamp": "2026-04-22T12:31:21-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-22 12:30 PDT\n📊 Markets — Wednesday, April 22, 2026\n\nTech stocks power broader gains as semiconductor strength lifts Nasdaq to strong session high.\n\n📈 US\n• S&P 500: $710.53 (+0.92%)\n• Nasdaq: $654.24 (+1.54%)\n• Dow: $494.1 (+0.56%)\n\n🛢️ Commodities & Crypto\n• Gold: $4744.84/oz (+0.54%)\n• BTC/USD: $79065.25 (+3.56%)\n• LTC/USD: $56.14 (+1.03%)\n\n🎯 Movers\n• TSM: Taiwan Semiconductor leads the upside with a 4.76% rally on robust AI chip demand and strong guidance sentiment.\n• AMD: AMD surges 6.40% following analyst upgrades and optimism around data-center GPU shipments.\n• AAPL: Apple climbs 2.48% ahead of next week's Q2 earnings, driven by iPhone 16 pre-order strength.\n• INTC: Intel slips 1.13% as traders position cautiously ahead of Q1 earnings release next week.\n• BTCUSD: Bitcoin jumps 3.56% to cross $79K amid renewed institutional inflows and ETF optimism.\n\n📰 Earnings previews dominate the tape: Intel, Meta, and Apple all see increased attention ahead of quarterly releases next week.\n\n⚡ Sentiment is clearly positive, fueled by a powerful semiconductor rally and resurgent crypto prices. Broader indices grind higher with tech leading the charge."
-  },
-  {
-    "date": "2026-04-22",
-    "slot": "AM",
-    "timestamp": "2026-04-22T07:53:20-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-21 07:27 PDT\n\n📊 Markets — Tuesday, April 21st, 2026\n\nUS equity futures point to a modestly higher open, with the Dow outperforming as UnitedHealth continues to rally.\n\n📈 US\n• S&P 500: $710.47 (+0.25%)\n• Nasdaq: $649.04 (+0.35%)\n• Dow: $497.20 (+0.58%)\n\n💱 Forex (from CAD)\n• CAD/USD: 0.733\n• CAD/EUR: 0.623\n• CAD/CNY: 4.998\n\n🛢️ Commodities & Crypto\n• Gold: $4771.98/oz (-1.01%)\n• BTC/USD: $76166.42 (+0.40%)\n• LTC/USD: $55.74 (+1.29%)\n\n🎯 Movers (only >2% moves or major news)\n• AMD: $281.77 (+2.48%) — Leading gains among US tech majors in pre-market action.\n• INTC: $66.76 (+1.61%) — BNP Paribas upgrades ahead of earnings; earnings preview focused on whether rally can sustain as chipmaker reports.\n\n📰 Headlines\n• Fed chair nominee Kevin Warsh faces Senate questions on rates and inflation policy.\n• Intel upgraded by BNP Paribas as earnings approach; Meta earnings report due soon.\n• UnitedHealth continues to lift Dow futures, driving relative outperformance.\n\n⚡ Sentiment is cautiously optimistic with earnings season in focus, particularly semiconductor names and big tech. Watch for Fed commentary and economic data."
   }
 ]
