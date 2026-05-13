@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-13",
+    "slot": "PM",
+    "timestamp": "2026-05-13T12:33:09-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: Wednesday, 2026-05-13 12:30 PDT\n\n📊 Markets — Wednesday, May 13\n\nTech stocks rally with NVDA and META surging ahead of earnings while BABA jumps 8% on its report.\n\n📈 US\n• S&P 500: $743.52 (+0.7%)\n• Nasdaq: $715.71 (+1.2%)\n• Dow: $497.44 (-0.1%)\n\n🛢️ Commodities & Crypto\n• Gold: $4687.32/oz (-0.6%)\n• BTC/USD: $79457 (-1.3%)\n• LTC/USD: $56.89 (-2.1%)\n\n🎯 Movers (only >2% moves or major news)\n• NVDA: +2.7% ahead of Q1 earnings; bulls watching Nebius as proxy\n• META: +2.3% on strong momentum\n• BABA: +8.4% on earnings beat despite late-week volatility\n\n📰 \n• Nvidia earnings preview: traders buying ahead of results\n• Alibaba stock falling after earnings results but recovered today\n\n⚡ Tech-led rally dominates with mega-cap earnings driving sentiment; crypto weakness provides contrast."
+  },
+  {
+    "date": "2026-05-13",
     "slot": "AM",
     "timestamp": "2026-05-13T14:28:27+0000",
     "title": "Market Report",
