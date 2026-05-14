@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-05-14",
+    "slot": "PM",
+    "timestamp": "2026-05-14T12:33:09-0700",
+    "title": "Market Report",
+    "text": "TIMESTAMP: Thursday, 2026-05-14 12:31 PDT\n\n📊 Markets — Thursday, May 14\n\nUS equities traded broadly higher despite notable losses in semis, as tech leadership rotated toward AI infrastructure names ahead of earnings.\n\n📈 US\n• S&P 500: $748.09 (+0.78%)\n• Nasdaq: $720.01 (+0.74%)\n• Dow: $500.79 (+0.73%)\n\n🌏 Asia\n• Nikkei: UNAVAILABLE\n• Hang Seng: UNAVAILABLE\n\n💱 Forex (from CAD)\n• USD/CAD: UNAVAILABLE\n• EUR/CAD: UNAVAILABLE\n• CNY/CAD: UNAVAILABLE\n\n🛢️ Commodities & Crypto\n• Oil: UNAVAILABLE\n• Gold: $4667.58/oz (-0.45%)\n• BTC/USD: $81360 (+2.61%)\n• LTC/USD: $58.98 (+3.46%)\n\n🎯 Movers (only >2% moves or major news)\n• TSM: Taiwan Semi surged +4.86% on solid demand visibility and positioning in advanced packaging.\n• NVDA: Nvidia rose +4.34% as investors priced in strong earnings; multiple bullish analyst notes.\n• INTC: Intel dropped -3.86% on concerns about AI execution and market share erosion.\n• BABA: Alibaba fell -3.47% on weak China sentiment despite ongoing buybacks.\n• LTC: Litecoin gained +3.46% in the crypto upswing.\n• BTC: Bitcoin up +2.61%, reclaiming $81k level on favorable macro tone.\n\n📰\n• Nvidia dominates pre-earnings chatter with analysts debating valuation vs. growth trajectory.\n• Trump's China deal disappointment weighs on Boeing-related sentiment; 200-plane target vs. 500 expectation.\n• Restaurant chains bring back unlimited specials; value-driven consumer shift noted.\n\n⚡ Session painted a bifurcated picture: AI chips thrilled while China-exposed semis faltered. Risk-on tone evident in crypto, but gold’s dip signals some inflation optimism. Metals and forex head into the prints with caution as today's data defines the next leg."
+  },
+  {
+    "date": "2026-05-14",
     "slot": "AM",
     "timestamp": "2026-05-14T14:30:33+0000",
     "title": "Market Report",
