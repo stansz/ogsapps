@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-14",
+    "slot": "AM",
+    "timestamp": "2026-05-14T14:30:33+0000",
+    "title": "Market Report",
+    "text": "📊 Markets — Thursday, May 14, 2026\n\nS&P 500 hits record high as tech stocks rally on AI optimism and solid retail data.\n\n📈 US\n• S&P 500: $745.73 (+0.46%)\n• Nasdaq: $718.22 (+0.49%)\n• Dow: $499.15 (+0.40%)\n\n💱 Forex (from CAD)\n• CAD/USD: 0.729\n• CAD/EUR: 0.623\n• CAD/CNY: 4.948\n\n🛢️ Commodities & Crypto\n• Gold: $4695.02/oz (+0.14%)\n• BTC/USD: $80098.99 (+1.02%)\n• LTC/USD: $57.72 (+1.25%)\n\n🎯 Movers (>2% or major news)\n• NVDA: +3.26% — Surges on AI demand and breakthrough reports on Chinese exports.\n• TSM: +4.42% — Taiwan Semiconductor leads chip rally on strong AI infrastructure spending.\n• INTC: -4.50% — Intel drops on mounting competitive pressures in the CPU market.\n• BABA: -2.04% — Alibaba declines on China growth concerns despite market gains.\n\n📰 Headlines\n• S&P 500 hits record on strong retail sales and falling jobless claims, showing economic resilience.\n• Nvidia jumps on Chinese export progress and bullish analyst notes ahead of earnings; AMD also in focus.\n\n⚡ Market sentiment remains positive with AI momentum lifting tech and the broader S&P at all-time highs, supported by encouraging economic data."
+  },
+  {
     "date": "2026-05-13",
     "slot": "PM",
     "timestamp": "2026-05-13T12:33:09-0700",
@@ -180,19 +187,5 @@
     "timestamp": "2026-04-24T07:28:21-0700",
     "title": "Market Report",
     "text": "TIMESTAMP: 2026-04-24 07:27 PDT\n\n📊 Markets — Friday, April 24th, 2026\n\nUS equities trade mixed in early trade as earnings-driven chip rally offsets geopolitical concerns.\n\n📈 US\n• S&P 500: $710.26 (+0.26%)\n• Nasdaq: $658.87 (+1.14%)\n• Dow: $491.38 (-0.33%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 0.73\n• EUR/CAD: 0.624\n• CNY/CAD: 4.985\n\n🛢️ Commodities & Crypto\n• Gold: $4724.45/oz (+0.66%)\n• BTC/USD: $77813.86 (-0.60%)\n• LTC/USD: $56.10 (-0.20%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +22.90% — Q1 earnings beat with strong outlook, chipmaker shows growth signs; stock upgraded to Buy by multiple firms as beneficiary of Intel's turnaround.\n• AMD: +13.96% — Upgraded to Buy, labeled the big winner of Intel earnings; gains on cross-sector optimism.\n• TSM: +3.67% — Rises in tandem with sector strength amid semiconductor rally.\n• NVDA: +1.63% — climbs with broader chip strength on earnings spillover.\n\n📰\n• Intel soars 20% on Q1 earnings beat and raised guidance, signaling potential market-share gains and improved margins.\n• AMD upgraded to Buy on thesis that Intel's strength validates AI/data-center recovery, positioning AMD as key beneficiary.\n\n⚡ Sentiment is cautious optimism, led by semiconductor strength on earnings catalysts; Middle East tensions and oil prices remain a watch-item ahead of the open."
-  },
-  {
-    "date": "2026-04-23",
-    "slot": "PM",
-    "timestamp": "2026-04-23T12:31:20-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-23 12:30 PDT\n📊 Markets — Thursday, April 23, 2026\n\nUS markets traded lower as tech weakness weighed on broad indexes ahead of key earnings.\n\n📈 US\n• S&P 500: $708.39 (-0.40%)\n• Nasdaq: $651.12 (-0.61%)\n• Dow: $492.92 (-0.37%)\n\n🛢️ Commodities & Crypto\n• Gold: $4,699.86/oz (-0.84%)\n• BTC/USD: $77,885.11 (-0.41%)\n• LTC/USD: $55.50 (+0.02%)\n\n🎯 Movers (only >2% moves or major news)\n• INTC: +2.05% — Strong pre-earnings momentum ahead of earnings report.\n• BABA: -3.85% — Continued pressure on Chinese tech amid macro concerns.\n• META: -2.23% — Mixed analyst sentiment builds ahead of earnings; some call it a \"golden buying opportunity\" while others urge caution.\n\n📰 Key headlines\n• Meta and Intel dominate pre-earnings chatter, with conflicting analyst views on valuation and expected moves.\n• Nasdaq and S&P 500 futures dip as jobless claims data and tech earnings focus markets.\n\n⚡ Overall sentiment is cautious with a defensive tilt. Broad indexes slipped, led lower by mega-cap tech, while Intel was a lone bright spot. No major Asia/FX data available today."
-  },
-  {
-    "date": "2026-04-23",
-    "slot": "AM",
-    "timestamp": "2026-04-23T07:28:24-0700",
-    "title": "Market Report",
-    "text": "📊 Markets — Thursday, April 23, 2026\n\nUS markets edge lower in early trade as geopolitical tensions and pre-earnings caution weigh, with tech stocks led by META selling off ahead of key earnings season.\n\n📈 US\n• S&P 500 (SPY): $710.75 (-0.06%)\n• Nasdaq (QQQ): $653.67 (-0.22%)\n• Dow (DIA): $494.71 (-0.01%)\n\n🌏 Asia\n• Nikkei: N/A\n• Hang Seng: N/A\n\n💱 Forex (from CAD)\n• USD/CAD: 1.368\n• EUR/CAD: 1.600\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Oil: N/A\n• Gold: $4732.83/oz (-0.15%)\n• BTC/USD: $57781.93 (-0.55%)\n• LTC/USD: $55.58 (+0.16%)\n\n🎯 Movers\n• INTC: +2.37% pre-earnings positioning; reports after close today with consensus expecting $1.30 EPS.\n• BABA: -3.25% amid ongoing China regulatory review concerns; HK-listed peers also pressured.\n\n📰 Earnings & Fed in focus: Intel leads a quiet tech earnings calendar today ahead of a busy week; jobless claims and manufacturing data due. Markets remain jittery over Strait of Hormuz tensions after Iran threats.\n\n⚡ Sentiment is cautious as investors parse geopolitical risks and await earnings clarity; the \"lucky\" rally faces its first real test with Intel earnings and macro data on tap."
   }
 ]
