@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-05-18",
+    "slot": "AM",
+    "timestamp": "2026-05-18T14:28:27+0000",
+    "title": "Market Report",
+    "text": "📊 Markets — Monday, May 18\n\nMarkets mixed as tech stocks weigh on indices ahead of NVDA earnings.\n\n📈 US\n• S&P 500: $739.94 (+0.10%)\n• Nasdaq: $708.04 (-0.13%)\n• Dow: $496.90 (+0.31%)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.376\n• EUR/CAD: 1.600\n• CNY/CAD: 0.202\n\n🛢️ Commodities & Crypto\n• Gold: $4,559.16/oz (+0.47%)\n• BTC/USD: $76,745.29 (-0.86%)\n• LTC/USD: $53.67 (-1.65%)\n\n🎯 Movers\n• TSM: -1.73% to $397.34 amid broader semiconductor weakness\n• NVDA: -0.90% to $223.30; earnings in focus with analysts calling Huang 'godfather of AI'\n\n📰 Top News\n• S&P 500 and Nasdaq open higher as Treasury yields and oil prices retreat\n• Nvidia earnings set to take center stage; analysts debate valuation ahead of report\n\n⚡ Cautious tone as investors await NVDA earnings; tech sector underpressure despite broader market resilience."
+  },
+  {
     "date": "2026-05-15",
     "slot": "AM",
     "timestamp": "2026-05-15T14:28:37+0000",
@@ -173,19 +180,5 @@
     "timestamp": "2026-04-28T07:28:20-0700",
     "title": "Market Report",
     "text": "TIMESTAMP: 2026-04-28 07:27 PDT\n\n📊 Markets — Tuesday, April 28\n\nUAE quits OPEC as Iran conflict rattles energy markets; OpenAI growth miss slams AI-linked shares ahead of US open.\n\n📈 US (prior close)\n• S&P 500: 7,115.20 (-0.51%)\n• Nasdaq (QQQ): $657.73 (-0.98%)\n• Dow: $491.90 (+0.01%)\n\n🌏 Asia (overnight)\n• Nikkei 225: 59,917.46 (-1.02%) — pulled back from Monday's record\n• Hang Seng: -0.48% — weighed by oil fears, CATL -7% on $5B HK offering\n• Kospi: 6,641.02 (+0.39%) — another record high\n\n💱 Forex (from CAD)\n• USD/CAD: 1.366\n• EUR/CAD: 1.601\n• CNY/CAD: 0.200\n\n🛢️ Commodities & Crypto\n• Brent Crude: ~$111.16/bbl (+2.7%) — UAE exits OPEC amid Strait of Hormuz crisis\n• Gold: $4,569/oz (-2.40%) — sharp pullback from recent highs\n• BTC/USD: $75,800 (-2.02%)\n• LTC/USD: $54.86 (-1.28%)\n\n🎯 Movers\n• TSM: $391.96 (-3.22%) — dragged by OpenAI-linked AI spending fears\n• INTC: $82.81 (-2.57%) — gave back some of yesterday's 20% post-earnings surge\n• AMD: $324.36 (-3.07%) — semiconductor sector weakness on AI demand jitters\n• ORCL: -5% premarket — OpenAI reportedly missed user/revenue targets; $300B Stargate deal in focus\n• SoftBank: -10% in Tokyo — steepest AI-related selloff on OpenAI growth headwinds\n\n📰 News\n• UAE quit OPEC and OPEC+ Tuesday, dealing a historic blow to the cartel as the Iran war, Strait of Hormuz disruptions, and Saudi-UAE rift converge — Brent crude tops $111\n• OpenAI growth shortfall report (missed sales & user targets) sinks SoftBank, Oracle, CoreWeave, and pressures US tech futures; S&P 500 futures -0.6% premarket\n\n⚡ Sentiment: Risk-off bias entering today. The UAE/OPEC exit adds immense crude supply uncertainty atop an already-simmering Iran conflict, pressuring equities globally. Tech faces a double headwind: OpenAI growth doubts revive AI capex scrutiny just ahead of mega-cap earnings. Gold's sharp retreat suggests some liquidation/position-squaring. Pre-market futures point to a lower open. Key data today: home prices and consumer confidence. Earnings on deck: Aflac, Alphabet, Amazon, Ford, Meta, Microsoft."
-  },
-  {
-    "date": "2026-04-27",
-    "slot": "PM",
-    "timestamp": "2026-04-27T12:31:21-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-27 12:30 PDT\n\n📊 Markets — Monday, April 27, 2026\n\nWall Street treads water ahead of a blockbuster week of Mag-7 earnings, with NVDA surging over 3% and AMD sliding on semiconductor rotation.\n\n📈 US\n• S&P 500 (SPY): $715.20 (+0.18%)\n• Nasdaq (QQQ): $663.81 (flat)\n• Dow (DIA): $492.20 (flat)\n\n🛢️ Commodities & Crypto\n• Gold: $4,682/oz (-0.53%)\n• BTC/USD: $76,686 (-2.53%)\n• LTC/USD: $55.23 (-1.87%)\n\n🎯 Movers\n• **NVDA** (+3.54%): Surged to $215.65, leading the Mag-7 higher ahead of this week's earnings reports — bullish signals noted by analysts.\n• **AMD** (-3.16%): Shed nearly $11 to $336.82 as semi names saw rotation before earnings season.\n• **BABA** (-2.42%): Dipped to $132.53 amid broader risk-off sentiment on Chinese ADRs.\n\n📰\n• Mag-7 earnings week kicks off — Google, Meta, Microsoft, Amazon, and Apple all report this week; Goldman Sachs reset AAPL forecasts ahead of its print.\n• Ray Dalio recommends up to 15% allocation to gold on Iran war uncertainty; gold holds near $4,682 despite today's pullback.\n\n⚡ Mixed session with a cautious tone ahead of the heaviest earnings week of the season. Semis showed sharp divergence (NVDA surging, AMD sliding), crypto pulled back, and gold held elevated on geopolitical uncertainty. All eyes on Mag-7 results for direction."
-  },
-  {
-    "date": "2026-04-27",
-    "slot": "AM",
-    "timestamp": "2026-04-27T07:29:02-0700",
-    "title": "Market Report",
-    "text": "TIMESTAMP: 2026-04-27 07:27 PDT\n\n📊 Markets — Monday, April 27\n\nFutures flat to slightly lower as oil surges on stalled US-Iran talks, while Asia's Nikkei and Kospi closed at record highs overnight.\n\n📈 US (pre-market context)\n• S&P 500 (SPY): $713.74 (flat)\n• Nasdaq (QQQ): $662.63 (−0.2%)\n• Dow (DIA): $491.84 (−0.1%)\n\n🌏 Asia (overnight close)\n• Nikkei 225: +1.38% to 60,537 (record high)\n• Hang Seng: −0.2%\n• Kospi: +2.15% to 6,615 (record high)\n\n💱 Forex (from CAD)\n• USD/CAD: 1.361\n• EUR/CAD: 1.597\n• CNY/CAD: 0.199\n\n🛢️ Commodities & Crypto\n• Oil (WTI): ~$96/bbl (+1.8%)\n• Gold: $4,694/oz (−0.3%)\n• BTC/USD: $77,916 (−1.0%)\n• LTC/USD: $55.72 (−1.0%)\n\n🎯 Movers\n• INTC: +3.6% — AI growth story gains momentum ahead of earnings; analysts flag upside\n• AMD: −3.1% — pullback into May 5 earnings; multiple analysts remain bullish despite the dip\n• BABA: −2.6% — tracking Hang Seng weakness; China tech under pressure\n\n📰 Headlines\n• Wednesday is Fed day: rate decision with Powell's last scheduled press conference; Fed is expected to hold, tone is the variable\n• US-Iran talks collapse again; Iran submits new proposal to reopen Strait of Hormuz — oil jumps ~2% on supply fears\n\n⚡ Sentiment\nA heavy catalyst week ahead. US index futures are treading water after record levels as markets digest a fresh geopolitical risk premium in oil. The main event is Wednesday's Fed decision — a hold is priced in, but Powell's swan-song press conference could move markets. Mag-7 earnings season also kicks into gear alongside AMD's May 5 report. Iran headlines remain the wildcard for energy-linked moves."
   }
 ]
