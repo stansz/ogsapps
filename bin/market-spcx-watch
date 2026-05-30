@@ -3,7 +3,7 @@
 # Tracks QQQ forced-sell impact on watchlist + bottom-tier dip targets
 # Uses Finnhub for live prices (60 calls/min free) + hardcoded QQQ weights
 #
-# Budget: 20 Finnhub quote calls per run — well within free tier (60/min)
+# Budget: 22 Finnhub quote calls per run — well within free tier (60/min)
 
 set -euo pipefail
 source /opt/data/.env
@@ -37,6 +37,8 @@ QQQ_WEIGHT[ALNY]=0.17
 QQQ_WEIGHT[INSM]=0.10
 QQQ_WEIGHT[DXCM]=0.12
 QQQ_WEIGHT[ARM]=0.19
+QQQ_WEIGHT[REGN]=0.29
+QQQ_WEIGHT[VRTX]=0.49
 
 # ── Catalyst calendar ──
 declare -A CATALYST
@@ -48,10 +50,12 @@ CATALYST[INSM]="⚡ Arikayce label expansion; brensocatib revenue ramp (approved
 CATALYST[DXCM]="⚡ Stelo OTC CGM rollout; growing T2D market; potential M&A target"
 CATALYST[ARM]="⚡ AI/edge chip IP royalties; licensing growth; earnings catalyst Q3 2026"
 CATALYST[MCHP]="Semi cycle recovery play; forced sell dip entry — H2 2026"
+CATALYST[REGN]="🔥 Down 22% (fianlimab miss), 4 FDA approvals in 2026; Dupixent COPD ramp; Factor XI Ph3"
+CATALYST[VRTX]="🔥 DPN Ph3 data H2 2026 (\$5B pain market); Journavx approved acute pain; global expansion"
 
 # ── All tickers ──
 WATCHLIST=($(/opt/data/workspace/bin/market-symbols equities))
-BOTTOM_TIER=(GILD MRNA BIIB MCHP ON MDLZ KHC PEP ALNY INSM DXCM ARM)
+BOTTOM_TIER=(GILD MRNA BIIB MCHP ON MDLZ KHC PEP ALNY INSM DXCM ARM REGN VRTX)
 ALL_TICKERS=("${WATCHLIST[@]}" "${BOTTOM_TIER[@]}")
 
 echo "SPCX_WATCH: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
@@ -83,7 +87,7 @@ QQQ_WEIGHT = {
     'TSM': 1.0, 'INTC': 2.7, 'GILD': 0.74, 'MRNA': 0.3,
     'BIIB': 0.3, 'MCHP': 0.23, 'ON': 0.4, 'MDLZ': 0.35,
     'KHC': 0.13, 'PEP': 0.90, 'ALNY': 0.17, 'INSM': 0.10,
-    'DXCM': 0.12, 'ARM': 0.19
+    'DXCM': 0.12, 'ARM': 0.19, 'REGN': 0.29, 'VRTX': 0.49
 }
 
 CATALYST = {
@@ -94,7 +98,9 @@ CATALYST = {
     'INSM': '⚡ Arikayce expansion; brensocatib ramp (approved Apr 2026)',
     'DXCM': '⚡ Stelo OTC CGM; growing T2D market; M&A target',
     'ARM': '⚡ AI/edge chip IP royalties; licensing growth — Q3 2026',
-    'MCHP': 'Semi cycle recovery; forced sell dip entry — H2 2026'
+    'MCHP': 'Semi cycle recovery; forced sell dip entry — H2 2026',
+    'REGN': '🔥 Down 22% (fianlimab miss), 4 FDA approvals 2026; Dupixent COPD; Factor XI Ph3',
+    'VRTX': '🔥 DPN Ph3 data H2 2026 ($5B pain market); Journavx approved; global expansion'
 }
 
 def parse_quote(fpath):
@@ -174,12 +180,14 @@ for r in sorted(bt, key=lambda x: x['qqq_weight'], reverse=True):
     print(f"| **{r['ticker']}** | ${r['price']:.2f} | {chg} | ~{w:.1f}% | {dip} | {cat} |")
 
 print("")
-print("**🥇 GILD** — buy the forced dip (~July 7), hold 7 weeks to FDA decision (Aug 27). Calendar arbitrage.")
-print("**🥈 ALNY** — ultra-low weight (0.17%), ATTR-CM data catalyst. Highest % squeeze impact.")
-print("**🥉 INSM** — smallest QQQ position (0.10%), most elastic. Brensocatib revenue story.")
-print("**4. DXCM** — OTC CGM rollout, T2D market growing 20%+ YoY. Device M&A target.")
-print("**5. ARM** — AI semiconductor IP, low float. Magnified moves on rebalance day.")
-print("**6. MCHP** — semi cycle recovery play. Buy forced dip, hold to H2 recovery.")
+print("**🥇 REGN** — down 22%, 4 FDA approvals in 2026, most asymmetric squeeze. Triple catalyst.")
+print("**🥈 VRTX** — DPN Ph3 data ($5B market). Biggest pharma catalyst in Nasdaq-100.")
+print("**🥉 GILD** — buy dip, hold 7 weeks to HIV PDUFA (Aug 27). Calendar arbitrage.")
+print("**4. ALNY** — ATTR-CM data, ultra-low weight (0.17%). Highest % squeeze impact.")
+print("**5. INSM** — smallest QQQ position (0.10%), most elastic. Brensocatib revenue.")
+print("**6. DXCM** — OTC CGM rollout, T2D market 20%+ YoY. Device M&A target.")
+print("**7. ARM** — AI semiconductor IP, low float. Magnified rebalance moves.")
+print("**8. MCHP** — semi cycle recovery. Buy forced dip, hold to H2 recovery.")
 print("")
 print("**Strategy:** Mark ~July 1-11. Buy red days with no earnings. Hold 1-2 weeks post-rebalance.")
 print("Calendar trades (GILD, MRNA): hold through FDA decision for binary payoff.")
