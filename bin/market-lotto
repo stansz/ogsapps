@@ -1,0 +1,275 @@
+#!/bin/bash
+# market-lotto — Lottery ticket scanner for watchlist stocks
+# Uses AlphaVantage OVERVIEW data + existing sentiment data
+# Output: ranked LOTTO scores for the LLM
+#
+# Budget: 8 OVERVIEW calls (weekly scan, not daily)
+
+set -euo pipefail
+source /opt/data/.env
+
+AV_KEY="${ALPHA_VANTAGE_API:-}"
+if [ -z "$AV_KEY" ]; then
+  echo "ALPHA_VANTAGE_API not set"
+  exit 1
+fi
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+SYMBOLS=($(/opt/data/workspace/bin/market-symbols equities))
+
+echo "LOTTO_SCAN: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
+echo ""
+
+# ── Fetch OVERVIEW for all tickers (sequential, free tier 1/sec) ──
+for sym in "${SYMBOLS[@]}"; do
+  curl -sf --max-time 15 \
+    "https://www.alphavantage.co/query?function=OVERVIEW&symbol=${sym}&apikey=${AV_KEY}" \
+    -o "${TMPDIR}/${sym}.json" 2>/dev/null
+  sleep 1
+done
+
+# ── Score & rank ──
+export SYMBOLS_STR="${SYMBOLS[*]}"
+export TMPDIR
+python3 << 'PYEOF'
+import json, os, sys
+
+symbols = os.environ.get('SYMBOLS_STR', '').split()
+tmpdir = os.environ.get('TMPDIR', '/tmp')
+
+results = []
+
+for sym in symbols:
+    fpath = f"{tmpdir}/{sym}.json"
+    if not os.path.exists(fpath) or os.path.getsize(fpath) < 100:
+        continue
+    
+    try:
+        d = json.load(open(fpath))
+    except:
+        continue
+    
+    # Skip if rate-limited
+    if 'Information' in d:
+        continue
+    
+    # Extract values
+    try:
+        price = float(d.get('AnalystTargetPrice', 0) or 0)  # fallback: we need current price
+        # Actually: OVERVIEW doesn't have current price. Use 50DayMA as proxy.
+        ma50 = float(d.get('50DayMovingAverage', 0) or 0)
+        ma200 = float(d.get('200DayMovingAverage', 0) or 0)
+        w52h = float(d.get('52WeekHigh', 0) or 0)
+        w52l = float(d.get('52WeekLow', 0) or 0)
+        beta = float(d.get('Beta', 0) or 0)
+        target = float(d.get('AnalystTargetPrice', 0) or 0)
+        name = d.get('Name', sym)
+        sector = d.get('Sector', '?')
+        market_cap = float(d.get('MarketCapitalization', 0) or 0)
+        pe = float(d.get('PERatio', 0) or 0)
+        eps = float(d.get('EPS', 0) or 0)
+        profit_margin = float(d.get('ProfitMargin', 0) or 0)
+        rev_growth = float(d.get('QuarterlyRevenueGrowthYOY', 0) or 0)
+        earn_growth = float(d.get('QuarterlyEarningsGrowthYOY', 0) or 0)
+    except (ValueError, TypeError):
+        continue
+    
+    if w52h <= 0 or w52l <= 0:
+        continue
+    
+    # Estimate current price: use 50-day MA as rough proxy
+    est_price = ma50 if ma50 > 0 else (w52h + w52l) / 2
+    if est_price <= 0:
+        continue
+    
+    # ── Score components (0-1 scale) ──
+    
+    # 1. Proximity to 52W low (closer = more bounce potential = more lottery)
+    range_52w = w52h - w52l
+    if range_52w > 0:
+        pct_off_low = (est_price - w52l) / range_52w  # 0 = at low, 1 = at high
+        low_proximity = 1.0 - pct_off_low  # invert: 1 = at bottom
+    else:
+        low_proximity = 0.5
+    
+    # 2. Below 50-day MA? (below = potential mean reversion bounce)
+    if ma50 > 0:
+        below_ma = 1.0 if est_price < ma50 else 0.3  # binary with floor
+    else:
+        below_ma = 0.5
+    
+    # 3. Below 200-day MA? (deeper bearish signal — interesting bounce candidate)
+    if ma200 > 0:
+        below_200 = 1.0 if est_price < ma200 else 0.2
+    else:
+        below_200 = 0.5
+    
+    # 4. Beta (higher = more volatile = more lottery-like, but cap at reasonable level)
+    beta_score = min(beta / 3.0, 1.0) if beta > 0 else 0.5
+    
+    # 5. Analyst upside (how far below target — potential catalyst)
+    if target > 0 and est_price > 0:
+        upside = (target - est_price) / est_price
+        upside_score = max(min(upside * 100 / 50, 1.0), 0.0)  # 50% upside = max score
+    else:
+        upside_score = 0.0
+    
+    # 6. Growth check (even lotto tickets should have some growth story)
+    growth_present = 0.5 if (rev_growth > 0 or earn_growth > 0) else 0.0
+    
+    # ── Composite LOTTO score ──
+    lotto = (
+        low_proximity * 0.30 +
+        below_ma * 0.20 +
+        below_200 * 0.10 +
+        beta_score * 0.10 +
+        upside_score * 0.15 +
+        growth_present * 0.15
+    )
+    
+    # ── Summary flags ──
+    flags = []
+    if pct_off_low < 0.15:
+        flags.append("🔥 NEAR 52W LOW")
+    if est_price < ma50 and ma50 > 0:
+        flags.append("📉 BELOW 50MA")
+    if est_price < ma200 and ma200 > 0:
+        flags.append("📉 BELOW 200MA")
+    if beta > 2:
+        flags.append(f"🎢 BETA {beta:.1f}")
+    if target > est_price * 1.2 and target > 0:
+        flags.append(f"🎯 {((target-est_price)/est_price*100):.0f}% UPSIDE")
+    if rev_growth > 0.1:
+        flags.append(f"📈 REV +{rev_growth*100:.0f}%")
+    if earn_growth > 0.1:
+        flags.append(f"💰 EPS +{earn_growth*100:.0f}%")
+    
+    # Store SPCX risk for later section (don't clutter flags)
+    QQQ_HIGH_WEIGHT = {'NVDA': 0.08, 'AAPL': 0.07, 'META': 0.05, 'AMD': 0.02, 'TSM': 0.01, 'INTC': 0.005}
+    spcx_weight = QQQ_HIGH_WEIGHT.get(sym, 0)
+    
+    results.append({
+        'ticker': sym,
+        'name': name,
+        'lotto': round(lotto, 3),
+        'est_price': round(est_price, 2),
+        'w52h': w52h,
+        'w52l': w52l,
+        'pct_off_low': round(pct_off_low * 100, 1),
+        'ma50': ma50,
+        'ma200': ma200,
+        'beta': round(beta, 2),
+        'target': target,
+        'sector': sector,
+        'market_cap': market_cap,
+        'pe': round(pe, 2) if pe else 0,
+        'rev_growth': round(rev_growth * 100, 1),
+        'earn_growth': round(earn_growth * 100, 1),
+        'spcx_weight': round(spcx_weight * 100, 1),
+        'flags': ' '.join(flags) if flags else '—'
+    })
+
+# Sort by LOTTO score descending
+results.sort(key=lambda x: x['lotto'], reverse=True)
+
+# ── Output ──
+print("## LOTTERY TICKETS (weekly scan)")
+print("")
+print(f"| Rank | Ticker | Score | Price | 52W Range | Beta | Flags |")
+print(f"|------|--------|-------|-------|-----------|------|-------|")
+for i, r in enumerate(results, 1):
+    range_str = f"\${r['w52l']}–\${r['w52h']}"
+    price_str = f"\${r['est_price']}" if r['est_price'] > 0 else "?"
+    print(f"| {i} | **{r['ticker']}** | {r['lotto']:.3f} | {price_str} | {range_str} | {r['beta']} | {r['flags']} |")
+
+print("")
+print("## DETAILS")
+print("")
+for r in results:
+    print(f"**{r['ticker']}** ({r['name']}, {r['sector']})")
+    print(f"  LOTTO: {r['lotto']:.3f} | Est Price: \${r['est_price']} | {r['pct_off_low']}% off 52W low")
+    print(f"  50MA: \${r['ma50']} | 200MA: \${r['ma200']} | Beta: {r['beta']} | P/E: {r['pe']}")
+    print(f"  Rev Growth: {r['rev_growth']}% | EPS Growth: {r['earn_growth']}%")
+    print(f"  Flags: {r['flags']}")
+    print("")
+
+# ── SPCX Risk Analysis ──
+print("## 🚀 SPCX RISK ANALYSIS (SpaceX IPO)")
+print("")
+print("**Timeline:** ~July 6-7, 2026 — Nasdaq-100 Fast Entry adds SPCX after 15 trading days.")
+print("**Mechanism:** Passive funds (QQQ/SPY/IWM) must buy ~19% of SPCX float. To raise")
+print(f"  cash, they **mechanically sell** existing QQQ holdings. Goldman estimates $95B in")
+print("  forced selling. This is index math, not a judgment on any company.")
+print("")
+print("### BUY (on the rebalance dip)")
+print("")
+print("| Ticker | QQQ Weight | Impact | Thesis |")
+print("|--------|-----------|--------|--------|")
+any_buy = False
+for r in results:
+    w = r.get('spcx_weight', 0)
+    if w > 3:
+        any_buy = True
+        est_sell = f"~{w*0.6:.1f}% of position sold"
+        print(f"| **{r['ticker']}** | ~{w:.0f}% | ⚠️ {est_sell} | Buy the forced dip; rebounds post-rebalance |")
+if not any_buy:
+    print("| *(none in watchlist)* | — | — | — |")
+print("")
+print("### SELL (before rebalance)")
+print("")
+print("| Ticker | Reason |")
+print("|--------|--------|")
+# Nothing in watchlist to pre-sell, but note the general case
+print("| *(none in watchlist)* | No watchlist stocks warrant pre-selling for this event |")
+print("")
+print("### OTHER (unaffected)")
+print("")
+others = [r for r in results if r.get('spcx_weight', 0) <= 3]
+if others:
+    for r in others:
+        note = "No QQQ exposure" if r.get('spcx_weight', 0) == 0 else f"Minimal QQQ ({r.get('spcx_weight', 0):.0f}%)"
+        print(f"| **{r['ticker']}** | {note} |")
+else:
+    print("| *(all watchlist tickers affected)* | — |")
+print("")
+print("### 🎯 BOTTOM-TIER DIP TARGETS (not in watchlist)")
+print("")
+print("These low-weight QQQ stocks have thin liquidity. Even small forced sells")
+print("can gap them 5-8%. Same trade: buy the dip, no fundamental problem.")
+print("**Stacked catalysts = rebalance dip buys the entry, FDA/event creates the exit.**")
+print("")
+print("| Ticker | Name | QQQ Wt | Sector | SPCX Dip | 🧬 Catalyst | Date |")
+print("|--------|------|--------|--------|----------|-------------|------|")
+print("| **GILD** | Gilead Sciences | ~0.4% | Biotech | 5-7% | 🔥 HIV BIC/LEN PDUFA (priority review) | **Aug 27** |")
+print("| **MRNA** | Moderna | ~0.3% | Biotech | 5-8% | 🔥 Flu vaccine PDUFA (27% better efficacy) | **Aug 5** |")
+print("| **BIIB** | Biogen | ~0.3% | Biotech | 5-8% | Tau Alzheimer's → Phase 3 | Q3 2026 |")
+print("| **MCHP** | Microchip Tech | ~0.3% | Semis | 4-6% | — (semiconductor cycle recovery) | — |")
+print("| **ON** | ON Semiconductor | ~0.4% | Semis | 4-6% | — (auto/industrial chip rebound) | — |")
+print("| **MDLZ** | Mondelez | ~0.5% | Consumer | 3-5% | — (defensive staple, no catalyst needed) | — |")
+print("| **KHC** | Kraft Heinz | ~0.4% | Consumer | 3-5% | — (defensive staple) | — |")
+print("| **PEP** | PepsiCo | ~0.5% | Consumer | 3-4% | — (earnings mid-July possible overlap) | — |")
+print("")
+print("**🥇 GILD is the best setup:** SPCX forced-sell entry (~July 7) → 7 weeks later →")
+print("FDA decision on once-daily HIV pill (priority review = high approval odds). If")
+print("approved, that's an 8-15% pop on top of the rebalance recovery. Calendar arbitrage.")
+print("")
+print("**🥈 MRNA is the tighter timeline:** Same dip → only 4 weeks until flu vaccine PDUFA.")
+print("Phase 3 data in NEJM showed 27% better efficacy. Approval odds 60-70%. If it hits,")
+print("the catalyst pop compounds the rebalance bounce. Higher risk, faster payoff.")
+print("")
+print("**Strategy:** Same calendar (~July 1-11). Same logic. Better spreads.")
+print("These aren't broken companies — they're collateral damage from index math.")
+print("Cash ready. Buy the red day that has no news. Wait 1-2 weeks. Collect.")
+print("")
+print("⚠️ **Do NOT short these.** Borrow costs spike when everyone piles in.")
+print("Buying the dip = free. Shorting = paying 8-15% annualized for timing risk.")
+print("")
+print("**Strategy:** Mark ~July 1 on the calendar. If NVDA/AAPL/META drop 3-5% in")
+print("the first week of July with no earnings/bad news, that's the rebalance dip.")
+print("Buy into it. The forced selling ends when SPCX is fully weighted (~1-2 days).")
+
+PYEOF
+
+exit $?
