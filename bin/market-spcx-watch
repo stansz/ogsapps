@@ -1,17 +1,16 @@
 #!/bin/bash
 # market-spcx-watch — SPCX IPO rebalance impact tracker
 # Tracks QQQ forced-sell impact on watchlist + bottom-tier dip targets
-# Output: formatted markdown report for the LLM or direct delivery
+# Uses Finnhub for live prices (60 calls/min free) + hardcoded QQQ weights
 #
-# Uses AlphaVantage OVERVIEW + GLOBAL_QUOTE for current prices
-# Budget: ~16 OVERVIEW calls (watchlist + bottom-tier) + 1 QUOTE each
+# Budget: 16 Finnhub quote calls per run — well within free tier
 
 set -euo pipefail
 source /opt/data/.env
 
-AV_KEY="${ALPHA_VANTAGE_API:-}"
-if [ -z "$AV_KEY" ]; then
-  echo "ALPHA_VANTAGE_API not set"
+FH_KEY="${FINNHUB_KEY:-}"
+if [ -z "$FH_KEY" ]; then
+  echo "FINNHUB_KEY not set"
   exit 1
 fi
 
@@ -35,13 +34,13 @@ QQQ_WEIGHT[MDLZ]=0.5
 QQQ_WEIGHT[KHC]=0.4
 QQQ_WEIGHT[PEP]=0.5
 
-# ── Bottom-tier catalyst calendar ──
+# ── Catalyst calendar ──
 declare -A CATALYST
-CATALYST[GILD]="HIV BIC/LEN PDUFA (priority review) | Aug 27"
-CATALYST[MRNA]="Flu vaccine PDUFA (27% better efficacy) | Aug 5"
-CATALYST[BIIB]="Tau Alzheimer's Phase 3 | Q3 2026"
+CATALYST[GILD]="🔥 HIV BIC/LEN PDUFA (priority review) — Aug 27"
+CATALYST[MRNA]="🔥 Flu vaccine PDUFA (27% better efficacy) — Aug 5"
+CATALYST[BIIB]="Tau Alzheimer's Phase 3 — Q3 2026"
 
-# ── All tickers to track ──
+# ── All tickers ──
 WATCHLIST=($(/opt/data/workspace/bin/market-symbols equities))
 BOTTOM_TIER=(GILD MRNA BIIB MCHP ON MDLZ KHC PEP)
 ALL_TICKERS=("${WATCHLIST[@]}" "${BOTTOM_TIER[@]}")
@@ -49,12 +48,12 @@ ALL_TICKERS=("${WATCHLIST[@]}" "${BOTTOM_TIER[@]}")
 echo "SPCX_WATCH: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
 echo ""
 
-# ── Fetch OVERVIEW for all tickers ──
+# ── Fetch Finnhub quotes for all tickers ──
 for sym in "${ALL_TICKERS[@]}"; do
-  curl -sf --max-time 15 \
-    "https://www.alphavantage.co/query?function=OVERVIEW&symbol=${sym}&apikey=${AV_KEY}" \
+  curl -sf --max-time 10 \
+    "https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FH_KEY}" \
     -o "${TMPDIR}/${sym}.json" 2>/dev/null
-  sleep 1
+  sleep 0.3
 done
 
 # ── Analyze ──
@@ -78,55 +77,40 @@ QQQ_WEIGHT = {
 }
 
 CATALYST = {
-    'GILD': 'HIV BIC/LEN PDUFA (priority review) | Aug 27',
-    'MRNA': 'Flu vaccine PDUFA (27% better efficacy) | Aug 5',
-    'BIIB': 'Tau Alzheimer\'s Phase 3 | Q3 2026'
+    'GILD': '🔥 HIV BIC/LEN PDUFA (priority review) — Aug 27',
+    'MRNA': '🔥 Flu vaccine PDUFA (27% better efficacy) — Aug 5',
+    'BIIB': 'Tau Alzheimer\'s Phase 3 — Q3 2026'
 }
 
-def parse_overview(fpath):
+def parse_quote(fpath):
     try:
         d = json.load(open(fpath))
     except:
         return None
-    if 'Information' in d or 'Symbol' not in d:
+    c = d.get('c', 0)
+    if c == 0:
         return None
-    try:
-        ma50 = float(d.get('50DayMovingAverage', 0) or 0)
-        w52h = float(d.get('52WeekHigh', 0) or 0)
-        w52l = float(d.get('52WeekLow', 0) or 0)
-        # Use MA50 as price proxy (same as lotto scanner)
-        price = ma50 if ma50 > 0 else (w52h + w52l) / 2
-        return {
-            'name': d.get('Name', '?'),
-            'price': price,
-            'ma50': ma50,
-            'ma200': float(d.get('200DayMovingAverage', 0) or 0),
-            'w52h': w52h,
-            'w52l': w52l,
-            'beta': float(d.get('Beta', 0) or 0),
-            'target': float(d.get('AnalystTargetPrice', 0) or 0),
-            'sector': d.get('Sector', '?'),
-            'mkt_cap': float(d.get('MarketCapitalization', 0) or 0) / 1e9,
-            'pe': float(d.get('PERatio', 0) or 0),
-            'name_full': d.get('Name', sym)
-        }
-    except (ValueError, TypeError):
-        return None
+    return {
+        'price': float(c),
+        'change': float(d.get('d', 0)),
+        'change_pct': float(d.get('dp', 0)),
+        'high': float(d.get('h', 0)),
+        'low': float(d.get('l', 0)),
+        'prev_close': float(d.get('pc', 0))
+    }
 
-# Collect data
 results = []
 for sym in all_tickers:
-    ov = parse_overview(f"{tmpdir}/{sym}.json")
-    if ov is None:
+    q = parse_quote(f"{tmpdir}/{sym}.json")
+    if q is None:
         continue
     
-    ov['ticker'] = sym
-    ov['qqq_weight'] = QQQ_WEIGHT.get(sym, 0)
-    ov['in_watchlist'] = sym in watchlist
-    ov['catalyst'] = CATALYST.get(sym, '')
-    results.append(ov)
+    q['ticker'] = sym
+    q['qqq_weight'] = QQQ_WEIGHT.get(sym, 0)
+    q['catalyst'] = CATALYST.get(sym, '')
+    q['in_watchlist'] = sym in watchlist
+    results.append(q)
 
-# Split into watchlist and bottom-tier
 wl = [r for r in results if r['in_watchlist']]
 bt = [r for r in results if not r['in_watchlist']]
 
@@ -139,57 +123,46 @@ print(f"to raise cash for SPCX. Goldman estimates ~$95B in forced selling. Index
 print("")
 
 # ── Watchlist Impact ──
-print("### 📊 YOUR WATCHLIST — QQQ FORCED SELL IMPACT")
+print("### 📊 YOUR WATCHLIST — LIVE QQQ IMPACT")
 print("")
-print("| Ticker | Price | QQQ Wt | Est. Sell | 50MA | 200MA | Beta | Target |")
-print("|--------|-------|--------|-----------|------|-------|------|--------|")
-buy_targets = []
+print("| Ticker | Price | Chg% | QQQ Wt | Est. Forced Sell | Dip Effect |")
+print("|--------|-------|------|--------|------------------|------------|")
 for r in sorted(wl, key=lambda x: x['qqq_weight'], reverse=True):
     w = r['qqq_weight']
-    if w > 0.5:
-        est_sell = f"{w * 0.6:.1f}% of position"
-        impact = f"⚠️ ~{est_sell}"
-        buy_targets.append(r)
+    chg = f"{r['change_pct']:+.1f}%" if r['change_pct'] != 0 else "—"
+    
+    if w >= 2.0:
+        est_sell = f"~{w * 0.6:.1f}% position"
+        dip = f"⚠️ {3 + w * 0.2:.0f}-{3 + w * 0.5:.0f}% dip"
+    elif w > 0.5:
+        est_sell = f"~{w * 0.6:.1f}% position"
+        dip = "1-3% dip"
     else:
-        impact = "Minimal"
+        est_sell = "Minimal"
+        dip = "Negligible"
     
-    price_str = f"${r['price']:.2f}" if r['price'] > 0 else "?"
-    ma50_str = f"${r['ma50']:.2f}" if r['ma50'] > 0 else "?"
-    ma200_str = f"${r['ma200']:.2f}" if r['ma200'] > 0 else "?"
-    target_str = f"${r['target']:.2f}" if r['target'] > 0 else "?"
-    
-    print(f"| **{r['ticker']}** | {price_str} | ~{w:.0f}% | {impact} | {ma50_str} | {ma200_str} | {r['beta']:.1f} | {target_str} |")
-
-if buy_targets:
-    print("")
-    print("**🎯 Buy targets on the rebalance dip:** ", end="")
-    print(", ".join(f"{r['ticker']} (est +{((r['target']-r['price'])/r['price']*100):.0f}% upside)" for r in buy_targets if r['target'] > r['price']))
+    print(f"| **{r['ticker']}** | ${r['price']:.2f} | {chg} | ~{w:.0f}% | {est_sell} | {dip} |")
 
 print("")
-print("### 🎯 BOTTOM-TIER DIP CANDIDATES")
+
+# ── Bottom-tier ──
+print("### 🎯 BOTTOM-TIER DIP CANDIDATES (with catalysts)")
 print("")
-print("Low-weight QQQ stocks with thin liquidity. Small forced sells can gap them 5-8%.")
-print("| Ticker | Price | QQQ Wt | Est Dip | Sector | 🧬 Catalyst |")
-print("|--------|-------|--------|---------|--------|-------------|")
+print("| Ticker | Price | Chg% | QQQ Wt | Est. Dip | Catalyst |")
+print("|--------|-------|------|--------|----------|----------|")
 
 for r in sorted(bt, key=lambda x: x['qqq_weight'], reverse=True):
+    chg = f"{r['change_pct']:+.1f}%" if r['change_pct'] != 0 else "—"
     w = r['qqq_weight']
-    if w >= 0.4:
-        est_dip = "3-7%"
-    else:
-        est_dip = "4-8%"
-    
-    price_str = f"${r['price']:.2f}" if r['price'] > 0 else "?"
+    dip = "3-7%" if w >= 0.4 else "4-8%"
     cat = r['catalyst'] if r['catalyst'] else "—"
-    
-    print(f"| **{r['ticker']}** | {price_str} | ~{w:.1f}% | {est_dip} | {r['sector']} | {cat} |")
+    print(f"| **{r['ticker']}** | ${r['price']:.2f} | {chg} | ~{w:.1f}% | {dip} | {cat} |")
 
 print("")
-print("**Strategy:** Mark ~July 1-11 on the calendar. Buy the red days with no earnings/news.")
-print("Hold 1-2 weeks post-rebalance for the snap-back. Not short candidates — borrow costs spike.")
+print("**🥇 GILD** — buy the forced dip (~July 7), hold 7 weeks to FDA decision (Aug 27). Calendar arbitrage.")
+print("**🥈 MRNA** — same entry, only 4 weeks to flu vaccine PDUFA. Higher risk, faster payoff.")
 print("")
-print("**🥇 GILD is the best setup:** SPCX forced-sell entry (~July 7) → 7 weeks → FDA decision (Aug 27).")
-print("Calendar arbitrage — buy the dip, sell the approval pop.")
+print("**Strategy:** Mark ~July 1-11. Buy red days with no earnings. Hold 1-2 weeks post-rebalance.")
 PYEOF
 
 exit $?
