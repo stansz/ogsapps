@@ -3,7 +3,7 @@
 # Tracks QQQ forced-sell impact on watchlist + bottom-tier dip targets
 # Uses Finnhub for live prices (60 calls/min free) + hardcoded QQQ weights
 #
-# Budget: 16 Finnhub quote calls per run — well within free tier
+# Budget: 20 Finnhub quote calls per run — well within free tier (60/min)
 
 set -euo pipefail
 source /opt/data/.env
@@ -19,30 +19,39 @@ trap 'rm -rf "$TMPDIR"' EXIT
 
 # ── QQQ weights (approximate, as of May 2026) ──
 declare -A QQQ_WEIGHT
-QQQ_WEIGHT[NVDA]=8.0
-QQQ_WEIGHT[AAPL]=7.0
-QQQ_WEIGHT[META]=5.0
-QQQ_WEIGHT[AMD]=2.0
+QQQ_WEIGHT[NVDA]=8.3
+QQQ_WEIGHT[AAPL]=7.3
+QQQ_WEIGHT[META]=3.0
+QQQ_WEIGHT[AMD]=3.6
 QQQ_WEIGHT[TSM]=1.0
-QQQ_WEIGHT[INTC]=0.5
-QQQ_WEIGHT[GILD]=0.4
+QQQ_WEIGHT[INTC]=2.7
+QQQ_WEIGHT[GILD]=0.74
 QQQ_WEIGHT[MRNA]=0.3
 QQQ_WEIGHT[BIIB]=0.3
-QQQ_WEIGHT[MCHP]=0.3
+QQQ_WEIGHT[MCHP]=0.23
 QQQ_WEIGHT[ON]=0.4
-QQQ_WEIGHT[MDLZ]=0.5
-QQQ_WEIGHT[KHC]=0.4
-QQQ_WEIGHT[PEP]=0.5
+QQQ_WEIGHT[MDLZ]=0.35
+QQQ_WEIGHT[KHC]=0.13
+QQQ_WEIGHT[PEP]=0.90
+QQQ_WEIGHT[ALNY]=0.17
+QQQ_WEIGHT[INSM]=0.10
+QQQ_WEIGHT[DXCM]=0.12
+QQQ_WEIGHT[ARM]=0.19
 
 # ── Catalyst calendar ──
 declare -A CATALYST
 CATALYST[GILD]="🔥 HIV BIC/LEN PDUFA (priority review) — Aug 27"
 CATALYST[MRNA]="🔥 Flu vaccine PDUFA (27% better efficacy) — Aug 5"
 CATALYST[BIIB]="Tau Alzheimer's Phase 3 — Q3 2026"
+CATALYST[ALNY]="⚡ Amvuttra ATTR-CM data; vutrisiran label expansion — H2 2026"
+CATALYST[INSM]="⚡ Arikayce label expansion; brensocatib revenue ramp (approved Apr 2026)"
+CATALYST[DXCM]="⚡ Stelo OTC CGM rollout; growing T2D market; potential M&A target"
+CATALYST[ARM]="⚡ AI/edge chip IP royalties; licensing growth; earnings catalyst Q3 2026"
+CATALYST[MCHP]="Semi cycle recovery play; forced sell dip entry — H2 2026"
 
 # ── All tickers ──
 WATCHLIST=($(/opt/data/workspace/bin/market-symbols equities))
-BOTTOM_TIER=(GILD MRNA BIIB MCHP ON MDLZ KHC PEP)
+BOTTOM_TIER=(GILD MRNA BIIB MCHP ON MDLZ KHC PEP ALNY INSM DXCM ARM)
 ALL_TICKERS=("${WATCHLIST[@]}" "${BOTTOM_TIER[@]}")
 
 echo "SPCX_WATCH: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
@@ -70,16 +79,22 @@ bottom_tier = os.environ.get('BOTTOM_TIER_STR', '').split()
 all_tickers = watchlist + bottom_tier
 
 QQQ_WEIGHT = {
-    'NVDA': 8.0, 'AAPL': 7.0, 'META': 5.0, 'AMD': 2.0,
-    'TSM': 1.0, 'INTC': 0.5, 'GILD': 0.4, 'MRNA': 0.3,
-    'BIIB': 0.3, 'MCHP': 0.3, 'ON': 0.4, 'MDLZ': 0.5,
-    'KHC': 0.4, 'PEP': 0.5
+    'NVDA': 8.3, 'AAPL': 7.3, 'META': 3.0, 'AMD': 3.6,
+    'TSM': 1.0, 'INTC': 2.7, 'GILD': 0.74, 'MRNA': 0.3,
+    'BIIB': 0.3, 'MCHP': 0.23, 'ON': 0.4, 'MDLZ': 0.35,
+    'KHC': 0.13, 'PEP': 0.90, 'ALNY': 0.17, 'INSM': 0.10,
+    'DXCM': 0.12, 'ARM': 0.19
 }
 
 CATALYST = {
     'GILD': '🔥 HIV BIC/LEN PDUFA (priority review) — Aug 27',
     'MRNA': '🔥 Flu vaccine PDUFA (27% better efficacy) — Aug 5',
-    'BIIB': 'Tau Alzheimer\'s Phase 3 — Q3 2026'
+    'BIIB': 'Tau Alzheimer\'s Phase 3 — Q3 2026',
+    'ALNY': '⚡ Amvuttra ATTR-CM data; vutrisiran expansion — H2 2026',
+    'INSM': '⚡ Arikayce expansion; brensocatib ramp (approved Apr 2026)',
+    'DXCM': '⚡ Stelo OTC CGM; growing T2D market; M&A target',
+    'ARM': '⚡ AI/edge chip IP royalties; licensing growth — Q3 2026',
+    'MCHP': 'Semi cycle recovery; forced sell dip entry — H2 2026'
 }
 
 def parse_quote(fpath):
@@ -160,9 +175,14 @@ for r in sorted(bt, key=lambda x: x['qqq_weight'], reverse=True):
 
 print("")
 print("**🥇 GILD** — buy the forced dip (~July 7), hold 7 weeks to FDA decision (Aug 27). Calendar arbitrage.")
-print("**🥈 MRNA** — same entry, only 4 weeks to flu vaccine PDUFA. Higher risk, faster payoff.")
+print("**🥈 ALNY** — ultra-low weight (0.17%), ATTR-CM data catalyst. Highest % squeeze impact.")
+print("**🥉 INSM** — smallest QQQ position (0.10%), most elastic. Brensocatib revenue story.")
+print("**4. DXCM** — OTC CGM rollout, T2D market growing 20%+ YoY. Device M&A target.")
+print("**5. ARM** — AI semiconductor IP, low float. Magnified moves on rebalance day.")
+print("**6. MCHP** — semi cycle recovery play. Buy forced dip, hold to H2 recovery.")
 print("")
 print("**Strategy:** Mark ~July 1-11. Buy red days with no earnings. Hold 1-2 weeks post-rebalance.")
+print("Calendar trades (GILD, MRNA): hold through FDA decision for binary payoff.")
 PYEOF
 
 exit $?
