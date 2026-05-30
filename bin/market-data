@@ -1,0 +1,245 @@
+#!/bin/bash
+# market-data - Collect all market data for briefings in one shot
+# Usage: market-data [morning|eod|all]
+#   morning - bulletins + google news + forex (default)
+#   eod     - top stories + google news + no forex
+#   all     - skip date filter on news (for manual runs)
+#
+# Output: compact text block (~500-800 words) ready for LLM input
+# Exit: 0 if all primary sources succeeded, 1 if any failed
+
+set -euo pipefail
+source /opt/data/.env
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+# ── Fire all API calls in parallel ──────────────────────────
+
+# Finnhub quotes
+SYMBOLS=($(/opt/data/workspace/bin/market-symbols equities))
+MOVERS=($(/opt/data/workspace/bin/market-symbols movers))
+INDICES=($(/opt/data/workspace/bin/market-symbols indices))
+CRYPTO=($(/opt/data/workspace/bin/market-symbols crypto))
+ALL_SYMS=("${INDICES[@]}" "${SYMBOLS[@]}" "${MOVERS[@]}")
+
+for sym in "${ALL_SYMS[@]}"; do
+  curl -sf --max-time 15 \
+    "https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB_KEY}" \
+    > "${TMPDIR}/${sym}.json" 2>/dev/null &
+done
+
+# Twelve Data gold + crypto
+curl -sf --max-time 15 -H 'X-API-Version: last' \
+  "https://api.twelvedata.com/quote?symbol=XAU/USD&apikey=${TWELVE_DATA_KEY}" \
+  > "${TMPDIR}/gold.json" 2>/dev/null &
+for sym in "${CRYPTO[@]}"; do
+  safe_sym=$(echo "$sym" | tr '/' '_')
+  curl -sf --max-time 15 -H 'X-API-Version: last' \
+    "https://api.twelvedata.com/quote?symbol=${sym}&apikey=${TWELVE_DATA_KEY}" \
+    > "${TMPDIR}/${safe_sym}.json" 2>/dev/null &
+done
+
+# Mode setup
+MODE="${1:-morning}"
+SKIP_FOREX=false
+MW_FEED=""
+case "$MODE" in
+  morning)
+    MW_FEED="https://feeds.content.dowjones.io/public/rss/mw_bulletins"
+    ;;
+  eod)
+    MW_FEED="https://feeds.marketwatch.com/marketwatch/topstories/"
+    SKIP_FOREX=true
+    ;;
+  all)
+    ;;
+esac
+
+# Fixer forex
+if [ "$SKIP_FOREX" = "false" ]; then
+curl -sf --max-time 15 \
+  "https://data.fixer.io/api/latest?access_key=${FIXER_API_KEY}&symbols=USD,CAD,EUR,CNY" \
+  > "${TMPDIR}/forex.json" 2>/dev/null &
+fi
+
+# MarketWatch RSS (bulletins or topstories based on mode)
+if [ -n "$MW_FEED" ]; then
+  curl -s -L --max-time 10 "$MW_FEED" -o "${TMPDIR}/mw.xml" 2>/dev/null &
+fi
+
+# Google News RSS — ticker-specific headlines (built from SYMBOLS array)
+NEWS_TICKERS=$(printf '%s+OR+' "${SYMBOLS[@]}" | sed 's/+OR+$//')
+curl -s -L --max-time 10 \
+  "https://news.google.com/rss/search?q=${NEWS_TICKERS}+earnings&hl=en-US&gl=US&ceid=US:en" \
+  -o "${TMPDIR}/news.xml" 2>/dev/null &
+
+wait
+
+# ── Helpers ─────────────────────────────────────────────────
+
+JQ=/opt/data/workspace/bin/jq
+FAIL=0
+
+has_data() {
+  [ -s "$1" ] && $JQ -e . "$1" >/dev/null 2>&1
+}
+
+fmt_quote() {
+  # $1 = symbol label, $2 = file path
+  local f="$2"
+  if has_data "$f"; then
+    local c dp d h l
+    # Detect Finnhub vs Twelve Data format
+    if $JQ -e '.c' "$f" >/dev/null 2>&1; then
+      c=$($JQ -r '.c' "$f")
+      dp=$($JQ -r '.dp' "$f")
+      d=$($JQ -r '.d' "$f")
+      h=$($JQ -r '.h' "$f")
+      l=$($JQ -r '.l' "$f")
+    else
+      c=$($JQ -r '.close' "$f")
+      dp=$($JQ -r '.percent_change' "$f")
+      d=$($JQ -r '.change' "$f")
+      h=$($JQ -r '.high' "$f")
+      l=$($JQ -r '.low' "$f")
+    fi
+    if [ "$c" = "0" ] || [ "$c" = "null" ] || [ -z "$c" ]; then
+      echo "$1: UNAVAILABLE (market closed or invalid symbol)"
+      return 1
+    fi
+    local sign=""
+    if echo "$dp" | grep -qE '^[0-9]'; then sign="+"; fi
+    # Tag movers >2% for easy spotting
+    local mover=""
+    local abs_dp
+    abs_dp=$(echo "$dp" | sed 's/^-//')
+    if awk "BEGIN{exit !($abs_dp > 2)}" 2>/dev/null; then
+      mover=" ⚡ MOVER"
+    fi
+    echo "$1: \$${c} (${sign}${dp}% chg \$${d}) [H: \$${h} L: \$${l}]${mover}"
+  else
+    echo "$1: FETCH_FAILED"
+    return 1
+  fi
+}
+
+# ── Output ──────────────────────────────────────────────────
+
+# Timestamp (must be first line of output)
+echo "TIMESTAMP: $(TZ='America/Vancouver' date '+%A, %Y-%m-%d %H:%M %Z')"
+echo "## DATA COLLECTED"
+
+# Stocks & Indices
+echo "## QUOTES"
+echo ""
+for sym in "${INDICES[@]}" "${SYMBOLS[@]}"; do
+  fmt_quote "$sym" "${TMPDIR}/${sym}.json" || FAIL=1
+done
+
+# Broad market movers
+echo ""
+echo "## MARKET MOVERS"
+echo ""
+for sym in "${MOVERS[@]}"; do
+  fmt_quote "$sym" "${TMPDIR}/${sym}.json" || FAIL=1
+done
+
+# Crypto
+echo ""
+echo "## CRYPTO"
+echo ""
+for sym in "${CRYPTO[@]}"; do
+  safe_sym=$(echo "$sym" | tr '/' '_')
+  display_sym=$(echo "$sym" | sed 's/\///g')
+  fmt_quote "${display_sym}" "${TMPDIR}/${safe_sym}.json" || FAIL=1
+done
+
+# Gold
+echo ""
+echo "## GOLD"
+echo ""
+f="${TMPDIR}/gold.json"
+if has_data "$f"; then
+  close=$($JQ -r '.close // empty' "$f")
+  if [ -n "$close" ]; then
+    pct=$($JQ -r '.percent_change // "N/A"' "$f")
+    h=$($JQ -r '.high // "N/A"' "$f")
+    l=$($JQ -r '.low // "N/A"' "$f")
+    sign=""
+    if echo "$pct" | grep -qE '^[0-9]'; then sign="+"; fi
+    echo "XAU/USD: \$${close} (${sign}${pct}%) H: \$${h} L: \$${l}"
+  else
+    echo "XAU/USD: FETCH_FAILED (no data)"
+    FAIL=1
+  fi
+else
+  echo "XAU/USD: FETCH_FAILED"
+  FAIL=1
+fi
+
+# Forex
+if [ "$SKIP_FOREX" = "false" ]; then
+echo ""
+echo "## FOREX (from CAD)"
+echo ""
+f="${TMPDIR}/forex.json"
+if has_data "$f" && [ "$($JQ -r '.success // empty' "$f")" = "true" ]; then
+  $JQ -r '
+    .rates as $r |
+    ($r.USD / $r.CAD) as $usd |
+    (1 / $r.CAD) as $eur |
+    ($r.CNY / $r.CAD) as $cny |
+    "CAD/USD: \($usd * 1000 | round / 1000) | CAD/EUR: \($eur * 1000 | round / 1000) | CAD/CNY: \($cny * 1000 | round / 1000)"
+  ' "$f"
+else
+  echo "CAD/USD: FETCH_FAILED | CAD/EUR: FETCH_FAILED | CAD/CNY: FETCH_FAILED"
+  FAIL=1
+fi
+fi  # end SKIP_FOREX
+
+# News (RSS feeds — MarketWatch + Google News)
+# Pipeline: parse XML → pipe-delimited format → market-news-clean (dedup, filter, normalize)
+echo ""
+echo "## NEWS"
+echo ""
+
+python3 -c "
+import html, sys, xml.etree.ElementTree as ET
+
+items = []
+
+# MarketWatch
+try:
+    tree = ET.parse('${TMPDIR}/mw.xml')
+    for item in tree.findall('.//item')[:5]:
+        title = html.unescape(item.findtext('title', '') or '')
+        source = (item.findtext('source', '') or '').strip()
+        if title:
+            # Strip source suffix if present
+            if source and title.endswith(' - ' + source):
+                title = title[:-(len(' - ' + source))]
+            print(f'MW|{title}|MarketWatch')
+except Exception as e:
+    print(f'# MW PARSE ERROR: {e}', file=sys.stderr)
+
+# Google News
+try:
+    tree = ET.parse('${TMPDIR}/news.xml')
+    for item in tree.findall('.//item')[:5]:
+        title = html.unescape(item.findtext('title', '') or '')
+        source = (item.findtext('source', '') or '').strip()
+        if title:
+            print(f'GN|{title}|{source}')
+except Exception as e:
+    print(f'# GN PARSE ERROR: {e}', file=sys.stderr)
+" 2>/dev/null | /opt/data/workspace/bin/market-news-clean 2>/dev/null || {
+    echo "### MarketWatch"
+    echo "MW News: FETCH_FAILED"
+    echo "### Ticker News"
+    echo "News: FETCH_FAILED"
+    FAIL=1
+}
+
+echo ""
+exit $FAIL
