@@ -260,7 +260,7 @@ def main():
         url = item.get("url", "")
         title = item.get("title", "")
         source = item.get("source", item.get("feed", ""))
-        desc = item.get("description", "")[:200]
+        desc = item.get("description", "")[:600]
 
         if url:
             print(f"[{source}] [{title}]({url})")

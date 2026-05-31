@@ -120,7 +120,7 @@ for item in items:
     # Escape pipes in title/desc for pipe-delimited format
     safe_title = title[:200].replace('|', '/')
     safe_link = link.replace('|', '%7C') if link else ''
-    safe_desc = desc[:300].replace('|', '/')
+    safe_desc = desc[:600].replace('|', '/')
     # Output: FEED|title|url|description
     print(f'{name}|{safe_title}|{safe_link}|{safe_desc}')
     
