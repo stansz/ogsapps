@@ -15,26 +15,26 @@ if [ "$MODE" = "week" ]; then DAYS=7; fi
 
 CUTOFF=$(date -d "$DAYS days ago" +%s 2>/dev/null || python3 -c "import time; print(int(time.time()) - $DAYS*86400)")
 
-echo "AI_NEWS_FETCH: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
-echo ""
-
 # ── All feeds are verified working RSS XML ──
 declare -A FEEDS
-FEEDS["https://rss.arxiv.org/rss/cs.CL"]="arXiv cs.CL (NLP/LLM)"
-FEEDS["https://rss.arxiv.org/rss/cs.AI"]="arXiv cs.AI"
-FEEDS["https://rss.arxiv.org/rss/cs.LG"]="arXiv cs.LG (ML)"
+FEEDS["https://rss.arxiv.org/rss/cs.CL"]="arXiv|cs.CL"
+FEEDS["https://rss.arxiv.org/rss/cs.AI"]="arXiv|cs.AI"
+FEEDS["https://rss.arxiv.org/rss/cs.LG"]="arXiv|cs.LG"
 FEEDS["https://www.marktechpost.com/feed/"]="MarkTechPost"
-FEEDS["https://techcrunch.com/category/artificial-intelligence/feed/"]="TechCrunch AI"
+FEEDS["https://techcrunch.com/category/artificial-intelligence/feed/"]="TechCrunch"
 FEEDS["https://www.artificialintelligence-news.com/feed/"]="AI News"
 
 export CUTOFF TMPDIR
 
+# Collect raw pipe-delimited items
+RAWFILE="${TMPDIR}/raw_items.txt"
+> "$RAWFILE"
+
 for url in "${!FEEDS[@]}"; do
   name="${FEEDS[$url]}"
-  echo "━━━ $name ━━━"
   
   xmlfile="${TMPDIR}/feed.xml"
-  curl -sf --max-time 15 "$url" -o "$xmlfile" 2>/dev/null || { echo "  (fetch failed)"; echo ""; continue; }
+  curl -sf --max-time 15 "$url" -o "$xmlfile" 2>/dev/null || continue
   
   python3 -c "
 import sys, re, html
@@ -117,26 +117,27 @@ for item in items:
         title = re.sub(r'\s*\(arXiv:[^)]+\)', '', title)
     
     count += 1
-    if is_arxiv:
-        arxiv_url = link if link and 'arxiv.org' in link else f'https://arxiv.org/search/?searchtype=all&query={title[:60]}'
-        print(f'  📄 [{title[:150]}]({arxiv_url})')
-    else:
-        print(f'  📰 {title[:150]}')
-        if link:
-            print(f'     🔗 {link}')
-        if desc:
-            print(f'     {desc[:200]}')
-    print()
+    # Escape pipes in title/desc for pipe-delimited format
+    safe_title = title[:200].replace('|', '/')
+    safe_link = link.replace('|', '%7C') if link else ''
+    safe_desc = desc[:300].replace('|', '/')
+    # Output: FEED|title|url|description
+    print(f'{name}|{safe_title}|{safe_link}|{safe_desc}')
     
-    if count >= 8:
+    if count >= 10:
         break
 
-if count == 0:
-    print('  (no recent items)')
-" 2>/dev/null
+# Always print at least nothing (suppress error messages)
+" 2>/dev/null >> "$RAWFILE"
   
-  echo ""
   sleep 0.5
 done
 
+# ── Clean and deduplicate ──
+echo "AI_NEWS ($MODE, $(wc -l < "$RAWFILE" 2>/dev/null || echo 0) raw items)"
+echo ""
+
+/opt/data/workspace/bin/ai-news-clean < "$RAWFILE" 2>/dev/null
+
+echo ""
 echo "END_FETCH"

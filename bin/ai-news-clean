@@ -1,0 +1,277 @@
+#!/usr/bin/env python3
+"""
+ai-news-clean — Pre-process AI/ML news items for the AI briefing.
+
+Reads structured items from stdin (one per line: SOURCE|title|url|description),
+filters junk/SEO, normalizes sources, deduplicates across feeds, and
+outputs cleaned items ranked by significance.
+
+Pattern modeled after market-news-clean from the finance briefing pipeline.
+"""
+
+import re
+import sys
+from collections import OrderedDict
+
+# ── Junk title patterns (SEO, generic, listicles) ──────────
+JUNK_PATTERNS = [
+    re.compile(r"^(?:Top|Best)\s+\d+\s+", re.IGNORECASE),  # "Top 10 AI Tools"
+    re.compile(r"How to (?:Use|Build|Create|Get Started|Install|Set Up)", re.IGNORECASE),
+    re.compile(r"What Is (?:AI|Machine Learning|Deep Learning|LLM|GPT)\?", re.IGNORECASE),
+    re.compile(r"(?:A Beginner's|The Complete|An Ultimate|A Comprehensive) Guide", re.IGNORECASE),
+    re.compile(r"^\d+\s+(?:Best|Top|Must-Have|Essential)", re.IGNORECASE),
+    re.compile(r"vs\.?\s.*:\s*(?:Which|What's|The) (?:Is |Are )?(?:Better|Best|Right)", re.IGNORECASE),
+    re.compile(r"^\w+ (?:Stock Price|Stock)\s*(?:Today|News|Quote|Analysis)", re.IGNORECASE),
+    re.compile(r"^\w+ \((?:\w+)\) (?:Stock )?(?:Price|News)", re.IGNORECASE),
+    # Clickbait
+    re.compile(r"(?:You Won't Believe|This (?:One|Simple) Trick|Here's Why|Shocking)", re.IGNORECASE),
+    # Too short
+    re.compile(r"^.{1,20}$"),
+]
+
+# Sources to suppress entirely (PR spam, repost farms)
+JUNK_SOURCES = {
+    "Yahoo Finance", "Yahoo News", "Google News",
+    "PR Newswire", "GlobeNewswire", "Business Wire",
+    "Accesswire", "EIN Presswire",
+}
+
+# Source normalization — canonical names
+SOURCE_CANONICAL = {
+    "TechCrunch": "TechCrunch",
+    "The Verge": "The Verge",
+    "Ars Technica": "Ars Technica",
+    "Wired": "Wired",
+    "VentureBeat": "VentureBeat",
+    "MIT Technology Review": "MIT Tech Review",
+    "MIT Tech Review": "MIT Tech Review",
+    "MarkTechPost": "MarkTechPost",
+    "Artificial Intelligence News": "AI News",
+    "AI News": "AI News",
+    "arXiv cs.AI": "arXiv",
+    "arXiv cs.CL": "arXiv",
+    "arXiv cs.LG": "arXiv",
+    "Hugging Face": "HuggingFace",
+    "HuggingFace": "HuggingFace",
+    "OpenAI Blog": "OpenAI",
+    "OpenAI": "OpenAI",
+    "Anthropic Blog": "Anthropic",
+    "Anthropic": "Anthropic",
+    "Google AI Blog": "Google AI",
+    "Google AI": "Google AI",
+    "Meta AI Blog": "Meta AI",
+    "Meta AI": "Meta AI",
+    "DeepSeek Blog": "DeepSeek",
+    "DeepSeek": "DeepSeek",
+    "The Information": "The Information",
+    "Bloomberg": "Bloomberg",
+    "Reuters": "Reuters",
+    "Financial Times": "FT",
+    "FT": "FT",
+    "CNBC": "CNBC",
+    "BBC": "BBC",
+    "NYT": "NYT",
+    "New York Times": "NYT",
+}
+
+# Keywords that signal high relevance (boost score)
+BOOST_KEYWORDS = [
+    "release", "launch", "announce", "open source", "open-source",
+    "breakthrough", "state-of-the-art", "SOTA", "frontier",
+    "new model", "new llm", "benchmark", "beat", "outperform",
+    "parameter", "billion parameter", "mixture of expert",
+    "funding", "raised", "series", "valuation", "acqui",
+    "regulation", "ban", "policy", "executive order",
+    "phd", "resign", "depart", "hire",
+    "safety", "alignment", "jailbreak", "red team",
+    "agent", "autonomous", "tool use", "function call",
+    "multimodal", "vision", "audio", "video generation",
+    "reasoning", "chain of thought", "planning",
+    "distill", "quantiz", "fine-tun", "lora", "rlhf",
+]
+
+
+def normalize_source(source: str) -> str:
+    s = source.strip().strip('"').strip("'")
+    if s in SOURCE_CANONICAL:
+        return SOURCE_CANONICAL[s]
+    s_lower = s.lower()
+    for key, canonical in SOURCE_CANONICAL.items():
+        if key.lower() == s_lower:
+            return canonical
+    return s
+
+
+def is_junk(title: str) -> bool:
+    for pattern in JUNK_PATTERNS:
+        if pattern.search(title):
+            return True
+    return False
+
+
+def tokenize(title: str) -> set[str]:
+    """Extract significant words for dedup comparison with basic stemming."""
+    words = re.findall(r"[a-z0-9]{3,}", title.lower())
+    words = [w[:-1] if w.endswith("s") and len(w) > 4 else w for w in words]
+    stopwords = {
+        "the", "and", "for", "are", "but", "not", "you", "all", "can",
+        "had", "her", "was", "one", "our", "out", "has", "have", "from",
+        "they", "that", "this", "with", "will", "your", "which", "their",
+        "been", "were", "more", "what", "when", "make", "like", "just",
+        "into", "over", "than", "then", "also", "very", "only", "some",
+        "such", "other", "after", "about", "would", "could", "should",
+        "ai", "artificial", "intelligence", "model", "models", "new",
+        "data", "using", "used", "news", "how", "why", "its",
+    }
+    return {w for w in words if w not in stopwords}
+
+
+def dedup(items: list[dict]) -> list[dict]:
+    kept = []
+    for item in items:
+        tokens = tokenize(item["title"])
+        if not tokens:
+            continue
+        duplicate = False
+        for existing in kept:
+            existing_tokens = tokenize(existing["title"])
+            if not existing_tokens:
+                continue
+            intersection = tokens & existing_tokens
+            union = tokens | existing_tokens
+            if len(union) == 0:
+                continue
+            similarity = len(intersection) / len(union)
+            threshold = 0.45 if item.get("feed") == existing.get("feed") else 0.55
+            if similarity > threshold:
+                duplicate = True
+                break
+        if not duplicate:
+            kept.append(item)
+    return kept
+
+
+def score_item(item: dict) -> float:
+    """Score an item by relevance. Higher = more important."""
+    score = 0.0
+    title_lower = item["title"].lower()
+    desc_lower = (item.get("description", "") or "").lower()
+
+    # Boost for keywords
+    for kw in BOOST_KEYWORDS:
+        if kw in title_lower:
+            score += 2.0
+        elif kw in desc_lower:
+            score += 0.5
+
+    # Boost model release mentions in title
+    model_patterns = [
+        r"release", r"launch", r"announce", r"introduce",
+        r"new\s+\w+\s+model", r"open.source", r"breakthrough",
+    ]
+    for pat in model_patterns:
+        if re.search(pat, title_lower):
+            score += 1.5
+
+    # Boost for major labs
+    major_labs = ["openai", "anthropic", "google", "deepmind", "meta",
+                  "deepseek", "xai", "mistral", "nvidia", "microsoft"]
+    for lab in major_labs:
+        if lab in title_lower or lab in desc_lower:
+            score += 1.0
+            break
+
+    # Paper-specific boost (arXiv items)
+    if item.get("feed", "").startswith("arXiv"):
+        score += 0.5  # base relevance for filtered papers
+
+    # Penalize generic/clickbait
+    if re.search(r"\b(?:here'?s?\s+(?:why|what|how)|you need to know)\b", title_lower):
+        score -= 1.0
+    if re.search(r"\b(?:could|might|may)\s+\w+\s+(?:be|become|change)\b", title_lower):
+        score -= 0.5  # speculative headlines
+
+    return score
+
+
+def clean(items: list[dict]) -> list[dict]:
+    """Main cleaning pipeline."""
+    cleaned = []
+    skipped = 0
+
+    for item in items:
+        title = item.get("title", "").strip()
+
+        # Filter junk
+        if is_junk(title):
+            skipped += 1
+            continue
+
+        # Filter junk sources
+        source = item.get("source", item.get("feed", ""))
+        if source in JUNK_SOURCES:
+            skipped += 1
+            continue
+
+        # Normalize source
+        item["source"] = normalize_source(source)
+
+        # Score item
+        item["_score"] = score_item(item)
+
+        cleaned.append(item)
+
+    # Deduplicate
+    original = len(cleaned)
+    cleaned = dedup(cleaned)
+    dupes = original - len(cleaned)
+
+    # Sort by score descending
+    cleaned.sort(key=lambda x: x.get("_score", 0), reverse=True)
+
+    if skipped or dupes:
+        print(f"<!-- Cleaned: {len(cleaned)} items, {skipped} junk filtered, {dupes} duplicates removed -->")
+
+    return cleaned
+
+
+def main():
+    # Read items from stdin (format: SOURCE|title|url|description)
+    items = []
+    for line in sys.stdin:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split("|", 3)
+        if len(parts) < 2:
+            continue
+        item = {
+            "feed": parts[0].strip(),
+            "title": parts[1].strip(),
+            "url": parts[2].strip() if len(parts) > 2 else "",
+            "description": parts[3].strip() if len(parts) > 3 else "",
+        }
+        items.append(item)
+
+    cleaned = clean(items)
+
+    # Output cleaned items
+    for item in cleaned:
+        url = item.get("url", "")
+        title = item.get("title", "")
+        source = item.get("source", item.get("feed", ""))
+        desc = item.get("description", "")[:200]
+
+        if url:
+            print(f"[{source}] [{title}]({url})")
+        else:
+            print(f"[{source}] {title}")
+
+        if desc:
+            print(f"  {desc}")
+
+        print()
+
+
+if __name__ == "__main__":
+    main()
