@@ -1,0 +1,139 @@
+#!/bin/bash
+# ai-news-fetch — Fetches AI/ML news from RSS feeds for LLM briefing
+# Sources: arXiv papers, MarkTechPost, TechCrunch AI, AI News
+#
+# Budget: 6 curl calls — all RSS, no API keys needed
+
+set -euo pipefail
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+MODE="${1:-brief}"  # brief (3 days) or week (7 days)
+DAYS=3
+if [ "$MODE" = "week" ]; then DAYS=7; fi
+
+CUTOFF=$(date -d "$DAYS days ago" +%s 2>/dev/null || python3 -c "import time; print(int(time.time()) - $DAYS*86400)")
+
+echo "AI_NEWS_FETCH: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
+echo ""
+
+# ── All feeds are verified working RSS XML ──
+declare -A FEEDS
+FEEDS["https://rss.arxiv.org/rss/cs.CL"]="arXiv cs.CL (NLP/LLM)"
+FEEDS["https://rss.arxiv.org/rss/cs.AI"]="arXiv cs.AI"
+FEEDS["https://rss.arxiv.org/rss/cs.LG"]="arXiv cs.LG (ML)"
+FEEDS["https://www.marktechpost.com/feed/"]="MarkTechPost"
+FEEDS["https://techcrunch.com/category/artificial-intelligence/feed/"]="TechCrunch AI"
+FEEDS["https://www.artificialintelligence-news.com/feed/"]="AI News"
+
+export CUTOFF TMPDIR
+
+for url in "${!FEEDS[@]}"; do
+  name="${FEEDS[$url]}"
+  echo "━━━ $name ━━━"
+  
+  xmlfile="${TMPDIR}/feed.xml"
+  curl -sf --max-time 15 "$url" -o "$xmlfile" 2>/dev/null || { echo "  (fetch failed)"; echo ""; continue; }
+  
+  python3 -c "
+import sys, re, html
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+from xml.etree import ElementTree as ET
+
+cutoff = int('$CUTOFF')
+name = '$name'
+
+try:
+    tree = ET.parse('$xmlfile')
+    root = tree.getroot()
+except Exception as e:
+    sys.exit(0)
+
+items = root.findall('.//item')
+if not items:
+    ns = {'atom': 'http://www.w3.org/2005/Atom'}
+    items = root.findall('.//atom:entry', ns)
+
+# arXiv keyword filter (keep only LLM/agent/transformer papers)
+ARXIV_KW = [
+    'llm', 'language model', 'large language', 'transformer', 'agent',
+    'reasoning', 'alignment', 'rlhf', 'fine-tun', 'pretrain',
+    'multimodal', 'retrieval', 'rag', 'benchmark', 'safety', 'jailbreak',
+    'mixture of expert', 'moe', 'chain.of.thought', 'cot',
+    'instruction', 'reinforcement learning', 'open.source', 'open-weight',
+    'distill', 'quantiz', 'scaling law', 'emergen', 'in-context',
+    'prompt', 'few-shot', 'zero-shot', 'diffusion', 'gpt', 'claude',
+    'gemini', 'llama', 'deepseek', 'qwen', 'mistral', 'grok',
+    'code generation', 'tool use', 'function call', 'planning',
+    'synthetic data', 'data curation', 'evaluation', 'reward model',
+    'self-play', 'tree.of.thought', 'test.time', 'compute optimal'
+]
+
+is_arxiv = 'arxiv' in name.lower()
+
+count = 0
+for item in items:
+    title = item.findtext('title', '') or ''
+    link = item.findtext('link', '') or ''
+    
+    # Handle Atom links
+    if not link:
+        for l in item.findall('.//{http://www.w3.org/2005/Atom}link'):
+            link = l.get('href', '')
+            break
+    if not link:
+        link = item.findtext('id', '') or ''
+    
+    desc = item.findtext('description', '') or ''
+    desc = re.sub(r'<[^>]+>', ' ', desc)
+    desc = html.unescape(desc)
+    desc = re.sub(r'\s+', ' ', desc).strip()[:400]
+    
+    pubdate = item.findtext('pubDate', '') or item.findtext('published', '') or item.findtext('updated', '') or ''
+    try:
+        if pubdate:
+            dt = parsedate_to_datetime(pubdate)
+        else:
+            continue
+    except:
+        continue
+    
+    if dt.timestamp() < cutoff:
+        continue
+    
+    title = html.unescape(title).strip()
+    title = re.sub(r'\s+', ' ', title)
+    
+    if not title or len(title) < 15:
+        continue
+    
+    if is_arxiv:
+        title_lower = title.lower()
+        if not any(kw in title_lower for kw in ARXIV_KW):
+            continue
+        # Trim arXiv IDs from title
+        title = re.sub(r'\s*\(arXiv:[^)]+\)', '', title)
+    
+    count += 1
+    if is_arxiv:
+        print(f'  📄 {title[:150]}')
+    else:
+        print(f'  📰 {title[:150]}')
+        if desc:
+            print(f'     {desc[:200]}')
+    print()
+    
+    if count >= 8:
+        break
+
+if count == 0:
+    print('  (no recent items)')
+" 2>/dev/null
+  
+  echo ""
+  sleep 0.5
+done
+
+echo "END_FETCH"
