@@ -2,9 +2,11 @@
 # ai-news-fetch — Fetches AI/ML news from RSS feeds for LLM briefing
 # Sources: arXiv papers, MarkTechPost, TechCrunch AI, AI News
 #
-# Budget: 6 curl calls — all RSS, no API keys needed
+# Budget: 6 RSS calls + 3 Browserbase Search (optional, only if BROWSERBASE_API_KEY set)
 
 set -euo pipefail
+
+source /opt/data/.env 2>/dev/null || true
 
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
@@ -132,6 +134,42 @@ for item in items:
   
   sleep 0.5
 done
+
+# ── Browserbase Search augmentation (optional) ──
+BB_KEY="${BROWSERBASE_API_KEY:-${BROWSERBASE_API:-}}"
+if [ -n "$BB_KEY" ]; then
+  echo "  + Browserbase Search (supplementing RSS)"
+  SEARCH_QUERIES=(
+    "latest AI model release LLM launch 2026"
+    "new open source AI model breakthrough"
+    "AI research paper state of the art benchmark"
+  )
+  for query in "${SEARCH_QUERIES[@]}"; do
+    curl -sf --max-time 10 \
+      -X POST "https://api.browserbase.com/v1/search" \
+      -H "Content-Type: application/json" \
+      -H "X-BB-API-Key: ${BB_KEY}" \
+      -d "{\"query\": \"$query\", \"numResults\": 5}" \
+      -o "${TMPDIR}/search_$(echo "$query" | md5sum | cut -c1-8).json" 2>/dev/null || true
+    sleep 0.5
+  done
+  
+  # Convert search results to pipe-delimited format
+  python3 -c "
+import json, glob, os
+for fpath in sorted(glob.glob('${TMPDIR}/search_*.json')):
+    try:
+        data = json.load(open(fpath))
+    except:
+        continue
+    for r in data.get('results', []):
+        title = (r.get('title') or '').replace('|', '/')[:200]
+        url = (r.get('url') or '').replace('|', '%7C')
+        desc = (r.get('author') or '')[:200]
+        if title:
+            print(f'Browserbase Search|{title}|{url}|{desc}')
+" >> "$RAWFILE" 2>/dev/null || true
+fi
 
 # ── Clean and deduplicate ──
 echo "AI_NEWS ($MODE, $(wc -l < "$RAWFILE" 2>/dev/null || echo 0) raw items)"
