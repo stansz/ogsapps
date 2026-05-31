@@ -68,11 +68,51 @@ if [ -n "$MW_FEED" ]; then
   curl -s -L --max-time 10 "$MW_FEED" -o "${TMPDIR}/mw.xml" 2>/dev/null &
 fi
 
+# CNBC RSS feeds (Top News + Markets)
+curl -s -L --max-time 10 \
+  "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114" \
+  -o "${TMPDIR}/cnbc_top.xml" 2>/dev/null &
+curl -s -L --max-time 10 \
+  "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258" \
+  -o "${TMPDIR}/cnbc_markets.xml" 2>/dev/null &
+
 # Google News RSS — ticker-specific headlines (built from SYMBOLS array)
 NEWS_TICKERS=$(printf '%s+OR+' "${SYMBOLS[@]}" | sed 's/+OR+$//')
 curl -s -L --max-time 10 \
   "https://news.google.com/rss/search?q=${NEWS_TICKERS}+earnings&hl=en-US&gl=US&ceid=US:en" \
   -o "${TMPDIR}/news.xml" 2>/dev/null &
+
+# AlphaVantage — top gainers/losers + news sentiment (MUST be sequential: free tier 1/sec)
+# NOTE: free tier = 25 calls/day. We use 2 calls per run (3% of daily quota)
+if [ -n "${ALPHA_VANTAGE_API:-}" ]; then
+  AV_TICKERS=$(IFS=,; echo "${SYMBOLS[*]}")
+  curl -sf --max-time 15 \
+    "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${ALPHA_VANTAGE_API}" \
+    -o "${TMPDIR}/av_gainers.json" 2>/dev/null
+  sleep 2  # generous delay to avoid rate-limit on multi-ticker call
+  curl -sf --max-time 25 \
+    "https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${AV_TICKERS}&apikey=${ALPHA_VANTAGE_API}" \
+    -o "${TMPDIR}/av_sentiment.json" 2>/dev/null
+fi
+
+# Browserbase Search — supplemental financial news (optional)
+BB_KEY="${BROWSERBASE_API_KEY:-${BROWSERBASE_API:-}}"
+if [ -n "$BB_KEY" ]; then
+  NEWS_TICKERS=$(printf '%s OR ' "${SYMBOLS[@]}" | sed 's/ OR $//')
+  BB_QUERIES=(
+    "${NEWS_TICKERS} stock news today"
+    "market moving news S&P 500 Nasdaq"
+    "breaking financial headlines Wall Street"
+  )
+  for query in "${BB_QUERIES[@]}"; do
+    curl -sf --max-time 10 \
+      -X POST "https://api.browserbase.com/v1/search" \
+      -H "Content-Type: application/json" \
+      -H "X-BB-API-Key: ${BB_KEY}" \
+      -d "{\"query\": \"$query\", \"numResults\": 5}" \
+      -o "${TMPDIR}/bb_search_$(echo "$query" | md5sum | cut -c1-8).json" 2>/dev/null &
+  done
+fi
 
 wait
 
@@ -198,13 +238,70 @@ else
 fi
 fi  # end SKIP_FOREX
 
-# News (RSS feeds — MarketWatch + Google News)
+# ── AlphaVantage: Gainers/Losers + Sentiment ──────────────
+if [ -n "${ALPHA_VANTAGE_API:-}" ] && [ -s "${TMPDIR}/av_gainers.json" ]; then
+echo ""
+echo "## ALPHA VANTAGE"
+echo ""
+
+# Top gainers (filter: price > $5, volume > 100k)
+echo "### Top Gainers (market-wide, filtered)"
+$JQ -r '
+  .top_gainers // [] | map(select(
+    (.price | tonumber? // 0) > 5 and
+    (.volume | tonumber? // 0) > 100000
+  )) | .[:5] | .[] |
+  "\(.ticker): $\(.price) (\(.change_percentage)) vol: \(.volume)"
+' "${TMPDIR}/av_gainers.json" 2>/dev/null || echo "Gainers: UNAVAILABLE"
+
+echo ""
+
+# Top losers (filter: price > $5, volume > 100k)
+echo "### Top Losers (market-wide, filtered)"
+$JQ -r '
+  .top_losers // [] | map(select(
+    (.price | tonumber? // 0) > 5 and
+    (.volume | tonumber? // 0) > 100000
+  )) | .[:5] | .[] |
+  "\(.ticker): $\(.price) (\(.change_percentage)) vol: \(.volume)"
+' "${TMPDIR}/av_gainers.json" 2>/dev/null || echo "Losers: UNAVAILABLE"
+
+echo ""
+fi
+
+# Watchlist sentiment snapshot
+if [ -n "${ALPHA_VANTAGE_API:-}" ] && [ -s "${TMPDIR}/av_sentiment.json" ]; then
+echo "### Watchlist Sentiment"
+$JQ -r '
+  .feed // [] |
+  # Extract all ticker sentiment entries
+  [.[].ticker_sentiment[]? | select(.ticker_sentiment_score != null)] |
+  # Group by ticker, average the score
+  group_by(.ticker) |
+  map({
+    ticker: .[0].ticker,
+    avg_score: (map(.ticker_sentiment_score | tonumber) | add / length),
+    articles: length,
+    label: (if (map(.ticker_sentiment_score | tonumber) | add / length) > 0.15 then "BULLISH"
+            elif (map(.ticker_sentiment_score | tonumber) | add / length) < -0.15 then "BEARISH"
+            else "NEUTRAL" end)
+  }) |
+  sort_by(-.avg_score) |
+  .[] | "\(.ticker): \(.avg_score * 1000 | round / 1000) (\(.label), \(.articles) articles)"
+' "${TMPDIR}/av_sentiment.json" 2>/dev/null || echo "Sentiment: UNAVAILABLE"
+
+echo ""
+fi
+
+# News (RSS feeds — MarketWatch + CNBC + Google News + Browserbase Search)
 # Pipeline: parse XML → pipe-delimited format → market-news-clean (dedup, filter, normalize)
 echo ""
 echo "## NEWS"
 echo ""
 
-python3 -c "
+# Combine RSS + Browserbase Search results
+{
+  python3 -c "
 import html, sys, xml.etree.ElementTree as ET
 
 items = []
@@ -223,6 +320,26 @@ try:
 except Exception as e:
     print(f'# MW PARSE ERROR: {e}', file=sys.stderr)
 
+# CNBC Top News
+try:
+    tree = ET.parse('${TMPDIR}/cnbc_top.xml')
+    for item in tree.findall('.//item')[:4]:
+        title = html.unescape(item.findtext('title', '') or '')
+        if title:
+            print(f'CNBC|{title}|CNBC')
+except Exception as e:
+    print(f'# CNBC TOP PARSE ERROR: {e}', file=sys.stderr)
+
+# CNBC Markets
+try:
+    tree = ET.parse('${TMPDIR}/cnbc_markets.xml')
+    for item in tree.findall('.//item')[:3]:
+        title = html.unescape(item.findtext('title', '') or '')
+        if title:
+            print(f'CNBC|{title}|CNBC Markets')
+except Exception as e:
+    print(f'# CNBC MARKETS PARSE ERROR: {e}', file=sys.stderr)
+
 # Google News
 try:
     tree = ET.parse('${TMPDIR}/news.xml')
@@ -233,7 +350,25 @@ try:
             print(f'GN|{title}|{source}')
 except Exception as e:
     print(f'# GN PARSE ERROR: {e}', file=sys.stderr)
-" 2>/dev/null | /opt/data/workspace/bin/market-news-clean 2>/dev/null || {
+" 2>/dev/null
+
+  # Browserbase Search results — convert to pipe-delimited format
+  python3 -c "
+import json, glob, html
+for fpath in sorted(glob.glob('${TMPDIR}/bb_search_*.json')):
+    try:
+        data = json.load(open(fpath))
+    except:
+        continue
+    for r in data.get('results', []):
+        title = html.unescape(r.get('title', '') or '')
+        title = title.replace('|', '/')[:200]
+        source = (r.get('author') or 'Browserbase')[:50]
+        if title:
+            print(f'BB|{title}|{source}')
+" 2>/dev/null || true
+
+} | /opt/data/workspace/bin/market-news-clean 2>/dev/null || {
     echo "### MarketWatch"
     echo "MW News: FETCH_FAILED"
     echo "### Ticker News"
