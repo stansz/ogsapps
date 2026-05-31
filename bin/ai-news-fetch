@@ -118,9 +118,12 @@ for item in items:
     
     count += 1
     if is_arxiv:
-        print(f'  📄 {title[:150]}')
+        arxiv_url = link if link and 'arxiv.org' in link else f'https://arxiv.org/search/?searchtype=all&query={title[:60]}'
+        print(f'  📄 [{title[:150]}]({arxiv_url})')
     else:
         print(f'  📰 {title[:150]}')
+        if link:
+            print(f'     🔗 {link}')
         if desc:
             print(f'     {desc[:200]}')
     print()
