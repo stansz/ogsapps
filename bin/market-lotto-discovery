@@ -1,0 +1,395 @@
+#!/bin/bash
+# market-lotto-discovery — Weekly lotto ticket discovery from broad market
+# Pass 1: Finviz Screener (free) → pre-filter & pre-score → top 15
+# Pass 2: Alpha Vantage OVERVIEW (15 calls) → full LOTTO score
+# Schedule: Wednesdays 7:00 AM PT
+# Budget: 15 AV calls/week (within 25/day free tier)
+
+set -euo pipefail
+source /opt/data/.env
+
+AV_KEY="${ALPHA_VANTAGE_API:-}"
+if [ -z "$AV_KEY" ]; then
+  echo "ALPHA_VANTAGE_API not set"
+  exit 1
+fi
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+echo "LOTTO_DISCOVERY: $(TZ='America/Vancouver' date '+%Y-%m-%d %H:%M %Z')"
+echo ""
+
+# ═══════════════════════════════════════════════════════════════
+# PASS 1: Finviz Screener → pre-filter & pre-score
+# ═══════════════════════════════════════════════════════════════
+
+echo "🔍 PASS 1: Scanning broad market via Finviz..."
+echo ""
+
+python3 << 'PYEOF' > "${TMPDIR}/pass1.json"
+import json, sys
+from finviz.screener import Screener
+
+# ── Fetch from Finviz Technical table ──
+# Filters: USA, stocks-only, $1-50, beta>1.5, 0-30% above 52W low,
+#          price below SMA50, avg vol > 200K
+try:
+    stock_list = Screener(
+        filters=[
+            'geo_usa',                   # USA only
+            'ind_stocksonly',            # exclude ETFs/funds
+            'sh_price_o1',               # price > $1 (no penny stocks)
+            'sh_price_u50',              # price < $50
+            'fa_beta_o1.5',              # beta > 1.5
+            'ta_highlow52w_b0to30h',     # 0-30% above 52W low
+            'ta_sma50_pb',               # price below SMA50
+            'sh_avgvol_o200',            # avg vol > 200K
+        ],
+        table='Technical'
+    )
+except Exception as e:
+    print(json.dumps({"error": f"Finviz screener failed: {e}"}))
+    sys.exit(1)
+
+results = []
+
+for t in stock_list:
+    try:
+        ticker = t.get('Ticker', '').strip()
+        if not ticker:
+            continue
+        
+        price = float(str(t.get('Price', 0)).replace(',', '') or 0)
+        if price <= 0:
+            continue
+        
+        # Parse percentage fields (e.g. "37.52%" or "-3.10%")
+        def parse_pct(val):
+            try:
+                return float(str(val).replace('%', '').replace(',', ''))
+            except:
+                return 0.0
+        
+        beta = parse_pct(t.get('Beta', 0))
+        low_pct = parse_pct(t.get('52W Low', 0))   # % above 52W low
+        high_pct = parse_pct(t.get('52W High', 0))  # % below 52W high (negative = below)
+        sma50_pct = parse_pct(t.get('SMA50', 0))    # % distance from SMA50 (- = below)
+        sma200_pct = parse_pct(t.get('SMA200', 0))  # % distance from SMA200
+        sma20_pct = parse_pct(t.get('SMA20', 0))
+        rsi = parse_pct(t.get('RSI', 0))
+        change_pct = parse_pct(t.get('Change', 0))
+        volume = float(str(t.get('Volume', 0)).replace(',', '') or 0)
+        
+        # ── Pre-score (0-1 scale, technical signals only) ──
+        
+        # 1. 52W low proximity (closer = better, 0% = max score)
+        low_prox = max(0.0, 1.0 - (low_pct / 30.0))
+        
+        # 2. Below SMA50 depth (more below = more potential bounce)
+        if sma50_pct < 0:
+            below_ma50 = min(abs(sma50_pct) / 15.0, 1.0)  # 15% below = max
+        else:
+            below_ma50 = 0.0
+        
+        # 3. Below SMA200 depth
+        if sma200_pct < 0:
+            below_ma200 = min(abs(sma200_pct) / 25.0, 1.0)  # 25% below = max
+        else:
+            below_ma200 = 0.0
+        
+        # 4. Beta (more volatile = more lotto-like)
+        beta_score = min(beta / 3.5, 1.0) if beta > 0 else 0.3
+        
+        # 5. Recent weakness (price down today = better entry)
+        if change_pct < -2:
+            dip_score = 1.0
+        elif change_pct < 0:
+            dip_score = 0.7
+        elif change_pct < 2:
+            dip_score = 0.3
+        else:
+            dip_score = 0.0
+        
+        # 6. RSI oversold bonus (if available)
+        if rsi > 0 and rsi < 35:
+            rsi_score = min((35 - rsi) / 20.0, 1.0)
+        else:
+            rsi_score = 0.0
+        
+        # ── Composite pre-score ──
+        pre_score = (
+            low_prox * 0.35 +
+            below_ma50 * 0.20 +
+            below_ma200 * 0.10 +
+            beta_score * 0.12 +
+            dip_score * 0.10 +
+            rsi_score * 0.13
+        )
+        
+        results.append({
+            'ticker': ticker,
+            'price': round(price, 2),
+            'pre_score': round(pre_score, 3),
+            'beta': round(beta, 2),
+            'low_pct': round(low_pct, 1),
+            'sma50_pct': round(sma50_pct, 1),
+            'sma200_pct': round(sma200_pct, 1),
+            'change_pct': round(change_pct, 1),
+            'volume': int(volume),
+            'rsi': round(rsi, 1) if rsi > 0 else None,
+        })
+    except Exception as e:
+        continue
+
+# Sort by pre-score, take top 25 (will filter sub-$2 before AV calls)
+results.sort(key=lambda x: x['pre_score'], reverse=True)
+top_candidates = results[:25]
+
+json.dump(top_candidates, sys.stdout)
+PYEOF
+
+PASS1_COUNT=$(python3 -c "import json; d=json.load(open('${TMPDIR}/pass1.json')); print(len(d))" 2>/dev/null || echo 0)
+
+if [ "$PASS1_COUNT" -eq 0 ]; then
+  echo "❌ Pass 1 returned no candidates — Finviz may be down or filters too tight."
+  exit 0
+fi
+
+echo "   → ${PASS1_COUNT} candidates from Finviz, proceeding to AV enrichment..."
+echo ""
+
+# ═══════════════════════════════════════════════════════════════
+# PASS 2: Alpha Vantage OVERVIEW → full LOTTO score
+# ═══════════════════════════════════════════════════════════════
+
+echo "📊 PASS 2: Enriching with Alpha Vantage OVERVIEW (${PASS1_COUNT} calls)..."
+echo ""
+
+# Fetch OVERVIEW for each candidate (skip sub-$2 — AV rarely tracks penny stocks)
+python3 -c "
+import json
+data = json.load(open('${TMPDIR}/pass1.json'))
+for d in data:
+    if d['price'] >= 2.0:
+        print(d['ticker'])
+" | while read sym; do
+  curl -sf --max-time 15 \
+    "https://www.alphavantage.co/query?function=OVERVIEW&symbol=${sym}&apikey=${AV_KEY}" \
+    -o "${TMPDIR}/${sym}.json" 2>/dev/null
+  sleep 1
+done
+
+# ── Full LOTTO scoring ──
+export TMPDIR
+python3 << 'PYEOF' > "${TMPDIR}/final.json"
+import json, os, sys
+
+tmpdir = os.environ.get('TMPDIR', '/tmp')
+
+# Load pass 1 candidates
+pass1 = json.load(open(f"{tmpdir}/pass1.json"))
+tickers = [d['ticker'] for d in pass1]
+pass1_map = {d['ticker']: d for d in pass1}
+
+results = []
+
+for sym in tickers:
+    fpath = f"{tmpdir}/{sym}.json"
+    if not os.path.exists(fpath) or os.path.getsize(fpath) < 100:
+        continue
+    
+    try:
+        d = json.load(open(fpath))
+    except:
+        continue
+    
+    if 'Information' in d or 'Note' in d:
+        continue
+    
+    try:
+        ma50 = float(d.get('50DayMovingAverage', 0) or 0)
+        ma200 = float(d.get('200DayMovingAverage', 0) or 0)
+        w52h = float(d.get('52WeekHigh', 0) or 0)
+        w52l = float(d.get('52WeekLow', 0) or 0)
+        beta = float(d.get('Beta', 0) or 0)
+        target = float(d.get('AnalystTargetPrice', 0) or 0)
+        name = d.get('Name', sym)
+        sector = d.get('Sector', '?')
+        market_cap = float(d.get('MarketCapitalization', 0) or 0)
+        pe = float(d.get('PERatio', 0) or 0)
+        eps = float(d.get('EPS', 0) or 0)
+        profit_margin = float(d.get('ProfitMargin', 0) or 0)
+        rev_growth = float(d.get('QuarterlyRevenueGrowthYOY', 0) or 0)
+        earn_growth = float(d.get('QuarterlyEarningsGrowthYOY', 0) or 0)
+    except (ValueError, TypeError):
+        continue
+    
+    if w52h <= 0 or w52l <= 0:
+        continue
+    
+    # Use actual price from Finviz (more recent than AV estimates)
+    price = pass1_map[sym]['price']
+    if price <= 0:
+        continue
+    
+    # ── Full LOTTO score (same formula as watchlist lotto) ──
+    
+    # 1. Proximity to 52W low
+    range_52w = w52h - w52l
+    if range_52w > 0:
+        pct_off_low = (price - w52l) / range_52w
+        low_proximity = 1.0 - pct_off_low
+    else:
+        low_proximity = 0.5
+    
+    # 2. Below 50-day MA
+    if ma50 > 0:
+        below_ma = 1.0 if price < ma50 else 0.3
+    else:
+        below_ma = 0.5
+    
+    # 3. Below 200-day MA
+    if ma200 > 0:
+        below_200 = 1.0 if price < ma200 else 0.2
+    else:
+        below_200 = 0.5
+    
+    # 4. Beta
+    beta_score = min(beta / 3.0, 1.0) if beta > 0 else 0.5
+    
+    # 5. Analyst upside
+    if target > 0 and price > 0:
+        upside = (target - price) / price
+        upside_score = max(min(upside * 100 / 50, 1.0), 0.0)
+    else:
+        upside_score = 0.0
+    
+    # 6. Growth check
+    growth_present = 0.5 if (rev_growth > 0 or earn_growth > 0) else 0.0
+    
+    # ── Composite LOTTO score ──
+    lotto = (
+        low_proximity * 0.30 +
+        below_ma * 0.20 +
+        below_200 * 0.10 +
+        beta_score * 0.10 +
+        upside_score * 0.15 +
+        growth_present * 0.15
+    )
+    
+    # ── Flags ──
+    flags = []
+    if pct_off_low < 0.15:
+        flags.append("🔥 NEAR 52W LOW")
+    if price < ma50 and ma50 > 0:
+        flags.append("📉 BELOW 50MA")
+    if price < ma200 and ma200 > 0:
+        flags.append("📉 BELOW 200MA")
+    if beta > 2:
+        flags.append(f"🎢 BETA {beta:.1f}")
+    if target > price * 1.2 and target > 0:
+        flags.append(f"🎯 {((target-price)/price*100):.0f}% UPSIDE")
+    if rev_growth > 0.1:
+        flags.append(f"📈 REV +{rev_growth*100:.0f}%")
+    if earn_growth > 0.1:
+        flags.append(f"💰 EPS +{earn_growth*100:.0f}%")
+    if market_cap < 2_000_000_000 and market_cap > 0:
+        flags.append("🔬 SMALL CAP")
+    
+    mktcap_str = f"${market_cap/1e9:.1f}B" if market_cap > 1e9 else f"${market_cap/1e6:.0f}M"
+    
+    results.append({
+        'ticker': sym,
+        'name': name,
+        'lotto': round(lotto, 3),
+        'pre_score': pass1_map[sym]['pre_score'],
+        'price': round(price, 2),
+        'w52h': w52h,
+        'w52l': w52l,
+        'pct_off_low': round(pct_off_low * 100, 1),
+        'ma50': ma50,
+        'ma200': ma200,
+        'beta': round(beta, 2),
+        'target': target,
+        'sector': sector,
+        'market_cap': mktcap_str,
+        'pe': round(pe, 2) if pe else 0,
+        'rev_growth': round(rev_growth * 100, 1),
+        'earn_growth': round(earn_growth * 100, 1),
+        'flags': ' '.join(flags) if flags else '—'
+    })
+
+# Sort by full LOTTO score
+results.sort(key=lambda x: x['lotto'], reverse=True)
+
+json.dump(results, sys.stdout)
+PYEOF
+
+# ═══════════════════════════════════════════════════════════════
+# OUTPUT: Markdown report
+# ═══════════════════════════════════════════════════════════════
+
+python3 << 'PYEOF'
+import json, os
+
+tmpdir = os.environ.get('TMPDIR', '/tmp')
+results = json.load(open(f"{tmpdir}/final.json"))
+
+if not results:
+    print("❌ No candidates passed full scoring. Try wider Finviz filters.")
+    exit(0)
+
+# ── Header ──
+print("# 🎰 LOTTO DISCOVERY — Weekly Market Scan")
+print("")
+print(f"**{len(results)} candidates** surfaced from broad market scan, scored on:")
+print("52W low proximity · MA relationships · Beta · Analyst upside · Growth signals")
+print("")
+print("> *Pass 1: Finviz screener (technical pre-filter) → Pass 2: Alpha Vantage OVERVIEW (fundamentals)*")
+print("")
+
+# ── Ranked table ──
+print("## 🏆 LOTTO RANKINGS")
+print("")
+print("| # | Ticker | Company | LOTTO | Price | 52W Range | β | P/E | Flags |")
+print("|---|---|---|---:|---:|---:|---:|---:|---|")
+for i, r in enumerate(results, 1):
+    name_short = r['name'][:22]
+    range_str = f"${r['w52l']:.0f}–${r['w52h']:.0f}"
+    beta_str = f"{r['beta']:.1f}"
+    pe_str = f"{r['pe']:.1f}" if r['pe'] > 0 else "—"
+    print(f"| {i} | **{r['ticker']}** | {name_short} | **{r['lotto']:.3f}** | ${r['price']:.2f} | {range_str} | {beta_str} | {pe_str} | {r['flags']} |")
+
+print("")
+
+# ── Details ──
+print("## 📋 DETAILS")
+print("")
+for r in results:
+    print(f"### {r['ticker']} — {r['name']}")
+    print(f"**LOTTO: {r['lotto']:.3f}** | Sector: {r['sector']} | Cap: {r['market_cap']}")
+    print(f"  Price: ${r['price']:.2f} | {r['pct_off_low']}% above 52W low (${r['w52l']:.2f}–${r['w52h']:.2f})")
+    print(f"  50MA: ${r['ma50']:.2f} | 200MA: ${r['ma200']:.2f} | Beta: {r['beta']:.2f}")
+    
+    if r['target'] > 0:
+        upside = (r['target'] - r['price']) / r['price'] * 100
+        print(f"  🎯 Analyst Target: ${r['target']:.2f} ({upside:+.0f}%)")
+    
+    growth_parts = []
+    if r['rev_growth'] != 0:
+        growth_parts.append(f"Rev: {r['rev_growth']:+.1f}%")
+    if r['earn_growth'] != 0:
+        growth_parts.append(f"EPS: {r['earn_growth']:+.1f}%")
+    if growth_parts:
+        print(f"  📈 {', '.join(growth_parts)} | P/E: {r['pe']}")
+    
+    if r['flags'] != '—':
+        print(f"  🚩 {r['flags']}")
+    print("")
+
+print("---")
+print(f"*Scan completed — next scan Wednesday. Not financial advice. 🎲*")
+PYEOF
+
+exit $?
