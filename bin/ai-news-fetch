@@ -171,6 +171,31 @@ for fpath in sorted(glob.glob('${TMPDIR}/search_*.json')):
 " >> "$RAWFILE" 2>/dev/null || true
 fi
 
+# ── Big Model Radar digests (supplemental) ──
+BMR_DIGESTS="/opt/data/workspace/ai-brief-digests"
+if [ -d "$BMR_DIGESTS" ]; then
+  for digest in "$BMR_DIGESTS"/*-en.md; do
+    [ -f "$digest" ] || continue
+    name=$(basename "$digest" -en.md)
+    # Extract first meaningful paragraph (skip heading/links, grab first substantial content)
+    summary=$(python3 -c "
+import re
+text = open('$digest').read()
+# Strip markdown heading/links/metadata
+text = re.sub(r'^#.*\n', '', text)
+text = re.sub(r'>.*\n', '', text)
+text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+text = re.sub(r'\n\s*\n', '\n', text)
+text = re.sub(r'\s+', ' ', text).strip()
+# Get first 500 chars
+print(text[:500])
+" 2>/dev/null)
+    if [ -n "$summary" ]; then
+      echo "BigModelRadar $name|$name|https://gsscsd.github.io/big_model_radar|$summary" >> "$RAWFILE"
+    fi
+  done
+fi
+
 # ── Clean and deduplicate ──
 echo "AI_NEWS ($MODE, $(wc -l < "$RAWFILE" 2>/dev/null || echo 0) raw items)"
 echo ""
