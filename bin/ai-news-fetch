@@ -171,29 +171,19 @@ for fpath in sorted(glob.glob('${TMPDIR}/search_*.json')):
 " >> "$RAWFILE" 2>/dev/null || true
 fi
 
-# ── Big Model Radar digests (supplemental) ──
-BMR_DIGESTS="/opt/data/workspace/ai-brief-digests"
-if [ -d "$BMR_DIGESTS" ]; then
-  for digest in "$BMR_DIGESTS"/*-en.md; do
-    [ -f "$digest" ] || continue
-    name=$(basename "$digest" -en.md)
-    # Extract first meaningful paragraph (skip heading/links, grab first substantial content)
-    summary=$(python3 -c "
-import re
-text = open('$digest').read()
-# Strip markdown heading/links/metadata
-text = re.sub(r'^#.*\n', '', text)
-text = re.sub(r'>.*\n', '', text)
-text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
-text = re.sub(r'\n\s*\n', '\n', text)
-text = re.sub(r'\s+', ' ', text).strip()
-# Get first 500 chars
-print(text[:500])
-" 2>/dev/null)
-    if [ -n "$summary" ]; then
-      echo "BigModelRadar $name|$name|https://gsscsd.github.io/big_model_radar|$summary" >> "$RAWFILE"
-    fi
-  done
+# ── Big Model Radar briefing (API) ──
+BMR_API="https://ukraine.ogsapps.cc/api/big-model-radar/digests"
+BMR_JSON="${TMPDIR}/bmr.json"
+if curl -sf --max-time 10 "$BMR_API" -o "$BMR_JSON" 2>/dev/null; then
+  python3 -c "
+import json
+data = json.load(open('$BMR_JSON'))
+brief = data.get('briefing', '').strip()
+if brief:
+    # Collapse to single line for pipe-delimited format
+    safe = brief.replace('|', '/').replace(chr(10), ' / ')
+    print(f'BigModelRadar|Daily AI Ecosystem Radar Briefing|https://ukraine.ogsapps.cc/api/big-model-radar/digests|{safe[:2000]}')
+" >> "$RAWFILE" 2>/dev/null || true
 fi
 
 # ── Clean and deduplicate ──
