@@ -1,7 +1,6 @@
 #!/bin/bash
 # ai-news-fetch — Fetches AI/ML news from RSS feeds for LLM briefing
 # Sources: arXiv papers, MarkTechPost, TechCrunch AI, AI News
-#
 # Budget: 6 RSS calls + 3 Browserbase Search (optional, only if BROWSERBASE_API_KEY set)
 
 set -euo pipefail
@@ -168,21 +167,6 @@ for fpath in sorted(glob.glob('${TMPDIR}/search_*.json')):
         desc = (r.get('author') or '')[:200]
         if title:
             print(f'Browserbase Search|{title}|{url}|{desc}')
-" >> "$RAWFILE" 2>/dev/null || true
-fi
-
-# ── Big Model Radar briefing (API) ──
-BMR_API="https://ukraine.ogsapps.cc/api/big-model-radar/digests"
-BMR_JSON="${TMPDIR}/bmr.json"
-if curl -sf --max-time 10 "$BMR_API" -o "$BMR_JSON" 2>/dev/null; then
-  python3 -c "
-import json
-data = json.load(open('$BMR_JSON'))
-brief = data.get('briefing', '').strip()
-if brief:
-    # Collapse to single line for pipe-delimited format
-    safe = brief.replace('|', '/').replace(chr(10), ' / ')
-    print(f'BigModelRadar|Daily AI Ecosystem Radar Briefing|https://ukraine.ogsapps.cc/api/big-model-radar/digests|{safe[:2000]}')
 " >> "$RAWFILE" 2>/dev/null || true
 fi
 
