@@ -1,0 +1,45 @@
+#!/bin/bash
+# last30days-fetch — Community social signal for AI briefing
+# Runs the last30days engine against Reddit, HN, Polymarket, GitHub, and web
+# for AI/ML topics. Output: raw evidence block for LLM synthesis.
+#
+# Free sources: Reddit, HN, Polymarket, GitHub, Web (Brave/Exa fallback)
+# Optional: X/Twitter (needs AUTH_TOKEN/CT0 or XAI_API_KEY) — uncomment below
+#           YouTube (needs yt-dlp on PATH)
+#
+# Target: <30s total for cron use
+
+set -euo pipefail
+
+ENGINE="/opt/data/workspace/last30days-skill/skills/last30days/scripts/last30days.py"
+PYTHON="python3.13"
+SUBREDDITS="MachineLearning,LocalLLaMA,ClaudeCode,singularity,OpenAI,artificial"
+TIMEOUT=25  # per-engine-call timeout
+
+echo "🌐 Community Signal — last30days v3, 7d lookback"
+echo ""
+
+# ── Query 1: Model releases + community discussion (broad) ──
+echo "  → Researching: AI releases & community discussion..."
+timeout $TIMEOUT $PYTHON "$ENGINE" \
+  "AI model release launch LLM breakthrough" \
+  --subreddits "$SUBREDDITS" \
+  --emit=md \
+  --quick \
+  --days 7 \
+  2>/dev/null || echo "  ⚠️ Q1 timed out or failed"
+
+echo ""
+
+# ── Query 2: Tools, regulation, industry moves ──
+echo "  → Researching: AI tools, regulation, industry..."
+timeout $TIMEOUT $PYTHON "$ENGINE" \
+  "AI regulation policy funding tools agents" \
+  --subreddits "$SUBREDDITS" \
+  --emit=md \
+  --quick \
+  --days 7 \
+  2>/dev/null || echo "  ⚠️ Q2 timed out or failed"
+
+echo ""
+echo "END_SOCIAL_SIGNALS"
