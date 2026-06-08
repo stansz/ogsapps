@@ -1,0 +1,42 @@
+#!/bin/bash
+# market-social-fetch — Community social signal for financial market briefing
+# Runs the last30days engine against Reddit, HN, Polymarket, and web
+# for market/economic topics. Output: raw evidence block for LLM synthesis.
+#
+# Free sources: Reddit, HN, Polymarket, Web (Brave/Exa fallback)
+# Target: <30s for cron use
+
+set -euo pipefail
+
+ENGINE="/opt/data/workspace/last30days-skill/skills/last30days/scripts/last30days.py"
+PYTHON="python3.13"
+SUBREDDITS="wallstreetbets,stocks,investing,StockMarket,CryptoCurrency,economics"
+TIMEOUT=25
+
+echo "📊 Market Sentiment — last30days v3, 7d lookback"
+echo ""
+
+# ── Query 1: Market sentiment & retail discussion ──
+echo "  → Researching: stock market sentiment..."
+timeout $TIMEOUT $PYTHON "$ENGINE" \
+  "stock market investing sentiment outlook" \
+  --subreddits "$SUBREDDITS" \
+  --emit=md \
+  --quick \
+  --days 7 \
+  2>/dev/null || echo "  ⚠️ Q1 timed out"
+
+echo ""
+
+# ── Query 2: Fed, rates, macro ──
+echo "  → Researching: Fed rates macro economy..."
+timeout $TIMEOUT $PYTHON "$ENGINE" \
+  "Federal Reserve interest rates economy inflation" \
+  --subreddits "$SUBREDDITS" \
+  --emit=md \
+  --quick \
+  --days 7 \
+  2>/dev/null || echo "  ⚠️ Q2 timed out"
+
+echo ""
+echo "END_MARKET_SOCIAL"
