@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+"""
+ashare-market-data — Fetch A-share market data for marketbrief pipeline
+
+Collects A-share index closes + market breadth from AkShare.
+Outputs compact text block (~150-250 words) for LLM consumption.
+All API calls run in parallel via ThreadPoolExecutor.
+
+Usage: ashare-market-data
+Exit: 0 on success, 1 if all primary sources failed
+"""
+
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import date, timedelta
+
+# ── Configuration ──────────────────────────────────────────
+A_INDICES = {
+    "sh000001": "上证指数",
+    "sz399001": "深证成指",
+    "sz399006": "创业板指",
+    "sh000688": "科创50",
+    "sh000300": "沪深300",
+    "sh000016": "上证50",
+}
+
+# ── Data fetching ──────────────────────────────────────────
+
+def fetch_index_daily(code, name):
+    """Fetch latest daily close for an A-share index via AkShare."""
+    import akshare as ak
+    try:
+        df = ak.stock_zh_index_daily(symbol=code)
+        if df is None or len(df) < 2:
+            return None
+        last = df.iloc[-1]
+        prev = df.iloc[-2]
+        close = float(last["close"])
+        prev_close = float(prev["close"])
+        chg_pct = ((close - prev_close) / prev_close) * 100
+        vol = float(last.get("volume", 0))
+        return {
+            "code": code,
+            "name": name,
+            "close": close,
+            "change_pct": chg_pct,
+            "volume": vol,
+            "date": str(last.get("date", "")),
+        }
+    except Exception as e:
+        return {"code": code, "name": name, "error": str(e)[:80]}
+
+
+def fetch_market_breadth():
+    """Fetch A-share market breadth (up/down/limit counts)."""
+    import akshare as ak
+    try:
+        df = ak.stock_market_activity_legu()
+        data = {}
+        for _, row in df.iterrows():
+            key = str(row["item"]).strip()
+            val = row["value"]
+            data[key] = val
+        return data
+    except Exception as e:
+        return {"error": str(e)[:80]}
+
+
+def fetch_margin():
+    """Fetch margin trading data (融资融券) — optional color."""
+    import akshare as ak
+    try:
+        sh = ak.macro_china_market_margin_sh()
+        sz = ak.macro_china_market_margin_sz()
+        if sh is not None and len(sh) > 0 and sz is not None and len(sz) > 0:
+            last_sh = sh.iloc[-1]
+            last_sz = sz.iloc[-1]
+            total_margin = float(last_sh.get("融资融券余额", 0)) + float(last_sz.get("融资融券余额", 0))
+            return {
+                "total_margin_yi": round(total_margin / 1e8, 0),
+                "date": str(last_sh.get("日期", "")),
+            }
+    except Exception:
+        pass
+    return None
+
+
+# ── Output formatting ─────────────────────────────────────
+
+def fmt_amount(vol):
+    """Format volume to human-readable."""
+    if vol >= 1e12:
+        return f"{vol/1e12:.2f}万亿"
+    elif vol >= 1e8:
+        return f"{vol/1e8:.1f}亿"
+    elif vol >= 1e4:
+        return f"{vol/1e4:.1f}万"
+    return f"{vol:.0f}"
+
+
+def fmt_change(pct):
+    """Format change percentage with arrow."""
+    if pct > 0:
+        return f"🟢+{pct:.2f}%"
+    elif pct < 0:
+        return f"🔴{pct:.2f}%"
+    return f"⚪{pct:.2f}%"
+
+
+def render(indices, breadth, margin):
+    """Render the data into a compact text block."""
+    lines = []
+    lines.append("## 🇨🇳 A-Share Market")
+
+    # Index table
+    if indices:
+        lines.append("| Index | Close | Change |")
+        lines.append("|-------|-------|--------|")
+        for idx in indices:
+            if "error" in idx:
+                lines.append(f"| {idx['name']} | — | ⚠️ FETCH_FAILED |")
+            else:
+                lines.append(
+                    f"| {idx['name']} | {idx['close']:.2f} | {fmt_change(idx['change_pct'])} |"
+                )
+
+    # Market breadth
+    if breadth and "error" not in breadth:
+        up = breadth.get("上涨", "?")
+        down = breadth.get("下跌", "?")
+        flat = breadth.get("平盘", "?")
+        limit_up = breadth.get("真实涨停", breadth.get("涨停", "?"))
+        limit_down = breadth.get("真实跌停", breadth.get("跌停", "?"))
+        activity = breadth.get("活跃度", "?")
+        stat_date = breadth.get("统计日期", "")
+
+        lines.append("")
+        lines.append(
+            f"📊 **Market Breadth** — "
+            f"⬆️ {up} up | ⬇️ {down} down | ➖ {flat} flat | "
+            f"🔥 {limit_up} limit-up | 💀 {limit_down} limit-down | "
+            f"Activity: {activity}"
+        )
+
+    # Margin data
+    if margin:
+        lines.append(
+            f"💰 融资融券余额: {margin['total_margin_yi']:.0f}亿 "
+            f"(as of {margin.get('date', '?')})"
+        )
+
+    # Data freshness note
+    lines.append("")
+    lines.append("*Data: AkShare (end-of-day, previous trading session)*")
+
+    return "\n".join(lines)
+
+
+# ── Main ───────────────────────────────────────────────────
+
+def main():
+    start = time.time()
+    results = {"indices": [], "breadth": None, "margin": None}
+
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        # Fire all index fetches in parallel
+        idx_futures = {
+            ex.submit(fetch_index_daily, code, name): code
+            for code, name in A_INDICES.items()
+        }
+        breadth_future = ex.submit(fetch_market_breadth)
+        margin_future = ex.submit(fetch_margin)
+
+        # Collect indices
+        for fut in as_completed(idx_futures):
+            result = fut.result()
+            if result:
+                results["indices"].append(result)
+
+        # Collect breadth + margin
+        results["breadth"] = breadth_future.result()
+        results["margin"] = margin_future.result()
+
+    # Sort indices by predefined order
+    idx_order = {code: i for i, code in enumerate(A_INDICES)}
+    results["indices"].sort(key=lambda x: idx_order.get(x.get("code", ""), 99))
+
+    elapsed = time.time() - start
+
+    # Count failures
+    idx_ok = sum(1 for i in results["indices"] if "error" not in i)
+    idx_total = len(results["indices"])
+    breadth_ok = results["breadth"] is not None and "error" not in results["breadth"]
+
+    # Render
+    output = render(results["indices"], results["breadth"], results["margin"])
+    print(output)
+
+    # Status line to stderr (for logging, not in LLM output)
+    print(
+        f"[ashare-market-data] indices={idx_ok}/{idx_total} breadth={'OK' if breadth_ok else 'FAIL'} "
+        f"elapsed={elapsed:.1f}s",
+        file=sys.stderr,
+    )
+
+    # Exit code: 0 if at least one index worked
+    if idx_ok > 0:
+        sys.exit(0)
+    else:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
