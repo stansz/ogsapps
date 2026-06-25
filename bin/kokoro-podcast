@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""
+kokoro-podcast — Generate a two-host podcast conversation from text input.
+
+Uses Kokoro TTS (open-source, local, free) with two alternating voices.
+Outputs a WAV file, then converts to MP3 via ffmpeg.
+
+Usage:
+  python3 kokoro-podcast.py --text "article text here" --output /tmp/podcast
+  python3 kokoro-podcast.py --file article.txt --host1 af_heart --host2 am_michael
+
+Voices:
+  American female: af_heart (warm), af_bella, af_nicole, af_sarah, af_sky
+  American male:   am_adam, am_eric, am_michael
+  British female:  bf_emma, bf_isabella
+  British male:    bm_george, bm_lewis
+"""
+
+import argparse
+import subprocess
+import sys
+import numpy as np
+
+# ── Config ──────────────────────────────────────────────────
+SAMPLE_RATE = 24000
+PAUSE_SECONDS = 0.3
+DEFAULT_HOST1 = "af_heart"
+DEFAULT_HOST2 = "am_michael"
+
+# ── TTS Generation ──────────────────────────────────────────
+
+def generate_segment(text: str, voice: str) -> np.ndarray:
+    """Generate audio for a single text segment with the given voice."""
+    from kokoro import KPipeline
+    pipeline = KPipeline(lang_code='a')
+    generator = pipeline(text.strip(), voice=voice, speed=1.0)
+    chunks = [audio for _, _, audio in generator]
+    return np.concatenate(chunks) if chunks else np.array([])
+
+
+def text_to_segments(raw_text: str) -> list[tuple[str, str]]:
+    """
+    Parse text into speaker segments.
+    Expects [HOST1] and [HOST2] markers, or alternates if no markers.
+    """
+    segments = []
+    lines = [l.strip() for l in raw_text.split('\n') if l.strip()]
+
+    for line in lines:
+        if line.startswith('[HOST1]'):
+            segments.append(('host1', line.replace('[HOST1]', '').strip()))
+        elif line.startswith('[HOST2]'):
+            segments.append(('host2', line.replace('[HOST2]', '').strip()))
+        elif line.startswith('['):
+            continue  # skip other markers
+        else:
+            # No marker — alternate speakers
+            speaker = 'host1' if len(segments) % 2 == 0 else 'host2'
+            segments.append((speaker, line))
+
+    return segments
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate two-host podcast audio")
+    parser.add_argument("--text", help="Podcast script text (with [HOST1]/[HOST2] markers)")
+    parser.add_argument("--file", help="Path to podcast script file")
+    parser.add_argument("--output", default="/tmp/podcast", help="Output base path (default: /tmp/podcast)")
+    parser.add_argument("--host1", default=DEFAULT_HOST1, help=f"Host 1 voice (default: {DEFAULT_HOST1})")
+    parser.add_argument("--host2", default=DEFAULT_HOST2, help=f"Host 2 voice (default: {DEFAULT_HOST2})")
+    parser.add_argument("--pause", type=float, default=PAUSE_SECONDS, help=f"Pause between speakers in seconds (default: {PAUSE_SECONDS})")
+    args = parser.parse_args()
+
+    # Get input text
+    if args.file:
+        with open(args.file) as f:
+            raw_text = f.read()
+    elif args.text:
+        raw_text = args.text
+    else:
+        raw_text = sys.stdin.read()
+
+    if not raw_text.strip():
+        print("ERROR: No input text provided", file=sys.stderr)
+        sys.exit(1)
+
+    # Parse segments
+    segments = text_to_segments(raw_text)
+    if not segments:
+        print("ERROR: No speaker segments found. Use [HOST1] and [HOST2] markers.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Generating {len(segments)} segments with voices {args.host1} / {args.host2}...")
+
+    # Generate audio
+    silence = np.zeros(int(SAMPLE_RATE * args.pause), dtype=np.float32)
+    final_audio = []
+
+    for i, (speaker, text) in enumerate(segments):
+        voice = args.host1 if speaker == 'host1' else args.host2
+        print(f"  [{i+1}/{len(segments)}] {speaker} ({voice}): {text[:60]}...")
+        audio = generate_segment(text, voice)
+
+        if len(audio) == 0:
+            print(f"    WARNING: empty audio for segment {i+1}, skipping")
+
+        final_audio.append(audio)
+        final_audio.append(silence)
+
+    combined = np.concatenate(final_audio)
+    duration = len(combined) / SAMPLE_RATE
+
+    # Save WAV
+    import soundfile as sf
+    wav_path = f"{args.output}.wav"
+    sf.write(wav_path, combined, SAMPLE_RATE)
+    print(f"\nWAV saved: {wav_path} ({duration:.1f}s)")
+
+    # Convert to MP3
+    mp3_path = f"{args.output}.mp3"
+    result = subprocess.run(
+        ["ffmpeg", "-y", "-i", wav_path, "-b:a", "128k", mp3_path],
+        capture_output=True, text=True
+    )
+    if result.returncode == 0:
+        import os
+        mp3_size = os.path.getsize(mp3_path)
+        print(f"MP3 saved: {mp3_path} ({mp3_size/1024/1024:.1f}MB)")
+    else:
+        print(f"MP3 conversion failed: {result.stderr[:200]}")
+
+    print(f"\nDONE: {duration:.1f}s podcast generated")
+
+
+if __name__ == "__main__":
+    main()
