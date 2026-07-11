@@ -18,10 +18,9 @@ trap 'rm -rf "$TMPDIR"' EXIT
 
 # Finnhub quotes
 SYMBOLS=($(/opt/data/workspace/bin/market-symbols equities))
-MOVERS=($(/opt/data/workspace/bin/market-symbols movers))
 INDICES=($(/opt/data/workspace/bin/market-symbols indices))
 CRYPTO=($(/opt/data/workspace/bin/market-symbols crypto))
-ALL_SYMS=("${INDICES[@]}" "${SYMBOLS[@]}" "${MOVERS[@]}")
+ALL_SYMS=("${INDICES[@]}" "${SYMBOLS[@]}")
 
 for sym in "${ALL_SYMS[@]}"; do
   curl -sf --max-time 15 \
@@ -174,14 +173,6 @@ echo "## DATA COLLECTED"
 echo "## QUOTES"
 echo ""
 for sym in "${INDICES[@]}" "${SYMBOLS[@]}"; do
-  fmt_quote "$sym" "${TMPDIR}/${sym}.json" || FAIL=1
-done
-
-# Broad market movers
-echo ""
-echo "## MARKET MOVERS"
-echo ""
-for sym in "${MOVERS[@]}"; do
   fmt_quote "$sym" "${TMPDIR}/${sym}.json" || FAIL=1
 done
 

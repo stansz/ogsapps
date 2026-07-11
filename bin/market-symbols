@@ -6,8 +6,7 @@
 case "${1:-all}" in
   indices) echo -e "SPY\nQQQ\nDIA" ;;
   equities) echo -e "NVDA\nTSM\nAAPL\nMETA\nINTC\nAMD\nCEF\nEWC\nGAP\nSIGA" ;;
-  movers)  echo -e "TSLA\nPLTR\nCOIN\nMSTR\nSMCI\nSOFI\nRIVN\nGME\nUBER\nMARA" ;;
   crypto)  echo -e "BTC/USD\nLTC/USD" ;;
-  all)     echo -e "SPY\nQQQ\nDIA\nNVDA\nTSM\nAAPL\nMETA\nINTC\nAMD\nCEF\nEWC\nGAP\nSIGA\nTSLA\nPLTR\nCOIN\nMSTR\nSMCI\nSOFI\nRIVN\nGME\nUBER\nMARA\nBTC/USD\nLTC/USD" ;;
-  *)       echo "Usage: market-symbols [indices|equities|movers|crypto|all]" >&2; exit 1 ;;
+  all)     echo -e "SPY\nQQQ\nDIA\nNVDA\nTSM\nAAPL\nMETA\nINTC\nAMD\nCEF\nEWC\nGAP\nSIGA\nBTC/USD\nLTC/USD" ;;
+  *)       echo "Usage: market-symbols [indices|equities|crypto|all]" >&2; exit 1 ;;
 esac
